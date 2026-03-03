@@ -1,0 +1,45 @@
+{
+  "workflow": "data/web-scraping",
+  "version": "1.0.0",
+  "description": "Fetches and extracts structured content from a web page URL",
+  "parameters": {
+    "url_variable": {
+      "type": "string",
+      "description": "Canvas variable name holding the URL to scrape",
+      "required": true,
+      "example": "product_url"
+    },
+    "extract_fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of field names to extract from the page (e.g. 'title', 'price', 'description')",
+      "required": false,
+      "default": []
+    },
+    "timeout_seconds": {
+      "type": "integer",
+      "description": "Request timeout in seconds",
+      "required": false,
+      "default": 30
+    }
+  },
+  "inputs": {
+    "url": "{{url_variable}}"
+  },
+  "outputs": {
+    "content": {
+      "type": "object",
+      "description": "Extracted fields as a key-value map. If extract_fields is empty, returns full page text."
+    },
+    "success": {
+      "type": "boolean",
+      "description": "Whether the page was successfully fetched and parsed"
+    },
+    "error_code": {
+      "type": "string",
+      "description": "Error code if scraping failed (e.g. 'timeout', 'access_denied', 'parse_error')",
+      "nullable": true
+    }
+  },
+  "nodes": []
+}

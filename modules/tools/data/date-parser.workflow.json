@@ -1,0 +1,51 @@
+{
+  "workflow": "data/date-parser",
+  "version": "1.0.0",
+  "description": "Parses natural language or ambiguous date strings into a standardized ISO 8601 date",
+  "parameters": {
+    "date_string_variable": {
+      "type": "string",
+      "description": "Canvas variable name holding the raw date string to parse",
+      "required": true,
+      "example": "user_date_input"
+    },
+    "reference_date_variable": {
+      "type": "string",
+      "description": "Canvas variable name holding a reference date for resolving relative expressions (e.g. 'next Monday'). Defaults to today if not provided.",
+      "required": false
+    },
+    "output_format": {
+      "type": "string",
+      "description": "Output date format string (ISO 8601 subset)",
+      "required": false,
+      "default": "YYYY-MM-DD",
+      "enum": ["YYYY-MM-DD", "YYYY-MM-DDTHH:mm:ssZ"]
+    },
+    "locale": {
+      "type": "string",
+      "description": "BCP-47 locale tag for language-specific date parsing",
+      "required": false,
+      "default": "zh-CN"
+    }
+  },
+  "inputs": {
+    "date_string": "{{date_string_variable}}"
+  },
+  "outputs": {
+    "parsed_date": {
+      "type": "string",
+      "description": "The parsed date in the specified output_format",
+      "nullable": true
+    },
+    "success": {
+      "type": "boolean",
+      "description": "Whether the date string was successfully parsed"
+    },
+    "error_code": {
+      "type": "string",
+      "description": "Error code if parsing failed (e.g. 'ambiguous_date', 'unrecognized_format')",
+      "nullable": true
+    }
+  },
+  "nodes": []
+}
