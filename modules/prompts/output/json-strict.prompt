@@ -1,0 +1,9 @@
+Your response MUST be a single valid JSON object. Follow these rules strictly:
+
+1. Output ONLY the JSON object — no explanation, no markdown code fences, no preamble.
+2. The JSON must conform to the following schema: `{{schema_reference}}`.
+3. All required fields must be present.
+4. Use `null` for unknown optional fields; do not omit them.
+5. Do not include any fields not defined in the schema.
+6. If you cannot produce a valid response that conforms to the schema, output:
+   `{"error": "unable_to_process", "reason": "<brief explanation>"}`

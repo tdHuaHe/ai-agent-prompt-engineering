@@ -1,0 +1,65 @@
+{
+  "workflow": "integration/api-caller",
+  "version": "1.0.0",
+  "description": "Generic HTTP API caller that sends a request to a configurable endpoint and returns the response",
+  "parameters": {
+    "endpoint_url": {
+      "type": "string",
+      "description": "The full URL of the API endpoint to call",
+      "required": true,
+      "example": "https://api.example.com/v1/users"
+    },
+    "method": {
+      "type": "string",
+      "description": "HTTP method",
+      "required": false,
+      "default": "POST",
+      "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    },
+    "payload_variable": {
+      "type": "string",
+      "description": "Canvas variable name holding the request payload object (for POST/PUT/PATCH)",
+      "required": false
+    },
+    "headers": {
+      "type": "object",
+      "description": "Static HTTP headers to include in the request (do not include secrets here; use the platform secret store)",
+      "required": false,
+      "default": {}
+    },
+    "timeout_seconds": {
+      "type": "integer",
+      "description": "Request timeout in seconds",
+      "required": false,
+      "default": 30
+    },
+    "auth_secret_key": {
+      "type": "string",
+      "description": "Platform secret store key for the API authentication token (Bearer token). Leave empty for unauthenticated APIs.",
+      "required": false
+    }
+  },
+  "inputs": {
+    "payload": "{{payload_variable}}"
+  },
+  "outputs": {
+    "status_code": {
+      "type": "integer",
+      "description": "HTTP response status code"
+    },
+    "response_body": {
+      "type": "object",
+      "description": "Parsed JSON response body, or raw string if response is not JSON"
+    },
+    "success": {
+      "type": "boolean",
+      "description": "True if status_code is in the 2xx range and the request did not time out"
+    },
+    "error_code": {
+      "type": "string",
+      "description": "Error code if the call failed (e.g. 'timeout', 'auth_error', 'server_error')",
+      "nullable": true
+    }
+  },
+  "nodes": []
+}

@@ -1,0 +1,35 @@
+{
+  "workflow": "auth/bank-card",
+  "version": "1.0.0",
+  "description": "Verifies the user's identity by checking bank card details against their account record",
+  "parameters": {
+    "card_number_variable": {
+      "type": "string",
+      "description": "Canvas variable name that holds the user's bank card number (last 4 digits or full number)",
+      "required": true,
+      "example": "user_card_last4"
+    },
+    "user_id_variable": {
+      "type": "string",
+      "description": "Canvas variable name that holds the user's account ID",
+      "required": true,
+      "example": "user_account_id"
+    }
+  },
+  "inputs": {
+    "card_number": "{{card_number_variable}}",
+    "user_id": "{{user_id_variable}}"
+  },
+  "outputs": {
+    "verified": {
+      "type": "boolean",
+      "description": "Whether the bank card details matched the user's account"
+    },
+    "error_code": {
+      "type": "string",
+      "description": "Error code if verification failed (e.g. 'card_not_found', 'mismatch')",
+      "nullable": true
+    }
+  },
+  "nodes": []
+}
