@@ -1,140 +1,83 @@
-# How to Design Multi-Agent Systems
+# How to Work with Multi-Agent Systems
 
-## What Is a Multi-Agent System?
+## What Is a System?
 
-A multi-agent system (MAS) is the top-level deliverable of this engineering framework. It consists of multiple coordinated agents working together to handle a complete business process. Systems are defined in the `systems/` directory.
+A system is a complete multi-agent platform configuration that handles an end-to-end business process. In this repo, systems are stored as JSON exports from the AI Agent Platform under `systems/industries/<industry>/`.
+
+The system JSON is the **source of truth** — it defines every agent, every tool workflow, and the orchestration logic. Agent and module files in this repo are extracted from it.
 
 ## System Directory Structure
 
 ```
-systems/<system-name>/
-├── system.json         # Full system configuration (final deliverable)
-├── agents/             # Agent configurations specific to this system
-│   └── <agent-name>/
-│       ├── prompt.md
-│       ├── tools.json
-│       └── params.json
-├── params.json         # System-level parameters
-└── README.md           # System description and architecture
+systems/industries/<industry>/
+└── <system-name>.json     # Full platform export (source of truth)
 ```
 
-## System Configuration Format
+There are no additional YAML, Markdown, or param files at the system level. Everything lives in the JSON.
 
-The `system.json` is the final deliverable — a JSON configuration file that can be imported into the AI Agent Platform:
+## What the System JSON Contains
+
+A platform export has the following top-level schema:
 
 ```json
 {
-  "system": "loan-application-system",
-  "version": "1.0.0",
-  "description": "End-to-end loan application processing system",
-  "agents": [
+  "agent_id": "...",
+  "agent_name": "...",
+  "role": "SUPERVISOR | ACTION_AGENT",
+  "goal": "...",
+  "instruction": "# Role\n...",
+  "tools": [
     {
-      "id": "intake_agent",
-      "name": "Application Intake Agent",
-      "prompt": "<rendered prompt content>",
-      "tools": ["verify_phone", "fetch_credit_score"],
-      "entry_point": true
-    },
-    {
-      "id": "review_agent",
-      "name": "Application Review Agent",
-      "prompt": "<rendered prompt content>",
-      "tools": ["fetch_applicant_history", "submit_decision"]
+      "tool_name": "...",
+      "input_params": { ... },
+      "output_params": { ... },
+      "execute_params": {
+        "nodes": [ ... ],
+        "edges": [ ... ],
+        "variables": [ ... ]
+      }
     }
-  ],
-  "orchestration": {
-    "flow": [
-      { "from": "intake_agent", "to": "review_agent", "condition": "application_complete" }
-    ]
-  },
-  "environment": {
-    "timeout_global": 3600,
-    "retry_policy": "exponential_backoff"
-  }
+  ]
 }
 ```
 
-## System Design Workflow
+Key fields:
+- **`instruction`**: The agent's full prompt — maps to `instruction.prompt.md`
+- **`tools[].input_params`**: Explicit inputs the agent passes to the tool — maps to `inputs:` in the workflow YAML
+- **`tools[].execute_params.nodes`**: The workflow graph — `function` nodes contain JS that maps to `js_functions:` in the workflow YAML
+- **`tools[].output_params`**: What the tool returns — maps to `outputs:` in the workflow YAML
 
-### Step 1: Map the Business Process
+## Extraction Workflow
 
-Before defining agents, map the complete business flow:
-- What are the distinct stages of the process?
-- What information is passed between stages?
-- What are the decision points and branching conditions?
-- What are the entry and exit points?
+### Step 1: Add the system JSON
+Place the exported JSON under `systems/industries/<industry>/`. Use the platform's export or copy/paste from the canvas.
 
-### Step 2: Define Agent Responsibilities
+### Step 2: Extract agents
+For each agent in the system, create an `agents/<agent-name>/` directory. See [agent-guide.md](./agent-guide.md) for the extraction process.
 
-Each agent should own one stage or responsibility. Principles:
-- **Single responsibility**: One agent, one clear job
-- **Clear handoffs**: Define what data passes between agents
-- **Minimal coupling**: Agents communicate through defined interfaces, not shared state
+### Step 3: Identify reusable modules
+After extracting all agents, review the instruction files and workflow YAMLs. Any pattern that appears in two or more agents is a candidate module. Extract to `modules/prompts/` or `modules/tools/` as appropriate.
 
-### Step 3: Compose Each Agent
+### Step 4: Write the module guide
+For each extracted module, add a `.guide.md` that explains the context it came from and what to change when reusing it.
 
-Follow the agent composition process in [agent-guide.md](./agent-guide.md) for each agent in the system.
+## Multi-Agent Orchestration
 
-### Step 4: Define Orchestration Logic
-
-The orchestration section defines how agents hand off to each other:
-- **Sequential**: Agent A completes, then Agent B starts
-- **Conditional**: Agent B starts only if Agent A produces a specific result
-- **Parallel**: Multiple agents run simultaneously, results merged
-
-### Step 5: Set System Parameters
-
-System-level parameters apply across all agents:
-- Environment configuration (timeouts, retry policies)
-- Shared context (session ID, user profile)
-- Feature flags
-
-### Step 6: Render and Validate
-
-Use the engineering tools to produce the final `system.json`:
-
-```bash
-python tools/render.py systems/<system-name>
-python tools/validate.py systems/<system-name>/system.json
-```
-
-## System README Template
-
-```markdown
-# System: <Name>
-
-## Purpose
-Description of the complete business process this system handles.
-
-## Architecture
+In the current FSI Banking system, the orchestration pattern is:
 
 ```
-[intake_agent] → [review_agent] → [decision_agent]
+[Supervisor / Coordinator]
+        │
+        ├── route → [FAQ Agent]
+        ├── route → [Account Balance and Transactions Agent]
+        └── escalate → [Session Summary Agent] → human handoff
 ```
 
-## Agents
-| Agent | Responsibility | Entry Point |
-|-------|---------------|-------------|
-| `intake_agent` | Collect and verify application data | Yes |
-| `review_agent` | Evaluate application against criteria | No |
-| `decision_agent` | Issue final decision and notification | No |
+Orchestration logic (routing conditions, escalation triggers) lives in the Supervisor's `instruction.prompt.md`. The reusable portions of that logic are extracted to `modules/prompts/orchestration/`.
 
-## Data Flow
-Description of what data is passed between agents.
+## Current Systems
 
-## System Parameters
-Link to or inline the system params.json content.
+| System | Industry | File |
+|--------|----------|------|
+| Trinity Voice Automation | FSI Banking | `systems/industries/fsi-banking/wafd-sb-AI-Agent-platform-SB - Trinity Voice Automation.json` |
 
-## Deployment Notes
-Any platform-specific setup required.
-```
-
-## Quality Standards
-
-Before delivering a system, verify:
-
-- [ ] Every agent is composed from modules (not written from scratch)
-- [ ] Orchestration logic is fully defined with explicit conditions
-- [ ] `system.json` passes validation (`tools/validate.py`)
-- [ ] System-level eval tests pass (`eval/systems/`)
-- [ ] README documents the architecture and data flow
