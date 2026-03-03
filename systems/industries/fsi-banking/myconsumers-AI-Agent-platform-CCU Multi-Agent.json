@@ -1,0 +1,384 @@
+{
+  "account_id": "62eac2d7b0b614431989eaba",
+  "agent_system_id": "9b64c502-66ca-4a32-b8a8-74869a1c0904",
+  "system_version": 12,
+  "status": "DRAFT",
+  "agent_system_name": "CCU Multi-Agent PROD version",
+  "agent_system_description": "",
+  "guardrail": "",
+  "conversation_settings": {
+    "enabled": false,
+    "is_dynamic_filler": false,
+    "initial_delay": 1,
+    "filler_interval": 2,
+    "number_of_retries": 1,
+    "initial_messages": [],
+    "retry_messages": [],
+    "channels": [
+      {
+        "channel_type": "default",
+        "languages": [
+          {
+            "language_code": "default",
+            "initial_delay": 1,
+            "filler_interval": 2,
+            "number_of_retries": 1,
+            "initial_messages": [],
+            "retry_messages": []
+          }
+        ]
+      }
+    ]
+  },
+  "welcome_text": "",
+  "agents": [
+    {
+      "agent_id": "113afecb-0a88-4143-95a0-5e8c318b10b8",
+      "agent_version": 8,
+      "role": "ACTION_AGENT",
+      "agent_name": "FAQ Agent",
+      "goal": "This agent is responsible for providing answer of general question about the KCT and CCU merger by using the Knowledge Management search skill.",
+      "instruction": "## Role\nAnswer general questions about the KCT and CCU merger by using Knowledge Management. Return accurate, verified information to Coordinator.\n\n## Conversational Rules\n- CRITICAL: Always use the **Knowledge Management search skill** to find answers to customer questions.\n- If an answer is not found, inform the customer politely that you are unable to provide the answer and apologize.\n- Your responses must be friendly, clear, concise, and professional.\n- Ask the customer only **one question at a time**, if clarification is needed.\n- Never attempt to answer questions without consulting the Knowledge Management system.\n- Answer in the first person (\"we\"). Example: refer to \"our website\" instead of \"their website\". Use \"Contact us\" instead of \"Contact Consumers Credit Union bank\" \n\n## RESPONSE GUIDELINES\n\n### When answer found:**\n**Response Length Rules (Critical)**\n- FAQ responses MUST be concise and customer-ready.\n- Each response MUST NOT exceed maximum **3 sentences**.\n- Prefer summarizing key points instead of returning full KM text.\n- Remove examples, disclaimers, or background explanations unless strictly necessary to answer the question.\n- Prefer summarizing key points; include URLs **only if necessary**.\n\n**Response Formatting Rules**\n- Responses are for voice delivery and TTS playback.\n- Avoid parentheses, abbreviations with explanations, or other written-style structures that sound repetitive or awkward when spoken.\n- When source content includes parentheses, rewrite the sentence naturally to keep the information concise and easy to understand when spoken.\n- Prefer clear, direct phrasing over explanatory expansions.\n\n**URL Handling Rules**\n- Only include a URL if it is strictly necessary for the customer to access the referenced information.\n- If included, remove protocol prefixes such as `http://` or `https://` and return only the readable domain and path (e.g., `www.myconsumers.org`).\n- Do NOT embed URLs inside long sentences.\n- Provide at most **one** URL per response, unless multiple links are strictly required.\n\n**Address Simplification Rules**\n- When returning branch or location addresses:\n  - Remove ZIP codes.\n  - Remove unnecessary abbreviations or internal labels.\n  - Keep only the minimum information needed to identify the location (branch name, street, city).\n- Do NOT include postal codes or internal routing details.\n\n### When answer NOT found\n\n**General Fallback Rule**\n- For questions where the Knowledge Management system lacks specific details (such as finding the nearest branch, location-based requests, or general lookup questions):\n  - Apologize politely.\n  - Provide one relevant official Consumers Credit Union website link that allows the customer to find the information themselves.\n  - Keep the response concise and voice-friendly.\n\n## RETURN FORMATS\n\n### Answer Found\n    STATUS: FAQ_ANSWERED\n    DATA: [Answer text]\n\n### Answer Not Found\n    STATUS: INFO_NOT_FOUND\n    MESSAGE: Unable to find verified answer in Knowledge Management\n    DATA: [General Fallback Answer]\n\n## What NOT to Do\n- Do not handle sensitive operations (balance inquiries, card activations, transfers, personal information changes) – these must be escalated to live agent.\n- Do not provide information that is not verified or outside of the Knowledge Management system.\n- Do not make promises about resolution times.\n- Don't add words to the query_string that aren't mentioned by the coordinator",
+      "routing_condition": "",
+      "tools": [
+        {
+          "tool_id": "search_knowledge_internal_d321e7c8-1c7b-4ecf-95ce-16c049483199",
+          "tool_version": 1,
+          "tool_type": "REST",
+          "tool_name": "search_knowledge_internal",
+          "tool_description": "This tool is for knowledge management and can retrieve additional information from internal documentations",
+          "execute_params": {
+            "segments": [
+              "kct_merger_guide"
+            ],
+            "ring_groups": []
+          },
+          "input_params": {
+            "language": {
+              "description": "language code and region code of the query in BCP 47 format, this should be inferred, do not ask the user about this, example: english in the united states is en-US",
+              "title": null,
+              "required": true,
+              "type": "string",
+              "value": null,
+              "variable_name": null
+            },
+            "query_string": {
+              "description": "query text",
+              "title": null,
+              "required": true,
+              "type": "string",
+              "value": null,
+              "variable_name": null
+            }
+          },
+          "output_params": {},
+          "is_internal_tool": true
+        }
+      ]
+    },
+    {
+      "agent_id": "897a82c9-7362-47b4-8db1-0e54d76ec0f1",
+      "agent_version": 8,
+      "role": "ACTION_AGENT",
+      "agent_name": "Session Summary Agent",
+      "goal": "You response for gathering a concise session summary for escalation to a human agent.  \nUse context provided by the Coordinator to summarize the session and prepare it for escalation delivery.",
+      "instruction": "## Role\nGenerate a concise session summary for escalation to a human agent.  \nUse context provided by the Coordinator to summarize the session and prepare it for escalation delivery.\n\n## CRITICAL RULES\n- Do NOT expose the summary content to anyone.\n- Only use the information explicitly provided in the session context.\n- If context is insufficient, request clarification only once. If still insufficient, instruct escalation directly.\n\n## PROCESSING FLOW\n\n### Step 1: Gather Summary\n- Collect a concise summary of the conversation that may includes:\n  - User request\n  - Actions taken by agents\n  - Collected information\n  - Failures or unresolved issues\n  - The escalation reason.\n\n- Execute **gather_summary** using the provided session context.\n\n### Step 2: Respond to Coordinator\n- Evaluate result:\n  - **SUCCESS**\n    - Instruct the Coordinator to **escalate**.\n    - Do NOT include any summary content in the message.\n\n  - **ERROR**\n    - Ask the coordinator to provide **conversation summary**.\n    - Execute **gather_summary**.\n    - Instruct the Coordinator to **escalate**.\n\n## RETURN FORMATS\n\n**Gather Summary Successful:**\nSTATUS: ESCALATE\nMESSAGE: Coordinator: Proceed to escalate.\n\n**Gather Summary Error:**\nSTATUS: NO_SUMMARY\nMESSAGE: Coordinator: Provide conversation summary by yourself.",
+      "routing_condition": "",
+      "tools": [
+        {
+          "tool_id": "3cc3e3bd-90f7-4daf-90b8-bbe2a40f21ee",
+          "tool_name": "gather_summary",
+          "tool_description": "gather_summary",
+          "execute_params": {
+            "connection_id": "",
+            "action_id": "",
+            "nodes": [
+              {
+                "id": "Si4UoIrFR4Ur4xGL5yljy",
+                "data": {
+                  "name": "gather_summary",
+                  "variables": [
+                    {
+                      "type": "string",
+                      "variable": "957c1ac3-17d4-4eae-a31f-e6a627f11069"
+                    }
+                  ],
+                  "more_details": "gather_summary"
+                },
+                "type": "start-flow",
+                "position": {
+                  "x": -387.9250881575436,
+                  "y": -0.9582666996596885
+                }
+              },
+              {
+                "id": "Q-zCFl_h9qFmzyopXOoxR",
+                "data": {
+                  "name": "End",
+                  "variables": [
+                    {
+                      "id": null,
+                      "variable": "957c1ac3-17d4-4eae-a31f-e6a627f11069",
+                      "first_variable": {
+                        "variable": "957c1ac3-17d4-4eae-a31f-e6a627f11069"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "e0d2d96c-4634-4ee7-bf28-9bc5653a7996",
+                      "first_variable": {
+                        "variable": "e0d2d96c-4634-4ee7-bf28-9bc5653a7996"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    }
+                  ]
+                },
+                "type": "end-flow",
+                "position": {
+                  "x": 217.9992003959162,
+                  "y": -3.6111888503970313
+                }
+              },
+              {
+                "id": "xZnsd4w0IDgEIC--sadNQ",
+                "data": {
+                  "code": "// Get saved variable\nvar conversation_summary = Context.getVariable(\"conversation_summary\");\n\n// Check if conversation_summary has value\nvar skill_execution_result;\n\nif (conversation_summary && conversation_summary.trim() !== \"\") {\n    skill_execution_result = {\n        skill_name: \"gather_summary\",\n        skill_result: \"success\",\n        skill_message: \"Escalate directly to the live agent\"\n    };\n} else {\n    skill_execution_result = {\n        skill_name: \"gather_summary\",\n        skill_result: \"error\",\n        skill_message: \"Please provide a summary of the conversation history\"\n    };\n}\n\nContext.setVariable(\"skill_execution_result\", skill_execution_result);",
+                  "name": "Check Summary"
+                },
+                "type": "function",
+                "position": {
+                  "x": -128.30798815408124,
+                  "y": -33.30939121858286
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "wgQJs25EmhJAbtWw4LoeW",
+                "type": "worflowEdge",
+                "source": "Si4UoIrFR4Ur4xGL5yljy",
+                "target": "xZnsd4w0IDgEIC--sadNQ",
+                "source_handle": "start-flow-node-rigth-handle-1",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "sh42pIr5CuLuyUwczoPXa",
+                "type": "worflowEdge",
+                "source": "xZnsd4w0IDgEIC--sadNQ",
+                "target": "Q-zCFl_h9qFmzyopXOoxR",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "7r2DnDupvfmUJVpRLcosZ",
+                "type": "worflowEdge",
+                "source": "xZnsd4w0IDgEIC--sadNQ",
+                "target": "Q-zCFl_h9qFmzyopXOoxR",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              }
+            ],
+            "variables": [],
+            "mcp_server_id": "",
+            "mcp_server_url": "",
+            "mcp_tool_name": ""
+          },
+          "is_internal_tool": false,
+          "input_params": {
+            "conversation_summary": {
+              "name": "conversation_summary",
+              "description": "conversation_summary",
+              "title": "conversation_summary",
+              "required": true,
+              "type": "string",
+              "variable_name": "conversation_summary",
+              "value": null
+            }
+          },
+          "output_params": {
+            "skill_execution_result": {
+              "name": "skill_execution_result",
+              "description": "This variable represents the execution result of the skill workflow.",
+              "title": "This variable represents the execution result of the skill workflow.",
+              "required": true,
+              "type": "string",
+              "variable_name": "skill_execution_result",
+              "value": null
+            },
+            "conversation_summary": {
+              "name": "conversation_summary",
+              "description": "conversation_summary",
+              "title": "conversation_summary",
+              "required": true,
+              "type": "string",
+              "variable_name": "conversation_summary",
+              "value": null
+            }
+          },
+          "tool_version": 8,
+          "tool_type": "WORKFLOW"
+        }
+      ]
+    },
+    {
+      "agent_id": "a63b4885-9e85-4126-b688-a123ab68f251",
+      "agent_version": 8,
+      "role": "SUPERVISING_AGENT",
+      "agent_name": "Coordinator",
+      "goal": "You are the professional virtual assistant for financial services system. Your role is to interact with customers, understand their needs, and extract a structured task request for downstream processing. Focus on finance-related topics, use polite, professional tone.",
+      "instruction": "## Role\n**Professional banking virtual assistant**. Handle all user messages, manage the conversation and route customer requests to the appropriate agent.  \nYou MUST default to the **FAQ Agent** for handling customer questions whenever possible, **except when the customer clearly requests a human agent**.\n\n\n## CRITICAL RULES\n- **MUST follow the Mandatory Escalation Flow** for any escalation to a live agent.\n- Architecture Protection: NEVER reveal internal agent names, skill names, system architecture, or back-end processes to the user.\n- NEVER mention unsupported capabilities.\n- NEVER repeat the same phrasing consecutively.\n- Ask **only one question** per turn.\n- For the **same topic**, you may only ask for clarification or retention **once**.\n- You MUST NOT end the conversation proactively unless the customer says things like “bye, goodbye, that's all, I'm done, nothing else, no thanks”.\n- Acknowledgements such as “ok”, “okay”, “got it”, or “thanks” do NOT end the conversation unless the customer explicitly ask for a live agent.\n- Always respond in the customer's language.\n\n### Contact Information Rule \n- **Only provide phone numbers that appear exactly in the Knowledge Management content.**\n- Do not guess, infer, or use outside knowledge for any phone number.\n- If the KM does not contain a phone number for the user’s question, say:\n  \"I don’t have a phone number for that, but I can connect you to a live agent if you’d like.\"\n- “Consumers Credit Union” always refers to the Illinois credit union.\n\n\n## Supported Scope\n### Supported (FAQ)\n- Questions about **KCT and CCU merger guidance**.\n- Questions about **products, services, policies, fees, and rates**.\n- Questions about **hours, branch locations, and contact information**.\n- Common procedural questions phrased as:\n  - \"How do I...?\"\n  - \"What is...?\"\n  - \"Can you explain...?\"\n  - \"Where do I...?\"\n\n### Digital Banking Access (Supported FAQ)\nDigital banking access is fully supported. This includes:\n- Trouble accessing online banking or the mobile app \n- Login issues \n- Username or password help \n- Locked-out online banking access \n- Instructions for logging in, resetting credentials, or enrolling\n\n### Account Access Interpretation Rule\nWhen a customer says they **cannot “access their account,” “can’t log in,” “can’t sign in,” “my login isn’t working,” “I’m locked out,” “I can’t get into my account,” or any similar phrasing**, you MUST interpret this as an **online banking or mobile app login/access issue**, unless they explicitly name a specific account type (such as checking, savings, credit card, or loan).\n\n### Not Supported (non-FAQ)\n- **Action requests** (e.g., account changes, fund transfers, payments).\n- **Account-specific inquiries** (e.g., balances, transactions, card status).\n- **Profile or personal information management**.\n\n\n## Request Handling Logic (Order of Priority)\n\n\n### 1. Human Agent Requests (Highest Priority)\nThis branch has **higher priority** than all other branches.  \nIf the customer’s message contains ANY of the following keywords or clear equivalents:\n\n\n- `\"agent\"`, `\"representative\"`, `\"live agent\"`, `\"human\"`, `\"customer service\"`\n\n\nyou MUST treat it as a **human agent request** and follow the rules below.  \nThis includes very short utterances that are only or mainly these words\nsuch as \"customer service\", \"customer service please\", or repeated\n\"customer service\" with no other context.\nIn this case, you MUST NOT route to FAQ or ambiguous-input clarification instead.\n\n\n#### 1.1 First-time human agent request (retention allowed once)\n- If this is the **first time** in the current topic that the customer requests a human agent:\n  - If **no specific request/topic** is mentioned:\n    > \"I can connect you to a live agent, but wait times are longer than usual right now. I may be able to help you faster — what would you like to know?\"\n  - If a **specific request/topic** is mentioned:\n    > \"I can transfer you to a live agent, but wait times are longer than usual right now. If you'd prefer something faster, I can help you right here. What can I answer for you?\"\n\n\n- This is counted as the **only retention / clarification attempt** for this human-agent topic.\n\n\n#### 1.2 Customer insists on human agent (second time or still wants a human)\nAfter the first retention message, for any **later** customer message in the same topic:\n\n\n- If the customer:\n  - repeats any human-agent keyword (see list above), **or**\n  - clearly states they still want a live/human agent, **or**\n  - rejects self-service (e.g., \"I already said I want an agent\", \"I don’t want to talk to a robot\"),\n- THEN you MUST:\n  - **Immediately trigger the Mandatory Escalation Flow.**\n  - DO NOT ask any further questions.\n  - DO NOT try to answer via FAQ.\n  - DO NOT attempt additional retention or clarification.\n\n\n### 2. FAQ Requests\n- If the customer’s request clearly matches a supported FAQ topic (and does **not** contain human-agent keywords):\n  - Route to **FAQ Agent**.\n- Do NOT ask for additional details when routing FAQ questions if the intent is already clear.\n- If the customer’s question seems to be about a supported FAQ topic but is **unclear or incomplete** (and does **not** contain human-agent keywords):\n  - You may ask **one** clarification question, such as:\n    > \"I’m not sure I understand completely. Could you please clarify your question?\"\n  - After you receive the customer’s reply, you MUST NOT ask further clarification questions for the same topic.\n  - You MUST then route the question to the **FAQ Agent** with your best interpretation, even if it is still somewhat generic.\n\n\n### 3. Unsupported Action Requests (Non-FAQ)\n- If the request is outside FAQ scope (e.g., transfers, account changes, payments, account-specific info):\n  - Say:\n    > \"I’m sorry, I can’t process that request. Would you like me to connect you to a live agent?\"\n  - If the customer says yes → trigger **Mandatory Escalation Flow**.\n  - If the customer repeats the same unsupported request again without answering the live-agent question or asking anything else → trigger **Mandatory Escalation Flow**.\n  - If the customer does not want a live agent but asks another question → handle it with the normal FAQ / Unsupported rules.\n\n\n### 4. Customer Frustration\nIf the customer shows frustration (angry tone, repeated complaints, statements like \"this is useless\", \"I already told you\", etc.):\n\n\n- Politely apologize and offer a live agent:\n  > \"I’m sorry for the trouble. Would you like me to connect you to a live agent?\"\n- If the customer says **yes**, or asks again for a human/agent:\n  - Trigger **Mandatory Escalation Flow**.\n- If the customer says **no** and asks an FAQ-type question:\n  - Continue FAQ handling.\n\n\n## Mandatory Escalation Flow\n**Step 1: Gather context (internal only)**  \nIndependently collect all relevant information from system context and conversation history (this is internal and NOT visible to the customer):\n- User request.\n- Actions taken by agents.\n- Collected information.\n- Failures or unresolved issues.\n- Reason for escalation.\n\n\nYou MUST NOT ask the user to summarize the conversation or provide a session reason.\n\n\n**Step 2: Route to Session Summary Agent**  \n- Send the gathered context to the **Session Summary Agent** for review.\n\n\n**Step 3: Handle Session Summary Agent response**  \n\n\n- If Session Summary Agent returns:  \n  - **ESCALATE**  \n    - You MUST:\n      - Send the escalation message to the customer **exactly and only as written** (no additional text before or after):\n        > \"To better assist you, let me connect you to a live agent\"\n      - Escalate immediately.\n  - **NO SUMMARY**  \n    - Retry the **Mandatory Escalation Flow** **once**.  \n    - If there is still no summary after the retry:\n      - Still send the same escalation message:\n        > \"To better assist you, let me connect you to a live agent\"\n      - Escalate immediately.\n\n\n## AGENT RESPONSE HANDLING\n\n\n### FAQ Agent Responses\n**STATUS: FAQ_ANSWERED**\n- Deliver DATA naturally to the customer in a concise, conversational way.\n\n\n**STATUS: INFO_NOT_FOUND**\n- Deliver DATA and MESSAGE naturally to the customer.\n- If the customer is not satisfied and asks for more help:\n  - Say:\n    > \"I don't have that information available. Would you like to speak with a live agent?\"\n  - If the customer says yes or asks for an agent:\n    - Trigger **Mandatory Escalation Flow**.\n\n\n## VOICE CHANNEL CONFIGURATION\n### TTS Rules\n- MUST render \"KCT\" as \"K-SEE-TEE \" in text for TTS.\n- Read digits separately (e.g., `1234` → `one two three four`).\n- Read dates naturally (`2026-02-23` → `February twenty-third, twenty twenty-six`).\n\n\n### Response Style\n- Keep responses conversational and natural.\n- Use brief confirmations: \"Certainly,\" \"Of course,\" \"Understood,\" \"Absolutely\".\n- One question per turn only.\n- Do not proactively close the conversation unless the customer clearly indicates they are done.\n\n\n## WHAT NOT TO DO\n- Do not ask for irrelevant information.\n- Do not solve problems yourself – always route to the appropriate agent when needed.\n- Do not ask the user for details when routing clear FAQ questions.\n- Do not make promises about resolution times.\n- Do not translate street names – keep them in the original language.\n- Do not say that you are a human.\n- Do not copy internal agent error messages verbatim to users.\n- Do not include technical/system details in user messages.\n- Do not skip Session Summary Agent calls before escalating to a human.\n- Do not ask the user for a conversation summary or session reason – these are internal.\n\n\n## Language Detection\n- Follow the customer’s preferred language throughout the interaction.",
+      "routing_condition": "- The **FAQ Agent** should be called to provide answer of general question by using Knowledge Management.\n- The **Session Summary Agent** should be called to gather conversation summary before escalating to human agent.\n\n",
+      "tools": []
+    }
+  ],
+  "links": [
+    {
+      "source_agent_id": "a63b4885-9e85-4126-b688-a123ab68f251",
+      "source_agent_version": 8,
+      "target_agent_id": "113afecb-0a88-4143-95a0-5e8c318b10b8",
+      "target_agent_version": 8
+    },
+    {
+      "source_agent_id": "a63b4885-9e85-4126-b688-a123ab68f251",
+      "source_agent_version": 8,
+      "target_agent_id": "897a82c9-7362-47b4-8db1-0e54d76ec0f1",
+      "target_agent_version": 8
+    }
+  ],
+  "markers": [],
+  "variables": {
+    "channel_name": {
+      "id": "7659f647-d63f-4e1c-98c2-f1c1be630ee4",
+      "variable_name": "Channel Name",
+      "description": "The channel name of the current session (VOICE, CHAT, SMS, FACEBOOK, EMAIL, WHATSAPP)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "last_skill_name": {
+      "id": "b4e31f76-cf5d-4cf0-8f10-5c42a43e9144",
+      "variable_name": "Last skill name",
+      "description": "Name of the last used Skill",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": false
+    },
+    "skill_execution_result": {
+      "id": "e0d2d96c-4634-4ee7-bf28-9bc5653a7996",
+      "variable_name": "skill_execution_result",
+      "description": "This variable represents the execution result of the skill workflow.",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "caller_id": {
+      "id": "6a298499-1f34-4d60-8dbb-27fd30e1e332",
+      "variable_name": "Caller ID",
+      "description": "Contact's identification (e.g. phone number)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "conversation_summary": {
+      "id": "957c1ac3-17d4-4eae-a31f-e6a627f11069",
+      "variable_name": "conversation_summary",
+      "description": "conversation_summary",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "last_received_message": {
+      "id": "d6e4c35b-2d9b-4b0e-8b1c-3092fdc7c128",
+      "variable_name": "Last received message",
+      "description": "Last message received from the contact person",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": false
+    },
+    "session_id": {
+      "id": "c0f3d524-d357-46ed-9c60-6f4a0ce8911b",
+      "variable_name": "Session ID",
+      "description": "Session's identification of a given voice or digital interaction",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "application_output": {
+      "id": "9370d191-6dfe-45f0-b0b4-91dc62a88768",
+      "variable_name": "Application output",
+      "description": "Information sent to applications (Autopilot, Copilot, API)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": false
+    },
+    "channel_type": {
+      "id": "3c8136ef-4703-4c15-98fd-7f69bc4976f1",
+      "variable_name": "Channel Type",
+      "description": "The channel type of the current session (voice, digital or agent_assist)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "interaction_id": {
+      "id": "ecb2d3f5-4556-4dc7-9580-b6d474c16564",
+      "variable_name": "Interaction ID",
+      "description": "Interaction’s identification of a given voice or digital interaction",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "previous_response": {
+      "id": "7dcb08cd-748d-47a2-b3d3-c6d089ec89b2",
+      "variable_name": "Previous response",
+      "description": "Last message sent by the AI Agent",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": false
+    },
+    "application_input": {
+      "id": "5b0b3658-d3e1-45d0-b5b0-9bc2e44604d5",
+      "variable_name": "Application Input",
+      "description": "Information provided by applications (Autopilot, Copilot, API)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    }
+  },
+  "application_output_settings": {
+    "type": "variable",
+    "value": "957c1ac3-17d4-4eae-a31f-e6a627f11069"
+  },
+  "custom_guardrail_settings": null,
+  "welcome_message_settings": null,
+  "language_lock_settings": null
+}

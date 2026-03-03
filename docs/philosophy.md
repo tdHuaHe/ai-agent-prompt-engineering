@@ -1,63 +1,56 @@
 # Why Engineering-Based Assembly
 
-## The Problem with Traditional Prompt Development
+## The Problem with Traditional Agent Development
 
-In traditional agent development, prompts are written from scratch for each use case. This leads to:
+In traditional agent development, prompts and tool workflows are written from scratch for each use case. This leads to:
 
-- **Duplicated effort**: Similar logic is rewritten across agents
-- **Inconsistent quality**: No shared best practices or standards
-- **Poor maintainability**: Changes to common logic require updating many places
-- **No reuse**: Knowledge accumulated in one agent cannot be transferred to another
+- **Duplicated effort**: Similar routing logic, safety rules, and workflow patterns are rewritten across agents
+- **Inconsistent quality**: No shared standards or battle-tested baselines
+- **Poor maintainability**: Changing common logic requires editing every agent that contains it
+- **Lost knowledge**: Patterns that work in production stay buried inside monolithic JSON exports
 
 ## The Engineering Approach
 
-The engineering-based assembly approach treats prompts and tools as reusable, versionable, and composable building blocks — similar to how software engineers treat libraries and components.
+This repo treats production-proven prompts and tool workflows as extractable, reusable building blocks — similar to how engineers treat shared libraries. Instead of authoring from scratch, you:
+
+1. Extract stable patterns from production system exports into named modules
+2. Compose agents from those modules
+3. Assemble systems from those agents
 
 ### Core Principles
 
-#### 1. Modular Reuse
-Every prompt snippet and tool workflow that solves a general problem should be encapsulated as a module. Modules are:
-- Independently testable
-- Parameterizable to adapt to different scenarios
-- Documented with clear usage instructions
-- Validated against quality standards
+#### 1. Extract Before Authoring
+The primary source of modules is production system JSON exports in `systems/`. Patterns are extracted when they prove themselves at scale, not designed speculatively. Every module has real provenance.
 
-#### 2. Composition over Authoring
-When building a new agent, the first step is to identify which existing modules cover the required capabilities. Only after exhausting reuse options should new logic be authored. This ensures:
-- Faster agent development
-- Higher baseline quality (reusing proven modules)
-- Reduced maintenance burden
+#### 2. Flat Files, Not Frameworks
+Modules are plain `.prompt.md` and `.workflow.yaml` files. No build steps, no rendering pipelines, no template engines. The format is readable and editable without tooling.
 
 #### 3. Layered Design
-The system is organized into distinct layers:
-- **Module Layer**: Atomic, reusable prompt and tool components
-- **Agent Layer**: Business-scenario-specific composition of modules
-- **System Layer**: Multi-agent orchestration for complete business systems
+The repo is organized into three layers:
+- **Module Layer** (`modules/`): Atomic, reusable prompt snippets and tool workflow definitions
+- **Agent Layer** (`agents/`): Instruction prompts and tool files assembled for a specific agent role
+- **System Layer** (`systems/`): Complete multi-agent platform exports (source of truth)
 
-Each layer builds on the layer below, and changes at one layer have clear, bounded impact.
+Extraction flows upward: system JSON → agent files → module files.
 
-#### 4. Engineering Management
-Quality is enforced through:
-- Parameterization schemas that validate module inputs
-- Automated evaluation frameworks at each layer
-- Tooling for rendering templates and validating configurations
-- Standardized directory structure and naming conventions
+#### 4. Guide Over Schema
+Rather than enforcing parameterization schemas, modules ship with a `.guide.md` that explains what to adapt when reusing. This keeps modules lightweight and avoids over-abstraction.
 
 ## Benefits
 
 | Aspect | Without Engineering | With Engineering |
-|--------|---------------------|-----------------|
-| Development speed | Slow (rewrite each time) | Fast (compose from modules) |
-| Consistency | Low | High (shared modules) |
-| Quality | Variable | Controlled (validated modules) |
-| Maintainability | Hard | Easy (single source of truth) |
-| Onboarding | Hard (no standards) | Easy (clear structure) |
+|--------|---------------------|------------------|
+| Development speed | Slow (rewrite each time) | Fast (adapt from modules) |
+| Consistency | Low | High (shared, proven modules) |
+| Knowledge retention | Lost in JSON exports | Surfaced as named modules |
+| Maintainability | Hard | Easy (single source per pattern) |
+| Onboarding | Hard (no standards) | Easy (clear structure + guides) |
 
-## When to Break the Rules
+## When Agent-Specific Logic Is Appropriate
 
-Modules should be general enough to avoid the need for overrides, but there are legitimate cases for agent-specific customization:
-- Business terminology that cannot be generalized
-- Compliance requirements specific to a single domain
-- Experimental capabilities not yet ready for module extraction
+Not everything belongs in a module. Keep logic in `agents/` when:
+- It is tightly coupled to a specific business domain or data schema
+- It has no plausible reuse across more than one agent
+- It captures a workflow that is not yet proven stable enough to generalize
 
-In these cases, customization should be applied as thin layers on top of composed modules, not by rewriting the modules themselves.
+In these cases, the agent file is the right home — not a forced abstraction into a module.
