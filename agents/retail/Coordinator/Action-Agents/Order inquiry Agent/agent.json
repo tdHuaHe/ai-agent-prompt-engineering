@@ -1,0 +1,912 @@
+{
+  "agent_id": "9ef6500e-052d-4a28-ac2f-4bbd089c57a5",
+  "agent_version": 1,
+  "role": "ACTION_AGENT",
+  "agent_name": "Order inquiry Agent",
+  "goal": "Order lookup specialist for AutoShack. Retrieves order information using customer-provided identifiers. And sends order tracking information via SMS when requested",
+  "instruction": "@instruction.md",
+  "routing_condition": "",
+  "tools": [
+    {
+      "tool_id": "4828c461-148b-4d5c-aeef-588639f63f32",
+      "tool_name": "getCustomerOrders",
+      "tool_description": "Retrieve customer orders using email, phone number, or order identifier",
+      "execute_params": {
+        "connection_id": "",
+        "action_id": "",
+        "nodes": [
+          {
+            "id": "8GR9ypuOlk86oT4LqA1tm",
+            "data": {
+              "name": "getCustomerOrders",
+              "variables": [
+                {
+                  "type": "string",
+                  "variable": "09b8b396-c5f7-4da6-90b3-fa67e9865a81"
+                },
+                {
+                  "type": "string",
+                  "variable": "ce64538a-b15e-4f71-857f-b7216faa0c5d"
+                },
+                {
+                  "type": "string",
+                  "variable": "a5301669-569f-4d82-a9fe-5e8a3b5e7145"
+                }
+              ],
+              "more_details": "Retrieve customer orders using email, phone number, or order identifier"
+            },
+            "type": "start-flow",
+            "position": {
+              "x": -497.57034744042073,
+              "y": -82.40213946896405
+            }
+          },
+          {
+            "id": "C30ONAHLx2uDuT6vBXukx",
+            "data": {
+              "name": "Retrieve customer orders",
+              "inputs": [
+                {
+                  "id": "697204e29c8195333ca48222-zJAFGJuexmOZvTVYkKJ4z",
+                  "name": "emailAddress",
+                  "type": "string",
+                  "title": "emailAddress",
+                  "required": false,
+                  "variable": "09b8b396-c5f7-4da6-90b3-fa67e9865a81",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "697204e29c8195333ca48222-cUuPF0GoDuEgvRshtfvZD",
+                  "name": "phoneNumber",
+                  "type": "string",
+                  "title": "phoneNumber",
+                  "required": false,
+                  "variable": "ce64538a-b15e-4f71-857f-b7216faa0c5d",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "697204e29c8195333ca48222-6uHIgO8GlewxFTQwvZWAw",
+                  "name": "orderNumber",
+                  "type": "string",
+                  "title": "orderNumber",
+                  "required": false,
+                  "variable": "a5301669-569f-4d82-a9fe-5e8a3b5e7145",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "697204e29c8195333ca48222-S9hSKxff-Z75-TY-kcFWl",
+                  "name": "salesChannel",
+                  "type": "string",
+                  "title": "salesChannel",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "697204e29c8195333ca48222-4nWz9XasAqIHRi_EFqFaz",
+                  "name": "noOfDays",
+                  "type": "number",
+                  "title": "noOfDays",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "697204e29c8195333ca48222-WP7ANErpG44u34MwHezi5",
+                  "name": "zipCode",
+                  "type": "string",
+                  "title": "zipCode",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "697204e29c8195333ca48222-qOhu2lZ8Zcnp6MjEZGQk9",
+                  "name": "message",
+                  "type": "string",
+                  "title": "message",
+                  "required": true,
+                  "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "697204e29c8195333ca48222-u9x0xiinsGLAbaKodokrh",
+                  "name": "count",
+                  "type": "integer",
+                  "title": "count",
+                  "required": true,
+                  "variable": "376f51c6-7b03-425c-97e6-206f7a6c0b63",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "697204e29c8195333ca48222-CZ26u9QwN_kYubm5nmvjC",
+                  "name": "orders",
+                  "type": "array",
+                  "title": "orders",
+                  "required": true,
+                  "variable": "341b86e6-af2f-4311-941d-a8e956661b52",
+                  "input_type": "variable"
+                }
+              ],
+              "action_id": "697204e29c8195333ca48222",
+              "connection_id": "6670981aace72c0a82ab5c2a"
+            },
+            "type": "execute-action",
+            "position": {
+              "x": 227.89702280390532,
+              "y": -231.02455577221636
+            }
+          },
+          {
+            "id": "OuvpQpL2JDSxHuW4YBRPf",
+            "data": {
+              "name": "successful End",
+              "variables": [
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+                  "first_variable": {
+                    "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                },
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "376f51c6-7b03-425c-97e6-206f7a6c0b63",
+                  "first_variable": {
+                    "variable": "376f51c6-7b03-425c-97e6-206f7a6c0b63"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                },
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "6279d707-9288-42da-a2a2-b1e7368d6d89",
+                  "first_variable": {
+                    "variable": "6279d707-9288-42da-a2a2-b1e7368d6d89"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                },
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+                  "first_variable": {
+                    "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                }
+              ]
+            },
+            "type": "end-flow",
+            "position": {
+              "x": 1290.528732452726,
+              "y": -217.7746001876536
+            }
+          },
+          {
+            "id": "SLfPDz0guidG5wTjWs_C-",
+            "data": {
+              "code": "Context.setVariable(\"workflow_status\", \"failure\")\nContext.setVariable(\"reason\", \"Error occured when executing Retrive orders\")",
+              "name": "actionError"
+            },
+            "type": "function",
+            "position": {
+              "x": 669.9136388012392,
+              "y": -73.98226185713241
+            }
+          },
+          {
+            "id": "tN3LF7vZPt_gczMMeGY2i",
+            "data": {
+              "name": "error End",
+              "variables": [
+                {
+                  "id": null,
+                  "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+                  "first_variable": {
+                    "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                },
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+                  "first_variable": {
+                    "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                }
+              ]
+            },
+            "type": "end-flow",
+            "position": {
+              "x": 1321.8797464359984,
+              "y": 239.09640319718386
+            }
+          },
+          {
+            "id": "Oh1hoJE9anETvqMFAYwNn",
+            "data": {
+              "code": "Context.setVariable(\"workflow_status\", \"failure\")\nContext.setVariable(\"reason\", \"Timeout occured when executing Retrive orders\")",
+              "name": "actionTimeout"
+            },
+            "type": "function",
+            "position": {
+              "x": 657.9022107921866,
+              "y": 101.47023335131883
+            }
+          },
+          {
+            "id": "rOpbRZsVRIQaze63yzUNx",
+            "data": {
+              "code": "function normalizeID(id) {\n    if (!id || typeof id !== 'string') {\n        Context.setVariable(\"workflow_status\", \"phone number is not valid\")\n        return '';\n    }\n    \n    // Remove all non-digit characters: spaces, hyphens, parentheses, dots, etc.\n    // Examples: \"(123) 456-7890\" → \"1234567890\", \"ORD-12345\" → \"12345\"\n    return id.replace(/\\D/g, '');\n}\n\nconst customerPhoneNumber = Context.getVariable(\"customerPhoneNumber\")\nconst customerOrderNumber = Context.getVariable(\"customerOrderNumber\")\nconst normalizedPhoneNumber = normalizeID(customerPhoneNumber)\nconst normalizedOrderNumber = normalizeID(customerOrderNumber)\nContext.setVariable(\"customerPhoneNumber\", normalizedPhoneNumber)\nContext.setVariable(\"customerOrderNumber\",normalizedOrderNumber)",
+              "name": "Normalize phone/order number"
+            },
+            "type": "function",
+            "position": {
+              "x": -153.20082733384535,
+              "y": -135.23078064127645
+            }
+          },
+          {
+            "id": "2PC0224QucEcEQJZwp2d3",
+            "data": {
+              "name": "Whether Order exists",
+              "variable": {
+                "value": "376f51c6-7b03-425c-97e6-206f7a6c0b63"
+              },
+              "conditions": [
+                {
+                  "id": "3WAJ9K14kC8CHGMWlYcUk",
+                  "type": "eq",
+                  "value": 0,
+                  "value_type": "number"
+                }
+              ]
+            },
+            "type": "split-flow",
+            "position": {
+              "x": 600.6718051527918,
+              "y": -292.4681009597231
+            }
+          },
+          {
+            "id": "eYeHnyKEsmVs5GTeOTEES",
+            "data": {
+              "code": "const ordersList = [\n  {\n    \"orderId\": 7538515,\n    \"salesChannel\": \"Canada : Webstore\",\n    \"dateOrdered\": \"2026-01-19T21:41:54+00:00\",\n    \"packageCount\": 2,\n    \"trackingInfo\": [\n      {\n        \"shipperName\": \"GLS Canada Parcel\",\n        \"trackingNumber\": \"P2579583601\"\n      },\n      {\n        \"shipperName\": \"GLS Canada Parcel\",\n        \"trackingNumber\": \"P2579583602\"\n      }\n    ]\n  },\n  {\n    \"orderId\": 7531225,\n    \"salesChannel\": \"Canada : Customer Service Representative\",\n    \"dateOrdered\": \"2026-01-14T09:21:19+00:00\",\n    \"packageCount\": 3,\n    \"trackingInfo\": [\n      {\n        \"shipperName\": \"UPS Canada Ground\",\n        \"trackingNumber\": \"1Z0A89R22099781157\"\n      },\n      {\n        \"shipperName\": \"UPS Canada Ground\",\n        \"trackingNumber\": \"1Z0A89R22099699569\"\n      },\n      {\n        \"shipperName\": \"UPS Canada Ground\",\n        \"trackingNumber\": \"1Z0A89R22096291576\"\n      }\n    ]\n  }\n]\nContext.setVariable('workflow_status', '');\nContext.setVariable('reason', '');\nContext.setVariable('parsedOrdersInfo', ordersList);\nContext.setVariable('orderCount', 2);",
+              "name": "Mock multi orders"
+            },
+            "type": "function",
+            "position": {
+              "x": 933.5860416750363,
+              "y": -549.5865382900768
+            }
+          },
+          {
+            "id": "-W_DaOnN8IV3as6WfLnIE",
+            "data": {
+              "code": "// Parse order API response and extract key information for Agent use\nfunction parseOrdersData(ordersList) {\n\n  // Build order summaries (sorted by order date descending, newest first)\n  const orderSummaries = ordersList\n    .map((order) => {\n      const packages = order.shipments?.packages || [];\n      const packageCount = packages.length;\n      \n      // Extract tracking info (keep only shipperName and trackingNumber)\n      const trackingInfo = packages.map(pkg => ({\n        shipperName: pkg.shipperName,\n        trackingNumber: pkg.trackingNumber\n      }));\n\n      return {\n        orderId: order.salesOrderId,\n        salesChannel: order.salesChannel,\n        dateOrdered: order.dateOrdered,\n        packageCount,\n        trackingInfo\n      };\n    })\n    .sort((a, b) => new Date(b.dateOrdered).getTime() - new Date(a.dateOrdered).getTime()); // Sort by time descending\n\n  return orderSummaries;\n}\n\nconst ordersList = Context.getVariable('ordersList');\nconst parsedData = parseOrdersData(ordersList);\n\nContext.setVariable('workflow_status', \"success\");\nContext.setVariable('parsedOrdersInfo', parsedData);",
+              "name": "parse order list"
+            },
+            "type": "function",
+            "position": {
+              "x": 950.6102148546008,
+              "y": -272.07208261447647
+            }
+          },
+          {
+            "id": "Cgaby5g5AbMuF_27Y7I0Z",
+            "data": {
+              "code": "Context.setVariable(\"workflow_status\", \"failure\")\nContext.setVariable(\"reason\", \"Error occured when executing normalize phone number function\")",
+              "name": "funcError"
+            },
+            "type": "function",
+            "position": {
+              "x": 268.6546994977889,
+              "y": 290.4887225306211
+            }
+          }
+        ],
+        "edges": [
+          {
+            "id": "itXEeoP31H0KSnfZBWDTT",
+            "type": "worflowEdge",
+            "source": "C30ONAHLx2uDuT6vBXukx",
+            "target": "SLfPDz0guidG5wTjWs_C-",
+            "source_handle": "error",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "iKlZx8OFKRK9pSL3FDBtA",
+            "type": "worflowEdge",
+            "source": "C30ONAHLx2uDuT6vBXukx",
+            "target": "Oh1hoJE9anETvqMFAYwNn",
+            "source_handle": "timeout",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "ku_-WFmB9UGRbIRQ8Un9L",
+            "type": "worflowEdge",
+            "source": "SLfPDz0guidG5wTjWs_C-",
+            "target": "tN3LF7vZPt_gczMMeGY2i",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "2fif1keALewmbYcVWIblj",
+            "type": "worflowEdge",
+            "source": "SLfPDz0guidG5wTjWs_C-",
+            "target": "tN3LF7vZPt_gczMMeGY2i",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "HUaRed294AII9yDzyygbB",
+            "type": "worflowEdge",
+            "source": "Oh1hoJE9anETvqMFAYwNn",
+            "target": "tN3LF7vZPt_gczMMeGY2i",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "xzoPYt2fWPotTidXPIKHm",
+            "type": "worflowEdge",
+            "source": "Oh1hoJE9anETvqMFAYwNn",
+            "target": "tN3LF7vZPt_gczMMeGY2i",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "Xate4kseJ8bxJGNpj78EE",
+            "type": "worflowEdge",
+            "source": "8GR9ypuOlk86oT4LqA1tm",
+            "target": "rOpbRZsVRIQaze63yzUNx",
+            "source_handle": "start-flow-node-rigth-handle-1",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "-D8mLajv0bpHSA7JueFMW",
+            "type": "worflowEdge",
+            "source": "rOpbRZsVRIQaze63yzUNx",
+            "target": "C30ONAHLx2uDuT6vBXukx",
+            "source_handle": "success",
+            "target_handle": "execute-action-node-rigth-handle-1"
+          },
+          {
+            "id": "3sPhCQmqWDJ50zPPNFIDc",
+            "type": "worflowEdge",
+            "source": "C30ONAHLx2uDuT6vBXukx",
+            "target": "2PC0224QucEcEQJZwp2d3",
+            "source_handle": "success",
+            "target_handle": "split-flow-left-handle-1"
+          },
+          {
+            "id": "fNI7bUf9-vxpJPIeCV7yK",
+            "type": "worflowEdge",
+            "source": "eYeHnyKEsmVs5GTeOTEES",
+            "target": "OuvpQpL2JDSxHuW4YBRPf",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "UwlJPjctp2HQmIVNZB8ot",
+            "type": "worflowEdge",
+            "source": "eYeHnyKEsmVs5GTeOTEES",
+            "target": "tN3LF7vZPt_gczMMeGY2i",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "d-vlWXG4A24q-AeRhpFc9",
+            "type": "worflowEdge",
+            "source": "-W_DaOnN8IV3as6WfLnIE",
+            "target": "OuvpQpL2JDSxHuW4YBRPf",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "COWrnHUDJfir9dhTpgkyt",
+            "type": "worflowEdge",
+            "source": "-W_DaOnN8IV3as6WfLnIE",
+            "target": "tN3LF7vZPt_gczMMeGY2i",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "5LC-wYvX0gOXHef3kfzhQ",
+            "type": "worflowEdge",
+            "source": "2PC0224QucEcEQJZwp2d3",
+            "target": "eYeHnyKEsmVs5GTeOTEES",
+            "source_handle": "3WAJ9K14kC8CHGMWlYcUk",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "QWlfKvEWgHADQs9HKbGt4",
+            "type": "worflowEdge",
+            "source": "2PC0224QucEcEQJZwp2d3",
+            "target": "-W_DaOnN8IV3as6WfLnIE",
+            "source_handle": "split-flow-exit-fallback",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "jCCMjQkWVusVyMGeIUuoW",
+            "type": "worflowEdge",
+            "source": "rOpbRZsVRIQaze63yzUNx",
+            "target": "Cgaby5g5AbMuF_27Y7I0Z",
+            "source_handle": "error",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "6rCSzH2zq50e1Wl9A0gh1",
+            "type": "worflowEdge",
+            "source": "Cgaby5g5AbMuF_27Y7I0Z",
+            "target": "tN3LF7vZPt_gczMMeGY2i",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "FL5rXlO53z6NlKoo5BhDL",
+            "type": "worflowEdge",
+            "source": "Cgaby5g5AbMuF_27Y7I0Z",
+            "target": "tN3LF7vZPt_gczMMeGY2i",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          }
+        ],
+        "variables": [],
+        "mcp_server_id": "",
+        "mcp_server_url": "",
+        "mcp_tool_name": ""
+      },
+      "is_internal_tool": false,
+      "input_params": {
+        "customer_phone_number": {
+          "name": "customerPhoneNumber",
+          "description": "customer's phone number for order inquiry.\nPhone number can be digit and '-', area code is not necessary.",
+          "title": "customer's phone number for order inquiry.\nPhone number can be digit and '-', area code is not necessary.",
+          "required": true,
+          "type": "string",
+          "variable_name": "customerPhoneNumber",
+          "value": null
+        },
+        "customer_order_number": {
+          "name": "customerOrderNumber",
+          "description": "Customer's order number, including internal (Autoshack) and external channels order ID",
+          "title": "Customer's order number, including internal (Autoshack) and external channels order ID",
+          "required": true,
+          "type": "string",
+          "variable_name": "customerOrderNumber",
+          "value": null
+        },
+        "customer_email_address": {
+          "name": "customerEmailAddress",
+          "description": "Customer email address for order inquiry.",
+          "title": "Customer email address for order inquiry.",
+          "required": true,
+          "type": "string",
+          "variable_name": "customerEmailAddress",
+          "value": null
+        }
+      },
+      "output_params": {
+        "workflow_status": {
+          "name": "workflow_status",
+          "description": "To track the execution status in workflow.",
+          "title": "To track the execution status in workflow.",
+          "required": true,
+          "type": "string",
+          "variable_name": "workflow_status",
+          "value": null
+        },
+        "reason": {
+          "name": "reason",
+          "description": "To tracking the failed reason in workflow",
+          "title": "To tracking the failed reason in workflow",
+          "required": true,
+          "type": "string",
+          "variable_name": "reason",
+          "value": null
+        },
+        "order_count": {
+          "name": "orderCount",
+          "description": "Total number of orders",
+          "title": "Total number of orders",
+          "required": true,
+          "type": "string",
+          "variable_name": "orderCount",
+          "value": null
+        },
+        "parsed_orders_info": {
+          "name": "parsedOrdersInfo",
+          "description": "The parsed customer order information used to reply to the customer mainly includes salesChannel, dateOrdered, and trackingInfo (shipperName, trackingNumber).",
+          "title": "The parsed customer order information used to reply to the customer mainly includes salesChannel, dateOrdered, and trackingInfo (shipperName, trackingNumber).",
+          "required": true,
+          "type": "string",
+          "variable_name": "parsedOrdersInfo",
+          "value": null
+        }
+      },
+      "tool_version": 1,
+      "tool_type": "WORKFLOW"
+    },
+    {
+      "tool_id": "d5913242-69ed-48ba-9983-52f87c8932e5",
+      "tool_name": "sendTrackingSMS",
+      "tool_description": "Send shipping status inquiry URL link to the user. It should be called after user provides the phone number to receive the text message.",
+      "execute_params": {
+        "connection_id": "",
+        "action_id": "",
+        "nodes": [
+          {
+            "id": "s44_Yk3s1tYQ2eB4iVw6b",
+            "data": {
+              "name": "sendTrackingSMS",
+              "variables": [
+                {
+                  "type": "string",
+                  "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44"
+                }
+              ],
+              "more_details": "Send shipping status inquiry URL link to the user. It should be called after user provides the phone number to receive the text message."
+            },
+            "type": "start-flow",
+            "position": {
+              "x": -428.1994247280879,
+              "y": 105.34110337958602
+            }
+          },
+          {
+            "id": "q9lCJ02TZ0x4UNKQgbOml",
+            "data": {
+              "code": "function validateAndFormatNANP(phone) {\n    // Step 1: Check for null/undefined/empty\n    if (!phone && phone !== 0) {\n      Context.setVariable(\"workflow_status\", \"failure\");\n      Context.setVariable(\"reason\", \"No phone number provided\");\n      return false;\n    }\n\n    // Step 2: Convert to string and clean up\n    let s = String(phone).trim();\n\n    // Step 3: Remove extension markers (ext, x, #, etc.)\n    // e.g. \"123-456-7890 ext 12\" -> \"123-456-7890\"\n    s = s.replace(/\\s*(?:ext|x|#|ext\\.)\\s*\\d+$/i, \"\");\n\n    // Step 4: Extract only digits\n    const digits = s.replace(/\\D+/g, \"\");\n\n    // Step 5: Validate and format (US/Canada both use +1 country code)\n    if (digits.length === 11 && digits.startsWith(\"1\")) {\n      // Country code format: +1xxxxxxxxxx (11 digits, starts with 1)\n      Context.setVariable(\"workflow_status\", \"success\");\n      return `+${digits}`;\n    } else if (digits.length === 10) {\n      // National format: xxxxxxxxxx (10 digits, no country code)\n      Context.setVariable(\"workflow_status\", \"success\");\n      return `+1${digits}`;\n    } else {\n      // Invalid format\n      Context.setVariable(\"workflow_status\", \"failure\");\n      \n      // Distinguish between likely international and format error\n      if (digits.length > 11 || (digits.length > 10 && !digits.startsWith(\"1\"))) {\n        Context.setVariable(\"reason\", \"International phone number not supported\");\n      } else {\n        Context.setVariable(\"reason\", \"Phone number does not match US/Canada formats\");\n      }\n      \n      return false;\n    }\n}\n\nContext.setVariable(\"workflow_status\", \"\")\nconst phone_number = Context.getVariable(\"smsPhoneNumber\")\nconst validateResult = validateAndFormatNANP(phone_number)\n\nif (!validateResult) {\n    Context.setVariable(\"phone_number_acceptable\", \"No\")\n} else {\n    Context.setVariable(\"phone_number_acceptable\", \"Yes\")\n    Context.setVariable(\"smsPhoneNumber\", validateResult)\n}",
+              "name": "Validate phone number"
+            },
+            "type": "function",
+            "position": {
+              "x": -93.67467640954942,
+              "y": 66.59935281909884
+            }
+          },
+          {
+            "id": "IRc9JGGSMyykOJCrg6nTA",
+            "data": {
+              "name": "Phone number acceptable",
+              "variable": {
+                "value": "oFlSsq4s1WTqHDyfodzHV"
+              },
+              "conditions": [
+                {
+                  "id": "jjHBr-sNxuanMP-XlSLXU",
+                  "type": "eq",
+                  "value": "Yes",
+                  "value_type": "string"
+                }
+              ]
+            },
+            "type": "split-flow",
+            "position": {
+              "x": 286.5,
+              "y": -133.75
+            }
+          },
+          {
+            "id": "PQt3ROrbGD2xr8xCMGvXQ",
+            "data": {
+              "code": "Context.setVariable(\"workflow_status\",\"failure\")\nContext.setVariable(\"reason\", \"Error occured when executing phone number validation function\")",
+              "name": "phone number validation function error"
+            },
+            "type": "function",
+            "position": {
+              "x": 285.683662269348,
+              "y": 315.6937530012291
+            }
+          },
+          {
+            "id": "wvOYZvkWOyN88PK8iHCoM",
+            "data": {
+              "name": "error End",
+              "variables": [
+                {
+                  "id": null,
+                  "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+                  "first_variable": {
+                    "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                },
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+                  "first_variable": {
+                    "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                },
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44",
+                  "first_variable": {
+                    "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                }
+              ]
+            },
+            "type": "end-flow",
+            "position": {
+              "x": 1515.6649502365897,
+              "y": 508.8678557517047
+            }
+          },
+          {
+            "id": "xLWOIX1KcqN1tMoQ8dsf8",
+            "data": {
+              "name": "successful End",
+              "variables": [
+                {
+                  "id": null,
+                  "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+                  "first_variable": {
+                    "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                },
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44",
+                  "first_variable": {
+                    "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                },
+                {
+                  "id": null,
+                  "type": "",
+                  "variable": "8c6e6942-ddca-46d9-a49f-28d5e5717e7a",
+                  "first_variable": {
+                    "variable": "8c6e6942-ddca-46d9-a49f-28d5e5717e7a"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                }
+              ]
+            },
+            "type": "end-flow",
+            "position": {
+              "x": 1584.3646023810923,
+              "y": -358.4638562389927
+            }
+          },
+          {
+            "id": "XcH732g7011vci6ewGceA",
+            "data": {
+              "code": "/**\n * Build tracking URL based on shipper name and tracking numbers\n * @param {string} shipperName - Name of the shipping carrier\n * @param {string[]} trackingNumbers - Array of tracking numbers\n * @returns {string|false} - Constructed tracking URL or false if unsupported\n */\nfunction buildTrackingURL(shipperName, trackingNumbers) {\n\n  // Normalize shipper name (lowercase, trim whitespace)\n  const normalized = shipperName.trim().toLowerCase();\n  \n  // Keyword-based matching - identifies shipper type regardless of full name variation\n  if (normalized.includes('ups')) {\n    const params = trackingNumbers.map((n, i) => `InquiryNumber${i + 1}=${n}`).join('&');\n    return `https://www.ups.com/track?TypeOfInquiryNumber=T&${params}`;\n  }\n  \n  if (normalized.includes('fedex')) {\n    return `https://www.fedex.com/fedextrack/summary?trknbr=${trackingNumbers.join(',')}`;\n  }\n  \n  if (normalized.includes('canpar')) {\n    return `https://www.canpar.com/en/tracking/track.htm?barcode=${trackingNumbers.join(',')}`;\n  }\n  \n  if (normalized.includes('gls')) {\n    return `https://www.gls-canada.com/track?tracking=${trackingNumbers.join(',')}`;\n  }\n  \n  // Unsupported shipper\n  return false;\n}\n\n\n// Main execution\nContext.setVariable(\"workflow_status\", \"\")\n\nconst parsedOrdersInfo = Context.getVariable(\"parsedOrdersInfo\");\n\nif (!parsedOrdersInfo || parsedOrdersInfo.length === 0) {\n  Context.setVariable(\"workflow_status\", \"failure\");\n  Context.setVariable(\"reason\", \"No order information found\");\n} else {\n  // Get the first order\n  const order = parsedOrdersInfo[0];\n  const trackingInfo = order.trackingInfo;\n  \n  if (!trackingInfo || trackingInfo.length === 0) {\n    Context.setVariable(\"workflow_status\", \"failure\");\n    Context.setVariable(\"reason\", \"No tracking information found for the order\");\n  } else {\n    // Extract shipper name from first element (all elements have same shipper for one order)\n    const shipperName = trackingInfo[0].shipperName;\n    \n    // Extract all tracking numbers into array\n    const trackingNumbers = trackingInfo.map(info => info.trackingNumber);\n    \n    // Build tracking URL\n    const trackingURL = buildTrackingURL(shipperName, trackingNumbers);\n    \n    if (!trackingURL) {\n      Context.setVariable(\"workflow_status\", \"failure\");\n      Context.setVariable(\"reason\", `Unsupported shipper: ${shipperName}`);\n    } else {\n      // Generate SMS message\n      const smsMessage = `AutoShack: Thanks for contacting AutoShack customer support.\nYou can check the shipping status of your order using the link below:\n${trackingURL}\nIf you have any other questions, feel free to contact us again.`;\n      \n      // Store results in Context\n      Context.setVariable(\"workflow_status\", \"success\");\n      Context.setVariable(\"shipperName\", shipperName);\n      Context.setVariable(\"trackingNumbers\", trackingNumbers);\n      Context.setVariable(\"trackingURL\", trackingURL);\n      Context.setVariable(\"smsMessage\", smsMessage);\n    }\n  }\n}",
+              "name": "generate SMS Message"
+            },
+            "type": "function",
+            "position": {
+              "x": 654.909188218592,
+              "y": -273.4515029224961
+            }
+          },
+          {
+            "id": "HB-DbO22Uar8i91LwfUdH",
+            "data": {
+              "code": "Context.setVariable(\"workflow_status\", \"failure\")\nContext.setVariable(\"reason\", \"error occured when executing SMS generate function\")",
+              "name": "generate sms function error"
+            },
+            "type": "function",
+            "position": {
+              "x": 1029.2740575853652,
+              "y": -97.2286538324017
+            }
+          }
+        ],
+        "edges": [
+          {
+            "id": "pX3Nv3b-pgsElPLDnvTpz",
+            "type": "worflowEdge",
+            "source": "s44_Yk3s1tYQ2eB4iVw6b",
+            "target": "q9lCJ02TZ0x4UNKQgbOml",
+            "source_handle": "start-flow-node-rigth-handle-1",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "nqpcA-PLWL_MpJ9IGh23b",
+            "type": "worflowEdge",
+            "source": "q9lCJ02TZ0x4UNKQgbOml",
+            "target": "IRc9JGGSMyykOJCrg6nTA",
+            "source_handle": "success",
+            "target_handle": "split-flow-left-handle-1"
+          },
+          {
+            "id": "Lwd9VPxi51LFq7AUnPmg1",
+            "type": "worflowEdge",
+            "source": "q9lCJ02TZ0x4UNKQgbOml",
+            "target": "PQt3ROrbGD2xr8xCMGvXQ",
+            "source_handle": "error",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "B29fH_Gekw355QPx-qDhW",
+            "type": "worflowEdge",
+            "source": "PQt3ROrbGD2xr8xCMGvXQ",
+            "target": "wvOYZvkWOyN88PK8iHCoM",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "x4zQk2oR3SfZvdlpD1qaO",
+            "type": "worflowEdge",
+            "source": "PQt3ROrbGD2xr8xCMGvXQ",
+            "target": "wvOYZvkWOyN88PK8iHCoM",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "tgahkNJ_xztUrlyIQiDMn",
+            "type": "worflowEdge",
+            "source": "IRc9JGGSMyykOJCrg6nTA",
+            "target": "XcH732g7011vci6ewGceA",
+            "source_handle": "jjHBr-sNxuanMP-XlSLXU",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "bEQQE9SWPgoOq_a9ee6nH",
+            "type": "worflowEdge",
+            "source": "XcH732g7011vci6ewGceA",
+            "target": "xLWOIX1KcqN1tMoQ8dsf8",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "9GOtwEPXSQVd7K9EWa8R_",
+            "type": "worflowEdge",
+            "source": "XcH732g7011vci6ewGceA",
+            "target": "HB-DbO22Uar8i91LwfUdH",
+            "source_handle": "error",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "o1QIe2UmSDk6q3B-WM5KI",
+            "type": "worflowEdge",
+            "source": "HB-DbO22Uar8i91LwfUdH",
+            "target": "wvOYZvkWOyN88PK8iHCoM",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "LFnvlL9OxWeD-fkqRJQYz",
+            "type": "worflowEdge",
+            "source": "HB-DbO22Uar8i91LwfUdH",
+            "target": "wvOYZvkWOyN88PK8iHCoM",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "e6HBJakHVUMQMhcBze1UI",
+            "type": "worflowEdge",
+            "source": "IRc9JGGSMyykOJCrg6nTA",
+            "target": "wvOYZvkWOyN88PK8iHCoM",
+            "source_handle": "split-flow-exit-fallback",
+            "target_handle": "end-flow-left-handle-1"
+          }
+        ],
+        "variables": [
+          {
+            "id": "oFlSsq4s1WTqHDyfodzHV",
+            "type": "Workflow",
+            "variable_name": "phone_number_acceptable",
+            "tool_reference": [
+              {
+                "tool_id": "XSKIQQsdUCgEeOd_Dtv7f",
+                "agent_id": "083c78a2-56ad-4acb-a7f8-663fedd61fd0"
+              },
+              {
+                "tool_id": "CauLvD3ho3pLFKVFd0cbv",
+                "agent_id": "083c78a2-56ad-4acb-a7f8-663fedd61fd0"
+              },
+              {
+                "tool_id": "d5913242-69ed-48ba-9983-52f87c8932e5",
+                "agent_id": "f91a78ff-2857-4527-9e7e-5252f51d17ad"
+              }
+            ]
+          },
+          {
+            "id": "kAsxfMeZefYHWNnYANkNs",
+            "type": "Workflow",
+            "variable_name": "debug_input_raw",
+            "tool_reference": []
+          }
+        ],
+        "mcp_server_id": "",
+        "mcp_server_url": "",
+        "mcp_tool_name": ""
+      },
+      "is_internal_tool": false,
+      "input_params": {
+        "sms_phone_number": {
+          "name": "smsPhoneNumber",
+          "description": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+          "title": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+          "required": true,
+          "type": "string",
+          "variable_name": "smsPhoneNumber",
+          "value": null
+        }
+      },
+      "output_params": {
+        "workflow_status": {
+          "name": "workflow_status",
+          "description": "To track the execution status in workflow.",
+          "title": "To track the execution status in workflow.",
+          "required": true,
+          "type": "string",
+          "variable_name": "workflow_status",
+          "value": null
+        },
+        "reason": {
+          "name": "reason",
+          "description": "To tracking the failed reason in workflow",
+          "title": "To tracking the failed reason in workflow",
+          "required": true,
+          "type": "string",
+          "variable_name": "reason",
+          "value": null
+        },
+        "sms_phone_number": {
+          "name": "smsPhoneNumber",
+          "description": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+          "title": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+          "required": true,
+          "type": "string",
+          "variable_name": "smsPhoneNumber",
+          "value": null
+        },
+        "sms_message": {
+          "name": "smsMessage",
+          "description": "SMS message is used to send the customer.",
+          "title": "SMS message is used to send the customer.",
+          "required": true,
+          "type": "string",
+          "variable_name": "smsMessage",
+          "value": null
+        }
+      },
+      "tool_version": 1,
+      "tool_type": "WORKFLOW"
+    }
+  ]
+}

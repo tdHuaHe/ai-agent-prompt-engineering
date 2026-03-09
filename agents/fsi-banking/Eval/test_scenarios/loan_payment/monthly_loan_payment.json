@@ -1,0 +1,35 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their monthly loan payment information.",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_active_loan_account_list",
+      "description": "Agent showed the customer's all active loan account numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_monthly_loan_payment",
+      "description": "Agent showed the monthly loan payment information successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_last_payment",
+      "description": "Agent showed the last payment information about this loan account successfully.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_account_number": "1066"
+  },
+  "user_simulation_policy": [
+    "After checking the monthly loan payment information, then requests the last payment information about this loan account."
+  ],
+  "target_turns": 15
+}

@@ -2,15 +2,18 @@
 
 ## What Is a System?
 
-A system is a complete multi-agent platform configuration that handles an end-to-end business process. In this repo, systems are stored as JSON exports from the AI Agent Platform under `systems/industries/<industry>/`.
+A system is a complete multi-agent platform configuration that handles an end-to-end business process. In this repo, systems are stored as JSON exports from the AI Agent Platform under `systems/<industry>/`.
 
 The system JSON is the **source of truth** — it defines every agent, every tool workflow, and the orchestration logic. Agent and module files in this repo are extracted from it.
 
 ## System Directory Structure
 
 ```
-systems/industries/<industry>/
-└── <system-name>.json     # Full platform export (source of truth)
+systems/<industry>/
+├── exports/
+│   └── <system-name>.json     # Full platform export (source of truth)
+└── builds/
+    └── <rebuilt>.json         # CI build output (not checked in)
 ```
 
 There are no additional YAML, Markdown, or param files at the system level. Everything lives in the JSON.
@@ -50,7 +53,7 @@ Key fields:
 ## Extraction Workflow
 
 ### Step 1: Add the system JSON
-Place the exported JSON under `systems/industries/<industry>/`. Use the platform's export or copy/paste from the canvas.
+Place the exported JSON under `systems/<industry>/exports/`. Use the platform's export or copy/paste from the canvas.
 
 ### Step 2: Extract agents
 For each agent in the system, create an `agents/<agent-name>/` directory. See [agent-guide.md](./agent-guide.md) for the extraction process.
@@ -79,5 +82,5 @@ Orchestration logic (routing conditions, escalation triggers) lives in the Super
 
 | System | Industry | File |
 |--------|----------|------|
-| Trinity Voice Automation | FSI Banking | `systems/industries/fsi-banking/wafd-sb-AI-Agent-platform-SB - Trinity Voice Automation.json` |
+| Trinity Voice Automation | FSI Banking | `systems/fsi-banking/exports/wafd-sb-AI-Agent-platform-SB - Trinity Voice Automation.json` |
 

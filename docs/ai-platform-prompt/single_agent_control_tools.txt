@@ -1,0 +1,78 @@
+[
+    {
+        "type": "function",
+        "function": {
+            "name": "reply_to_user",
+            "description": "Reply to the end user when you either need extra information, or have completed the task, or cannot handle the task.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "The message to the end user"
+                    }
+                },
+                "required": ["message"],
+                "additionalProperties": false
+            },
+            "strict": true
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "transfer_to_human",
+            "description": "Transfer to a human agent when you are instructed to do so.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "A message that indicates you are transferring to a human agent"
+                    }
+                },
+                "required": ["message"],
+                "additionalProperties": false
+            },
+            "strict": true
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "end_conversation",
+            "description": "Mark the end of the conversation. After the end user confirms that the user doesn't need additional help, you should use this tool.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "A message that politely appreciate the user and say goodbye"
+                    }
+                },
+                "required": ["message"],
+                "additionalProperties": false
+            },
+            "strict": true
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "block",
+            "description": "Block inappropriate requests",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "A message saying that you cannot answer this question according to your policy"
+                    }
+                },
+                "required": ["message"],
+                "additionalProperties": false
+            },
+            "strict": true
+        }
+    }
+]

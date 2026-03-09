@@ -1,0 +1,38 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to deactivate their active card",
+  "test_type":"sad_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_active_card_list",
+      "description": "Show the customer's all active card numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "ask_for_reason",
+      "description": "Ask the customer for the reason for deactivating the card",
+      "required": true
+    },  
+    {
+      "id": "deactivate_failed",
+      "description": "Inform the customer that the card has failed to deactivate.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_card_number": {
+      "value": ["8762", "the 2nd one"],
+      "description": "randomly select a card number option from the customer's card list"
+    },
+    "selected_reason": {
+      "value": "stolen"
+    }
+  },
+  "target_turns": 10
+}

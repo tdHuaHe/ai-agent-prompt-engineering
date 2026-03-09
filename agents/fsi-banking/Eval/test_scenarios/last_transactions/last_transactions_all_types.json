@@ -1,0 +1,33 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their account last transactions",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_account_list",
+      "description": "Show the customer's all account numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_transaction_types",
+      "description": "Show the customer all the transaction types options.",
+      "required": true
+    },  
+    {
+      "id": "show_last_transactions",
+      "description": "Show the customer the last 5 transactions",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_account_number": "1001",
+    "transaction_type": "all types"
+  },
+  "target_turns": 12
+}

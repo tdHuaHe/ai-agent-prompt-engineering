@@ -1,0 +1,130 @@
+{
+  "agent_id": "10b59878-1e8e-4d47-9734-dbff54a0dd70",
+  "agent_version": 1,
+  "role": "ACTION_AGENT",
+  "agent_name": "Transfer Support Agent",
+  "goal": "Agent's responsibility is to receive escalation context from the Coordinator, to support escalation to a human agent.",
+  "instruction": "@instruction.md",
+  "routing_condition": "",
+  "tools": [
+    {
+      "tool_id": "84ccc397-219a-4519-8038-c8a000cb6eb7",
+      "tool_name": "gatherInformation",
+      "tool_description": "This tool is used to collect the information needed before transferring the user to a live agent.",
+      "execute_params": {
+        "connection_id": "",
+        "action_id": "",
+        "nodes": [
+          {
+            "id": "TnNv94cRRZuZADwHWh1hx",
+            "data": {
+              "name": "gatherInformation",
+              "variables": [
+                {
+                  "type": "string",
+                  "variable": "e0232b90-c4b7-4557-ae0a-4ac08c6f414a"
+                }
+              ],
+              "more_details": "This tool is used to collect the information needed before transferring the user to a live agent."
+            },
+            "type": "start-flow",
+            "position": {
+              "x": -408,
+              "y": -42
+            }
+          },
+          {
+            "id": "sA6pj7TpzkCebb0C4sEmF",
+            "data": {
+              "code": "const conversationSummary = Context.getVariable(\"conversationSummary\");\nconst customerPhoneNumber = Context.getVariable(\"customerPhoneNumber\");\nconst customerEmailAddress = Context.getVariable(\"customerEmailAddress\");\nconst customerOrderNumber = Context.getVariable(\"customerOrderNumber\");\n\nconst escalation_data = `Customer Information:\n${customerPhoneNumber || 'N/A'}\n${customerEmailAddress || 'N/A'}\n${customerOrderNumber || 'N/A'}\n\nConversation Summary:\n${conversationSummary || 'N/A'}`;\n\nContext.setVariable(\"escalation_data\", escalation_data);",
+              "name": "gatherInformation"
+            },
+            "type": "function",
+            "position": {
+              "x": -63,
+              "y": -61.9375
+            }
+          },
+          {
+            "id": "MPqbpCNFkKWOx6ILIV75M",
+            "data": {
+              "name": "End Flow",
+              "variables": [
+                {
+                  "id": null,
+                  "variable": "7bb0e187-6f15-40c5-94ee-920e6c914948",
+                  "first_variable": {
+                    "variable": "7bb0e187-6f15-40c5-94ee-920e6c914948"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                }
+              ]
+            },
+            "type": "end-flow",
+            "position": {
+              "x": 258,
+              "y": -43.9375
+            }
+          }
+        ],
+        "edges": [
+          {
+            "id": "acy10T4A1dRvxFv0mZ4N3",
+            "type": "worflowEdge",
+            "source": "TnNv94cRRZuZADwHWh1hx",
+            "target": "sA6pj7TpzkCebb0C4sEmF",
+            "source_handle": "start-flow-node-rigth-handle-1",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "hz7yK__9guUOhZRZZ9CNn",
+            "type": "worflowEdge",
+            "source": "sA6pj7TpzkCebb0C4sEmF",
+            "target": "MPqbpCNFkKWOx6ILIV75M",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "rE9KgN0m8YwLxElA2erp-",
+            "type": "worflowEdge",
+            "source": "sA6pj7TpzkCebb0C4sEmF",
+            "target": "MPqbpCNFkKWOx6ILIV75M",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          }
+        ],
+        "variables": [],
+        "mcp_server_id": "",
+        "mcp_server_url": "",
+        "mcp_tool_name": ""
+      },
+      "is_internal_tool": false,
+      "input_params": {
+        "conversation_summary": {
+          "name": "conversationSummary",
+          "description": "Conversation Summary of the ENTIRE conversation from start to current point, not just recent exchanges",
+          "title": "Conversation Summary of the ENTIRE conversation from start to current point, not just recent exchanges",
+          "required": true,
+          "type": "string",
+          "variable_name": "conversationSummary",
+          "value": null
+        }
+      },
+      "output_params": {
+        "escalation_data": {
+          "name": "escalation_data",
+          "description": "the gathered information (conversation summary, customer info, etc.) used to escalate to external",
+          "title": "the gathered information (conversation summary, customer info, etc.) used to escalate to external",
+          "required": true,
+          "type": "string",
+          "variable_name": "escalation_data",
+          "value": null
+        }
+      },
+      "tool_version": 1,
+      "tool_type": "WORKFLOW"
+    }
+  ]
+}

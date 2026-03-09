@@ -1,0 +1,44 @@
+## BEST PRACTICES
+%s
+
+## AGENT SYSTEM TO REVIEW
+%s
+
+## TOOL USAGE
+After completing the review using the BEST PRACTICES outlined above, you must call the *'process_issues'* tool to process all the issues identified in the provided AGENT SYSTEM.
+Please ensure to populate the *'issues'* parameter with all the issues you have identified.
+
+## Output Format (STRICT)
+Return a JSON object under the top-level key "function".
+The "function" object must contain the following fields:
+- **name**: The name of the function being invoked. This must always be the string "process_issues".
+- **arguments**: A JSON object containing the evaluation results. The "arguments" object must contain the following field:
+  - **issues**: Return ALL detected rule violations in the "issues" array. Each issue must be concise and factual. Each issue must be a separate object with the following fields:
+      - **rule_id**: The ID of the violated rule (e.g., "R2").
+      - **rule_name**: The name of the violated rule.
+      - **description**: A brief, factual explanation of why the instruction violates the rule.
+      - **evidence**: The specific excerpt from the instruction that demonstrates the violation.
+
+### Example output:
+``` json
+    "function": {
+        "arguments": {
+          "issues":[
+              {
+              "rule_id": "R2",
+              "rule_name": "Each role must have a clear persona and responsibility",
+              "description": "The agent is assigned multiple unrelated responsibilities, making its role unclear.",
+              "evidence": "You are responsible for authentication, billing issues, escalation decisions, and improving user experience."
+              }
+          ]},
+        "name": "process_issues"
+    }
+```
+
+If no issues are found, return:
+``` json
+    "function": {
+        "arguments": {"issues":[]},
+        "name": "process_issues"
+    }
+```

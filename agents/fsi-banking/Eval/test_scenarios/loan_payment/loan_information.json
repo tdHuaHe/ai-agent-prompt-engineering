@@ -1,0 +1,32 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their loan information including interest and tax details.",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_active_loan_account_list",
+      "description": "Agent showed the customer's all active loan account numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_loan_information",
+      "description": "Agent showed the loan information successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_interest_and_tax_information",
+      "description": "Agent showed the interest and tax information related to the loan successfully.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_account_number": "1001"
+  },
+  "target_turns": 15
+}

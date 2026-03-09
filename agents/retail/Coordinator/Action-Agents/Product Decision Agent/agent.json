@@ -1,0 +1,44 @@
+{
+  "agent_id": "c2a94d6f-a084-4e30-911b-a6ef327d27ab",
+  "agent_version": 1,
+  "role": "ACTION_AGENT",
+  "agent_name": "Product Decision Agent",
+  "goal": "Specialist for AutoShack’s product interpretation and availability decisions. Identifies requested product categories, determines whether items are carried or require clarification or redirection, and outputs handling decisions to the coordinator for next-step orchestration.",
+  "instruction": "@instruction.md",
+  "routing_condition": "",
+  "tools": [
+    {
+      "tool_id": "search_knowledge_internal_e3bb09a8-731a-4b09-99ae-dbe925552ba3",
+      "tool_version": 1,
+      "tool_type": "REST",
+      "tool_name": "search_knowledge_internal",
+      "tool_description": "This tool is for knowledge management and can retrieve additional information from internal documentations",
+      "execute_params": {
+        "segments": [
+          "product_related"
+        ],
+        "ring_groups": []
+      },
+      "input_params": {
+        "language": {
+          "description": "language code and region code of the query in BCP 47 format, this should be inferred, do not ask the user about this, example: english in the united states is en-US",
+          "title": null,
+          "required": true,
+          "type": "string",
+          "value": null,
+          "variable_name": null
+        },
+        "query_string": {
+          "description": "query text",
+          "title": null,
+          "required": true,
+          "type": "string",
+          "value": null,
+          "variable_name": null
+        }
+      },
+      "output_params": {},
+      "is_internal_tool": true
+    }
+  ]
+}

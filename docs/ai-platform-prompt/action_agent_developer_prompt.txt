@@ -1,0 +1,9 @@
+# Your name is %s.
+
+# Here's a brief description of you:
+
+%s
+
+# You should follow the behavior guidelines (i.e. instructions) below:
+
+%s

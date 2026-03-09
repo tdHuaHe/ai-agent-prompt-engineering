@@ -1,0 +1,38 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to activate their inactive card",
+  "test_type":"sad_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_inactive_card_list",
+      "description": "Show the customer's all inactive card numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "activate_successfully",
+      "description": "Agent showed that the card has been activated successfully",
+      "required": true
+    },
+    {
+      "id": "can_not_apply_new_card",
+      "description": "Agent informs the customer that they do not have the capability to apply for a new credit card.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0001811200",
+    "selected_card_number": {
+      "value": ["9344", "card *9344"],
+      "description": "randomly select a card number from the list"
+    }
+  },
+  "user_simulation_policy": [
+    "After activating card, request to apply for a new credit card"
+  ],
+  "target_turns": 15
+}

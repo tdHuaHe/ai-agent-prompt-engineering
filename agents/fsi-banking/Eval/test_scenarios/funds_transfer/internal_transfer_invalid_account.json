@@ -1,0 +1,55 @@
+{
+  "persona": "an existing bank customer",
+  "scenario_desc": "Customer wants to transfer funds to another member's account at the same bank",
+  "test_type":"sad_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_account_list",
+      "description": "Show the customer's all account numbers successfully.",
+      "required": true
+    }, 
+    {
+      "id": "ask_transfer_from_account",
+      "description": "Agent asked the customer to select the account to transfer funds from.",
+      "required": true
+    },  
+    {
+      "id": "ask_another_member_id",
+      "description": "Agent asked the customer to provide the ID of the other member.",
+      "required": true
+    },  
+    {
+      "id": "ask_transfer_to_account",
+      "description": "Agent asked the customer to provide the account to transfer funds to.",
+      "required": true
+    },  
+    {
+      "id": "ask_transfer_amount",
+      "description": "Agent asked the customer to provide the amount to transfer.",
+      "required": true
+    },  
+    {
+      "id": "confirm_transfer_details",
+      "description": "Agent confirmed the transfer details with the customer.",
+      "required": true
+    },  
+    {
+      "id": "can_not_find_account",
+      "description": "Agent said cannot complete the transfer because the destination account was not found.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000574160",
+    "transfer_from_account": "6001",
+    "destination_member_id": "0000892170",
+    "transfer_to_account": "2222",
+    "transfer_amount": "100"
+  },
+  "target_turns": 15
+}

@@ -1,0 +1,36 @@
+[
+    {
+        "type": "function",
+        "function": {
+            "name": "send_to_user",
+            "description": "When the last message satisfies the requirement and can be sent to the user, use this tool to send it to the user.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                },
+                "required": [],
+                "additionalProperties": false
+            },
+            "strict": true
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "block",
+            "description": "This tool blocks inappropriate message",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "A message saying that you cannot answer this question according to your policy"
+                    }
+                },
+                "required": ["message"],
+                "additionalProperties": false
+            },
+            "strict": true
+        }
+    }
+]

@@ -1,0 +1,292 @@
+{
+  "workflow_status": {
+    "id": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+    "variable_name": "workflow_status",
+    "description": "To track the execution status in workflow.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "reason": {
+    "id": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+    "variable_name": "reason",
+    "description": "To tracking the failed reason in workflow",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "customer_phone_number": {
+    "id": "ce64538a-b15e-4f71-857f-b7216faa0c5d",
+    "variable_name": "customerPhoneNumber",
+    "description": "customer's phone number for order inquiry.\nPhone number can be digit and '-', area code is not necessary.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "last_received_message": {
+    "id": "d6e4c35b-2d9b-4b0e-8b1c-3092fdc7c128",
+    "variable_name": "Last received message",
+    "description": "Last message received from the contact person",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "language": {
+    "id": "1834d53e-16f9-4fa4-a391-4781e43a96de",
+    "variable_name": "language",
+    "description": "detected language type from customer message",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "application_output": {
+    "id": "9370d191-6dfe-45f0-b0b4-91dc62a88768",
+    "variable_name": "Application output",
+    "description": "Information sent to applications (Autopilot, Copilot, API)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "application_input": {
+    "id": "5b0b3658-d3e1-45d0-b5b0-9bc2e44604d5",
+    "variable_name": "Application Input",
+    "description": "Information provided by applications (Autopilot, Copilot, API)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "customer_order_number": {
+    "id": "a5301669-569f-4d82-a9fe-5e8a3b5e7145",
+    "variable_name": "customerOrderNumber",
+    "description": "Customer's order number, including internal (Autoshack) and external channels order ID",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "debug_value": {
+    "id": "e3e0e209-4cc5-4f2f-93f1-a5db7831b0b1",
+    "variable_name": "debug_value",
+    "description": "used for debugging the parsedOrdersList",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "sms_phone_number": {
+    "id": "e0387f78-d71b-4fd8-9c4f-6440fd281d44",
+    "variable_name": "smsPhoneNumber",
+    "description": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "sms_message": {
+    "id": "8c6e6942-ddca-46d9-a49f-28d5e5717e7a",
+    "variable_name": "smsMessage",
+    "description": "SMS message is used to send the customer.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "orders_list": {
+    "id": "341b86e6-af2f-4311-941d-a8e956661b52",
+    "variable_name": "ordersList",
+    "description": "The original customer order information returned from the API includes salesChannel, dateOrdered, shipments and package-related details.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "escalation_data": {
+    "id": "7bb0e187-6f15-40c5-94ee-920e6c914948",
+    "variable_name": "escalation_data",
+    "description": "the gathered information (conversation summary, customer info, etc.) used to escalate to external",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "channel_type": {
+    "id": "3c8136ef-4703-4c15-98fd-7f69bc4976f1",
+    "variable_name": "Channel Type",
+    "description": "The channel type of the current session (voice, digital or agent_assist)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "tracking_url": {
+    "id": "0fb83682-d99b-410f-8730-ab3a88bcebea",
+    "variable_name": "trackingURL",
+    "description": "The URL address users can use to directly query orders",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "km_segment": {
+    "id": "4464da23-db9c-49fc-a302-67d3946a8af3",
+    "variable_name": "km_segment",
+    "description": "this is used by Knowledge Segment",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "channel_name": {
+    "id": "7659f647-d63f-4e1c-98c2-f1c1be630ee4",
+    "variable_name": "Channel Name",
+    "description": "The channel name of the current session (VOICE, CHAT, SMS, FACEBOOK, EMAIL, WHATSAPP)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "last_skill_name": {
+    "id": "b4e31f76-cf5d-4cf0-8f10-5c42a43e9144",
+    "variable_name": "Last skill name",
+    "description": "Name of the last used Skill",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "order_count": {
+    "id": "376f51c6-7b03-425c-97e6-206f7a6c0b63",
+    "variable_name": "orderCount",
+    "description": "Total number of orders",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "session_id": {
+    "id": "c0f3d524-d357-46ed-9c60-6f4a0ce8911b",
+    "variable_name": "Session ID",
+    "description": "Session's identification of a given voice or digital interaction",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "sales_channel": {
+    "id": "5cd21905-eb15-4037-a270-f80675f1f29a",
+    "variable_name": "salesChannel",
+    "description": "Customer Buying Channels (Amazon, eBay, Walmart, Webstore, CSR) ",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "parsed_orders_info": {
+    "id": "6279d707-9288-42da-a2a2-b1e7368d6d89",
+    "variable_name": "parsedOrdersInfo",
+    "description": "The parsed customer order information used to reply to the customer mainly includes salesChannel, dateOrdered, and trackingInfo (shipperName, trackingNumber).",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "interaction_id": {
+    "id": "ecb2d3f5-4556-4dc7-9580-b6d474c16564",
+    "variable_name": "Interaction ID",
+    "description": "Interaction’s identification of a given voice or digital interaction",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "caller_id": {
+    "id": "6a298499-1f34-4d60-8dbb-27fd30e1e332",
+    "variable_name": "Caller ID",
+    "description": "Contact's identification (e.g. phone number)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "conversation_summary": {
+    "id": "e0232b90-c4b7-4557-ae0a-4ac08c6f414a",
+    "variable_name": "conversationSummary",
+    "description": "Conversation Summary of the ENTIRE conversation from start to current point, not just recent exchanges",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "tracking_numbers": {
+    "id": "269f56e4-20b5-4700-aeaa-86b735e3104b",
+    "variable_name": "trackingNumbers",
+    "description": "the tracking number of packages",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "shipper_name": {
+    "id": "cd0135d0-37a9-476e-a18d-37dfc9b8fee9",
+    "variable_name": "shipperName",
+    "description": "Shipping carrier or fulfillment provider responsible for the shipment.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "previous_response": {
+    "id": "7dcb08cd-748d-47a2-b3d3-c6d089ec89b2",
+    "variable_name": "Previous response",
+    "description": "Last message sent by the AI Agent",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "customer_email_address": {
+    "id": "09b8b396-c5f7-4da6-90b3-fa67e9865a81",
+    "variable_name": "customerEmailAddress",
+    "description": "Customer email address for order inquiry.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  }
+}

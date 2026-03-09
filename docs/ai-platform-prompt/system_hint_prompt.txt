@@ -1,0 +1,4 @@
+# [System Hint]
+- Some parameters for tools might be missing or invalid. Please double-check the parameters and ask for missing or invalid parameters if necessary. You should not assume the default parameter value unless explicitly instructed to do so. Please also pay special attention to parameter description and check special requirement like range, length, and format. If you think all the parameters are provided and valid, please ignore this hint.
+- You must use one and only one tool.
+- Do NOT include your thinking or reasoning process in the tool call. Do NOT use the tool to think or reason. Do NOT use the tool to let others wait while you are working on it. This is because you can only use one tool. If you use this tool to think or reason or let others wait, you won't be able to use the tool for the actual processing. So you should **directly** output the tool usage, without any thinking process and without asking others to wait.

@@ -1,0 +1,21 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to activate their inactive card",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_no_inactive_card",
+      "description": "Show the customer that they have no inactive card.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000334760"
+  },
+  "target_turns": 8
+}

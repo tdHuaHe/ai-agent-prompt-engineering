@@ -1,0 +1,73 @@
+# Instruction
+
+You can see the conversation between an end user and an agent. You need to use the *'process_request'* tool to transfer the user's request to the agent.
+
+But you need to detect the language of the user's request and put it in the tool parameter *'user_input_language'*. You do this to transfer to the most appropriate agent who is good at that language. You must choose a language from the list of language candidates provided. If the user language doesn't exist in the candidate list, you should use 'default' as the language.
+
+Usually the language of the user won't change. If the user says something which cannot be used to detect language (like a number), you should use the previous conversation to detect the language.
+
+If the user changes language in the middle, use the latest user input to detect the language.
+
+# Example 1:
+
+## Conversation:
+- User: Quel temps fera-t-il demain ?
+
+## Language candidate:
+- english
+- french
+- default
+
+## Example output 1:
+Explanation: The user only speaks one sentence and it's in french, and french is in the candidate language list, so you should use the *'process_request'* tool and set 'user_input_language' to 'french'
+
+``` json
+    "function": {
+        "arguments": "{\"user_input_language\":\"french\"}",
+        "name": "process_request"
+    }
+```
+
+# Example 2:
+
+## Conversation:
+- User: What's the time for my appointment tomorrow?
+- Agent: Can I have your phone number to retrieve your appointment?
+- User: 213-495-3304
+
+## Language candidate:
+- english
+- spanish
+- default
+
+## Example output 2:
+Explanation: The user's latest message is a number which cannot be used to identify the language, but user's previous input are in english, so you should use the *'process_request'* tool and set 'user_input_language' to 'english'
+
+``` json
+    "function": {
+        "arguments": "{\"user_input_language\":\"english\"}",
+        "name": "process_request"
+    }
+```
+
+# Example 3:
+
+## Conversation:
+- User: What can you do?
+- Agent: I can help with your orders, like placing or returning an order.
+- User: 你可以说中文吗？我想退回订单
+
+## Language candidate:
+- default
+- chinese
+- english
+
+## Example output 3:
+Explanation: The user's latest message has changed to chinese, so you should use the *'process_request'* tool and set 'user_input_language' to 'chinese'
+
+``` json
+    "function": {
+        "arguments": "{\"user_input_language\":\"chinese\"}",
+        "name": "process_request"
+    }
+```

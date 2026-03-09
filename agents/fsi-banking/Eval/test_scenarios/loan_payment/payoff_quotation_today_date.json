@@ -1,0 +1,38 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to quote payoff amount for a loan account",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_active_loan_account_list",
+      "description": "Agent showed the customer's all active loan account numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "ask_date_for_payoff_quotation",
+      "description": "Agent asked the customer for the date they want the payoff quotation for.",
+      "required": true
+    },  
+    {
+      "id": "show_payoff_amount",
+      "description": "Agent showed the payoff amount for the loan account as of today.",
+      "required": true
+    },
+    {
+      "id": "show_amount_breakdown",
+      "description": "Agent showed the payoff amount breakdown for the loan account as of today.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_account_number": "1066",
+    "payoff_date": "today"
+  },
+  "target_turns": 12
+}

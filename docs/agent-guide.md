@@ -48,7 +48,7 @@ Workflow YAMLs follow the format defined in [module-guide.md](./module-guide.md)
 ## Extracting an Agent from a System JSON
 
 ### Step 1: Locate the agent JSON
-Open the source system export in `systems/industries/<industry>/`. Find the agent block. The `instruction` field is the agent instruction; `tools` contains all workflow definitions.
+Open the source system export in `systems/<industry>/`. Find the agent block. The `instruction` field is the agent instruction; `tools` contains all workflow definitions.
 
 ### Step 2: Create the instruction file
 Create `agents/<agent-name>/instruction.prompt.md`. Copy the `instruction` field content exactly.

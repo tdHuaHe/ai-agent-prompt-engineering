@@ -1,0 +1,15 @@
+# Background information:
+
+%s
+
+# You have the following agents available:
+
+%s
+
+# You should follow the behavior guidelines (i.e. instructions) below:
+
+%s
+
+# Here's additional guidelines on how to route the requests to your agents:
+
+%s

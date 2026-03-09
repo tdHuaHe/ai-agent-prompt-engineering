@@ -1,0 +1,1628 @@
+{
+  "account_id": "65baad438ee61f72acdcfa2c",
+  "agent_system_id": "f91a78ff-2857-4527-9e7e-5252f51d17ad",
+  "system_version": 1,
+  "status": "PUBLISHED_UNSELECTED",
+  "agent_system_name": "AutoShack Autopilot Develop version",
+  "agent_system_description": "",
+  "guardrail": "",
+  "conversation_settings": {
+    "enabled": true,
+    "is_dynamic_filler": false,
+    "initial_delay": 1,
+    "filler_interval": 2,
+    "number_of_retries": 1,
+    "initial_messages": [],
+    "retry_messages": [],
+    "channels": [
+      {
+        "channel_type": "default",
+        "languages": [
+          {
+            "language_code": "default",
+            "initial_delay": 1,
+            "filler_interval": 2,
+            "number_of_retries": 1,
+            "initial_messages": [],
+            "retry_messages": []
+          }
+        ]
+      }
+    ]
+  },
+  "welcome_text": "",
+  "agents": [
+    {
+      "agent_id": "10b59878-1e8e-4d47-9734-dbff54a0dd70",
+      "agent_version": 1,
+      "role": "ACTION_AGENT",
+      "agent_name": "Transfer Support Agent",
+      "goal": "Agent's responsibility is to receive escalation context from the Coordinator, to support escalation to a human agent.",
+      "instruction": "Your **sole responsibility** is to receive escalation context from the Coordinator and pass it to the escalation system.\n\nYou do NOT interact with the customer.  \nYou do NOT generate or modify the escalation content.  \nYou do NOT perform business logic.\n\n# Execution Steps\n\n## Step 1: Receive Escalation Context\n- Receive escalation information prepared by the Coordinator\n- **REQUIRED:** Conversation summary\n- **OPTIONAL (if available):** Customer details, vehicle information, authentication status, and any other relevant context\n\n## Step 2: Pass Context to Skill\n- Execute **gatherInformation** skill using the context provided by the Coordinator\n\n## Step 3: Respond to Coordinator\n### If successful:\n- Confirm to the Coordinator that the escalation context has been captured.\n- Indicate that escalation to a human agent can proceed.\n- **Do NOT include the summary content in the message.**\n\n### If failed:\n- Inform the Coordinator that summary gathering was unsuccessful.\n- End the flow without retrying.\n\n# Output Rules\n\n- Messages must be concise and Coordinator-facing only.\n- Do NOT add formatting, guidance, or customer-facing text.\n- Do NOT suggest next actions beyond confirming readiness for escalation.",
+      "routing_condition": "",
+      "tools": [
+        {
+          "tool_id": "84ccc397-219a-4519-8038-c8a000cb6eb7",
+          "tool_name": "gatherInformation",
+          "tool_description": "This tool is used to collect the information needed before transferring the user to a live agent.",
+          "execute_params": {
+            "connection_id": "",
+            "action_id": "",
+            "nodes": [
+              {
+                "id": "TnNv94cRRZuZADwHWh1hx",
+                "data": {
+                  "name": "gatherInformation",
+                  "variables": [
+                    {
+                      "type": "string",
+                      "variable": "e0232b90-c4b7-4557-ae0a-4ac08c6f414a"
+                    }
+                  ],
+                  "more_details": "This tool is used to collect the information needed before transferring the user to a live agent."
+                },
+                "type": "start-flow",
+                "position": {
+                  "x": -408,
+                  "y": -42
+                }
+              },
+              {
+                "id": "sA6pj7TpzkCebb0C4sEmF",
+                "data": {
+                  "code": "const conversationSummary = Context.getVariable(\"conversationSummary\");\nconst customerPhoneNumber = Context.getVariable(\"customerPhoneNumber\");\nconst customerEmailAddress = Context.getVariable(\"customerEmailAddress\");\nconst customerOrderNumber = Context.getVariable(\"customerOrderNumber\");\n\nconst escalation_data = `Customer Information:\n${customerPhoneNumber || 'N/A'}\n${customerEmailAddress || 'N/A'}\n${customerOrderNumber || 'N/A'}\n\nConversation Summary:\n${conversationSummary || 'N/A'}`;\n\nContext.setVariable(\"escalation_data\", escalation_data);",
+                  "name": "gatherInformation"
+                },
+                "type": "function",
+                "position": {
+                  "x": -63,
+                  "y": -61.9375
+                }
+              },
+              {
+                "id": "MPqbpCNFkKWOx6ILIV75M",
+                "data": {
+                  "name": "End Flow",
+                  "variables": [
+                    {
+                      "id": null,
+                      "variable": "7bb0e187-6f15-40c5-94ee-920e6c914948",
+                      "first_variable": {
+                        "variable": "7bb0e187-6f15-40c5-94ee-920e6c914948"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    }
+                  ]
+                },
+                "type": "end-flow",
+                "position": {
+                  "x": 258,
+                  "y": -43.9375
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "acy10T4A1dRvxFv0mZ4N3",
+                "type": "worflowEdge",
+                "source": "TnNv94cRRZuZADwHWh1hx",
+                "target": "sA6pj7TpzkCebb0C4sEmF",
+                "source_handle": "start-flow-node-rigth-handle-1",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "hz7yK__9guUOhZRZZ9CNn",
+                "type": "worflowEdge",
+                "source": "sA6pj7TpzkCebb0C4sEmF",
+                "target": "MPqbpCNFkKWOx6ILIV75M",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "rE9KgN0m8YwLxElA2erp-",
+                "type": "worflowEdge",
+                "source": "sA6pj7TpzkCebb0C4sEmF",
+                "target": "MPqbpCNFkKWOx6ILIV75M",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              }
+            ],
+            "variables": [],
+            "mcp_server_id": "",
+            "mcp_server_url": "",
+            "mcp_tool_name": ""
+          },
+          "is_internal_tool": false,
+          "input_params": {
+            "conversation_summary": {
+              "name": "conversationSummary",
+              "description": "Conversation Summary of the ENTIRE conversation from start to current point, not just recent exchanges",
+              "title": "Conversation Summary of the ENTIRE conversation from start to current point, not just recent exchanges",
+              "required": true,
+              "type": "string",
+              "variable_name": "conversationSummary",
+              "value": null
+            }
+          },
+          "output_params": {
+            "escalation_data": {
+              "name": "escalation_data",
+              "description": "the gathered information (conversation summary, customer info, etc.) used to escalate to external",
+              "title": "the gathered information (conversation summary, customer info, etc.) used to escalate to external",
+              "required": true,
+              "type": "string",
+              "variable_name": "escalation_data",
+              "value": null
+            }
+          },
+          "tool_version": 1,
+          "tool_type": "WORKFLOW"
+        }
+      ]
+    },
+    {
+      "agent_id": "9ef6500e-052d-4a28-ac2f-4bbd089c57a5",
+      "agent_version": 1,
+      "role": "ACTION_AGENT",
+      "agent_name": "Order inquiry Agent",
+      "goal": "Order lookup specialist for AutoShack. Retrieves order information using customer-provided identifiers. And sends order tracking information via SMS when requested",
+      "instruction": "## Customer Intent / Purpose:\nAssists customers with order inquiries by looking up orders using any of:\n- Email address\n- Phone number  \n- Order number\n\nAdditionally handles:\n- Sending order tracking information via SMS when requested\n\n## Step-by-Step Execution:\n\n### Step 1: Receive customer identifier from Coordinator\n- Accept ANY ONE of: `customerPhoneNumber`, `customerEmailAddress`, or `customerOrderNumber`\n- Coordinator guarantees at least one identifier is provided\n- If no identifier present (system error), reply_to_coordinator with error description\n\n### Step 2: Execute getCustomerOrders tool\n- Execute **getCustomerOrders** skill using the context provided by the Coordinator\n\n### Step 3: Construct and send response to Coordinator\n\n**CRITICAL:** You only provide structured JSON decisions. The `answer` field is for Coordinator to use\n\nSend via **reply_to_coordinator** tool using this format:\n```json\n{\n  \"answer\": \"[natural language content]\"\n}\n```\n\n**Natural language content:** generated based on [orderCount] and [parsedOrdersInfo]\n\n1. **Multiple orders (`orderCount` >= 2):**\n   ```\n   I found [count] orders under your account.\n   \n   Order one: placed on [salesChannel], order number [orderId].\n   Order two: placed on [salesChannel], order number [orderId].\n   Order three: placed on [salesChannel], order number [orderId].\n   \n   Which order would you like to know more about? Please tell me the order number.\n   ```\n\n2. **Single order (`orderCount` = 1):**\n   ```\n   Order number: [orderId]\n   Placed on: [salesChannel]\n   Order date: [dateOrdered]\n   [If packageCount > 1: \"Package count: [packageCount]\"]\n   Shipping status: Shipped via [shipperName]. Tracking number(s): [trackingNumber1], [trackingNumber2]...\n   ```\n\n### Step 4: Handle SMS tracking request (if routed from Coordinator)\n1. Call `sendTrackingSMS` skill with provided parameters\n2. Generate reply based on [workflow_status] and [reason](if available), and send to coordinator\n\n## Important Notes:\n- **Terminal Action:** Using **reply_to_coordinator** is terminal - execute skill first, then reply\n- **One tool at a time:** Execute skill, wait for result, construct response, then send via reply_to_coordinator\n",
+      "routing_condition": "",
+      "tools": [
+        {
+          "tool_id": "4828c461-148b-4d5c-aeef-588639f63f32",
+          "tool_name": "getCustomerOrders",
+          "tool_description": "Retrieve customer orders using email, phone number, or order identifier",
+          "execute_params": {
+            "connection_id": "",
+            "action_id": "",
+            "nodes": [
+              {
+                "id": "8GR9ypuOlk86oT4LqA1tm",
+                "data": {
+                  "name": "getCustomerOrders",
+                  "variables": [
+                    {
+                      "type": "string",
+                      "variable": "09b8b396-c5f7-4da6-90b3-fa67e9865a81"
+                    },
+                    {
+                      "type": "string",
+                      "variable": "ce64538a-b15e-4f71-857f-b7216faa0c5d"
+                    },
+                    {
+                      "type": "string",
+                      "variable": "a5301669-569f-4d82-a9fe-5e8a3b5e7145"
+                    }
+                  ],
+                  "more_details": "Retrieve customer orders using email, phone number, or order identifier"
+                },
+                "type": "start-flow",
+                "position": {
+                  "x": -497.57034744042073,
+                  "y": -82.40213946896405
+                }
+              },
+              {
+                "id": "C30ONAHLx2uDuT6vBXukx",
+                "data": {
+                  "name": "Retrieve customer orders",
+                  "inputs": [
+                    {
+                      "id": "697204e29c8195333ca48222-zJAFGJuexmOZvTVYkKJ4z",
+                      "name": "emailAddress",
+                      "type": "string",
+                      "title": "emailAddress",
+                      "required": false,
+                      "variable": "09b8b396-c5f7-4da6-90b3-fa67e9865a81",
+                      "input_type": "variable"
+                    },
+                    {
+                      "id": "697204e29c8195333ca48222-cUuPF0GoDuEgvRshtfvZD",
+                      "name": "phoneNumber",
+                      "type": "string",
+                      "title": "phoneNumber",
+                      "required": false,
+                      "variable": "ce64538a-b15e-4f71-857f-b7216faa0c5d",
+                      "input_type": "variable"
+                    },
+                    {
+                      "id": "697204e29c8195333ca48222-6uHIgO8GlewxFTQwvZWAw",
+                      "name": "orderNumber",
+                      "type": "string",
+                      "title": "orderNumber",
+                      "required": false,
+                      "variable": "a5301669-569f-4d82-a9fe-5e8a3b5e7145",
+                      "input_type": "variable"
+                    },
+                    {
+                      "id": "697204e29c8195333ca48222-S9hSKxff-Z75-TY-kcFWl",
+                      "name": "salesChannel",
+                      "type": "string",
+                      "title": "salesChannel",
+                      "required": false,
+                      "variable": "",
+                      "input_type": "variable"
+                    },
+                    {
+                      "id": "697204e29c8195333ca48222-4nWz9XasAqIHRi_EFqFaz",
+                      "name": "noOfDays",
+                      "type": "number",
+                      "title": "noOfDays",
+                      "required": false,
+                      "variable": "",
+                      "input_type": "variable"
+                    },
+                    {
+                      "id": "697204e29c8195333ca48222-WP7ANErpG44u34MwHezi5",
+                      "name": "zipCode",
+                      "type": "string",
+                      "title": "zipCode",
+                      "required": false,
+                      "variable": "",
+                      "input_type": "variable"
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "id": "697204e29c8195333ca48222-qOhu2lZ8Zcnp6MjEZGQk9",
+                      "name": "message",
+                      "type": "string",
+                      "title": "message",
+                      "required": true,
+                      "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+                      "input_type": "variable"
+                    },
+                    {
+                      "id": "697204e29c8195333ca48222-u9x0xiinsGLAbaKodokrh",
+                      "name": "count",
+                      "type": "integer",
+                      "title": "count",
+                      "required": true,
+                      "variable": "376f51c6-7b03-425c-97e6-206f7a6c0b63",
+                      "input_type": "variable"
+                    },
+                    {
+                      "id": "697204e29c8195333ca48222-CZ26u9QwN_kYubm5nmvjC",
+                      "name": "orders",
+                      "type": "array",
+                      "title": "orders",
+                      "required": true,
+                      "variable": "341b86e6-af2f-4311-941d-a8e956661b52",
+                      "input_type": "variable"
+                    }
+                  ],
+                  "action_id": "697204e29c8195333ca48222",
+                  "connection_id": "6670981aace72c0a82ab5c2a"
+                },
+                "type": "execute-action",
+                "position": {
+                  "x": 227.89702280390532,
+                  "y": -231.02455577221636
+                }
+              },
+              {
+                "id": "OuvpQpL2JDSxHuW4YBRPf",
+                "data": {
+                  "name": "successful End",
+                  "variables": [
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+                      "first_variable": {
+                        "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "376f51c6-7b03-425c-97e6-206f7a6c0b63",
+                      "first_variable": {
+                        "variable": "376f51c6-7b03-425c-97e6-206f7a6c0b63"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "6279d707-9288-42da-a2a2-b1e7368d6d89",
+                      "first_variable": {
+                        "variable": "6279d707-9288-42da-a2a2-b1e7368d6d89"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+                      "first_variable": {
+                        "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    }
+                  ]
+                },
+                "type": "end-flow",
+                "position": {
+                  "x": 1290.528732452726,
+                  "y": -217.7746001876536
+                }
+              },
+              {
+                "id": "SLfPDz0guidG5wTjWs_C-",
+                "data": {
+                  "code": "Context.setVariable(\"workflow_status\", \"failure\")\nContext.setVariable(\"reason\", \"Error occured when executing Retrive orders\")",
+                  "name": "actionError"
+                },
+                "type": "function",
+                "position": {
+                  "x": 669.9136388012392,
+                  "y": -73.98226185713241
+                }
+              },
+              {
+                "id": "tN3LF7vZPt_gczMMeGY2i",
+                "data": {
+                  "name": "error End",
+                  "variables": [
+                    {
+                      "id": null,
+                      "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+                      "first_variable": {
+                        "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+                      "first_variable": {
+                        "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    }
+                  ]
+                },
+                "type": "end-flow",
+                "position": {
+                  "x": 1321.8797464359984,
+                  "y": 239.09640319718386
+                }
+              },
+              {
+                "id": "Oh1hoJE9anETvqMFAYwNn",
+                "data": {
+                  "code": "Context.setVariable(\"workflow_status\", \"failure\")\nContext.setVariable(\"reason\", \"Timeout occured when executing Retrive orders\")",
+                  "name": "actionTimeout"
+                },
+                "type": "function",
+                "position": {
+                  "x": 657.9022107921866,
+                  "y": 101.47023335131883
+                }
+              },
+              {
+                "id": "rOpbRZsVRIQaze63yzUNx",
+                "data": {
+                  "code": "function normalizeID(id) {\n    if (!id || typeof id !== 'string') {\n        Context.setVariable(\"workflow_status\", \"phone number is not valid\")\n        return '';\n    }\n    \n    // Remove all non-digit characters: spaces, hyphens, parentheses, dots, etc.\n    // Examples: \"(123) 456-7890\" → \"1234567890\", \"ORD-12345\" → \"12345\"\n    return id.replace(/\\D/g, '');\n}\n\nconst customerPhoneNumber = Context.getVariable(\"customerPhoneNumber\")\nconst customerOrderNumber = Context.getVariable(\"customerOrderNumber\")\nconst normalizedPhoneNumber = normalizeID(customerPhoneNumber)\nconst normalizedOrderNumber = normalizeID(customerOrderNumber)\nContext.setVariable(\"customerPhoneNumber\", normalizedPhoneNumber)\nContext.setVariable(\"customerOrderNumber\",normalizedOrderNumber)",
+                  "name": "Normalize phone/order number"
+                },
+                "type": "function",
+                "position": {
+                  "x": -153.20082733384535,
+                  "y": -135.23078064127645
+                }
+              },
+              {
+                "id": "2PC0224QucEcEQJZwp2d3",
+                "data": {
+                  "name": "Whether Order exists",
+                  "variable": {
+                    "value": "376f51c6-7b03-425c-97e6-206f7a6c0b63"
+                  },
+                  "conditions": [
+                    {
+                      "id": "3WAJ9K14kC8CHGMWlYcUk",
+                      "type": "eq",
+                      "value": 0,
+                      "value_type": "number"
+                    }
+                  ]
+                },
+                "type": "split-flow",
+                "position": {
+                  "x": 600.6718051527918,
+                  "y": -292.4681009597231
+                }
+              },
+              {
+                "id": "eYeHnyKEsmVs5GTeOTEES",
+                "data": {
+                  "code": "const ordersList = [\n  {\n    \"orderId\": 7538515,\n    \"salesChannel\": \"Canada : Webstore\",\n    \"dateOrdered\": \"2026-01-19T21:41:54+00:00\",\n    \"packageCount\": 2,\n    \"trackingInfo\": [\n      {\n        \"shipperName\": \"GLS Canada Parcel\",\n        \"trackingNumber\": \"P2579583601\"\n      },\n      {\n        \"shipperName\": \"GLS Canada Parcel\",\n        \"trackingNumber\": \"P2579583602\"\n      }\n    ]\n  },\n  {\n    \"orderId\": 7531225,\n    \"salesChannel\": \"Canada : Customer Service Representative\",\n    \"dateOrdered\": \"2026-01-14T09:21:19+00:00\",\n    \"packageCount\": 3,\n    \"trackingInfo\": [\n      {\n        \"shipperName\": \"UPS Canada Ground\",\n        \"trackingNumber\": \"1Z0A89R22099781157\"\n      },\n      {\n        \"shipperName\": \"UPS Canada Ground\",\n        \"trackingNumber\": \"1Z0A89R22099699569\"\n      },\n      {\n        \"shipperName\": \"UPS Canada Ground\",\n        \"trackingNumber\": \"1Z0A89R22096291576\"\n      }\n    ]\n  }\n]\nContext.setVariable('workflow_status', '');\nContext.setVariable('reason', '');\nContext.setVariable('parsedOrdersInfo', ordersList);\nContext.setVariable('orderCount', 2);",
+                  "name": "Mock multi orders"
+                },
+                "type": "function",
+                "position": {
+                  "x": 933.5860416750363,
+                  "y": -549.5865382900768
+                }
+              },
+              {
+                "id": "-W_DaOnN8IV3as6WfLnIE",
+                "data": {
+                  "code": "// Parse order API response and extract key information for Agent use\nfunction parseOrdersData(ordersList) {\n\n  // Build order summaries (sorted by order date descending, newest first)\n  const orderSummaries = ordersList\n    .map((order) => {\n      const packages = order.shipments?.packages || [];\n      const packageCount = packages.length;\n      \n      // Extract tracking info (keep only shipperName and trackingNumber)\n      const trackingInfo = packages.map(pkg => ({\n        shipperName: pkg.shipperName,\n        trackingNumber: pkg.trackingNumber\n      }));\n\n      return {\n        orderId: order.salesOrderId,\n        salesChannel: order.salesChannel,\n        dateOrdered: order.dateOrdered,\n        packageCount,\n        trackingInfo\n      };\n    })\n    .sort((a, b) => new Date(b.dateOrdered).getTime() - new Date(a.dateOrdered).getTime()); // Sort by time descending\n\n  return orderSummaries;\n}\n\nconst ordersList = Context.getVariable('ordersList');\nconst parsedData = parseOrdersData(ordersList);\n\nContext.setVariable('workflow_status', \"success\");\nContext.setVariable('parsedOrdersInfo', parsedData);",
+                  "name": "parse order list"
+                },
+                "type": "function",
+                "position": {
+                  "x": 950.6102148546008,
+                  "y": -272.07208261447647
+                }
+              },
+              {
+                "id": "Cgaby5g5AbMuF_27Y7I0Z",
+                "data": {
+                  "code": "Context.setVariable(\"workflow_status\", \"failure\")\nContext.setVariable(\"reason\", \"Error occured when executing normalize phone number function\")",
+                  "name": "funcError"
+                },
+                "type": "function",
+                "position": {
+                  "x": 268.6546994977889,
+                  "y": 290.4887225306211
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "itXEeoP31H0KSnfZBWDTT",
+                "type": "worflowEdge",
+                "source": "C30ONAHLx2uDuT6vBXukx",
+                "target": "SLfPDz0guidG5wTjWs_C-",
+                "source_handle": "error",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "iKlZx8OFKRK9pSL3FDBtA",
+                "type": "worflowEdge",
+                "source": "C30ONAHLx2uDuT6vBXukx",
+                "target": "Oh1hoJE9anETvqMFAYwNn",
+                "source_handle": "timeout",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "ku_-WFmB9UGRbIRQ8Un9L",
+                "type": "worflowEdge",
+                "source": "SLfPDz0guidG5wTjWs_C-",
+                "target": "tN3LF7vZPt_gczMMeGY2i",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "2fif1keALewmbYcVWIblj",
+                "type": "worflowEdge",
+                "source": "SLfPDz0guidG5wTjWs_C-",
+                "target": "tN3LF7vZPt_gczMMeGY2i",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "HUaRed294AII9yDzyygbB",
+                "type": "worflowEdge",
+                "source": "Oh1hoJE9anETvqMFAYwNn",
+                "target": "tN3LF7vZPt_gczMMeGY2i",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "xzoPYt2fWPotTidXPIKHm",
+                "type": "worflowEdge",
+                "source": "Oh1hoJE9anETvqMFAYwNn",
+                "target": "tN3LF7vZPt_gczMMeGY2i",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "Xate4kseJ8bxJGNpj78EE",
+                "type": "worflowEdge",
+                "source": "8GR9ypuOlk86oT4LqA1tm",
+                "target": "rOpbRZsVRIQaze63yzUNx",
+                "source_handle": "start-flow-node-rigth-handle-1",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "-D8mLajv0bpHSA7JueFMW",
+                "type": "worflowEdge",
+                "source": "rOpbRZsVRIQaze63yzUNx",
+                "target": "C30ONAHLx2uDuT6vBXukx",
+                "source_handle": "success",
+                "target_handle": "execute-action-node-rigth-handle-1"
+              },
+              {
+                "id": "3sPhCQmqWDJ50zPPNFIDc",
+                "type": "worflowEdge",
+                "source": "C30ONAHLx2uDuT6vBXukx",
+                "target": "2PC0224QucEcEQJZwp2d3",
+                "source_handle": "success",
+                "target_handle": "split-flow-left-handle-1"
+              },
+              {
+                "id": "fNI7bUf9-vxpJPIeCV7yK",
+                "type": "worflowEdge",
+                "source": "eYeHnyKEsmVs5GTeOTEES",
+                "target": "OuvpQpL2JDSxHuW4YBRPf",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "UwlJPjctp2HQmIVNZB8ot",
+                "type": "worflowEdge",
+                "source": "eYeHnyKEsmVs5GTeOTEES",
+                "target": "tN3LF7vZPt_gczMMeGY2i",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "d-vlWXG4A24q-AeRhpFc9",
+                "type": "worflowEdge",
+                "source": "-W_DaOnN8IV3as6WfLnIE",
+                "target": "OuvpQpL2JDSxHuW4YBRPf",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "COWrnHUDJfir9dhTpgkyt",
+                "type": "worflowEdge",
+                "source": "-W_DaOnN8IV3as6WfLnIE",
+                "target": "tN3LF7vZPt_gczMMeGY2i",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "5LC-wYvX0gOXHef3kfzhQ",
+                "type": "worflowEdge",
+                "source": "2PC0224QucEcEQJZwp2d3",
+                "target": "eYeHnyKEsmVs5GTeOTEES",
+                "source_handle": "3WAJ9K14kC8CHGMWlYcUk",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "QWlfKvEWgHADQs9HKbGt4",
+                "type": "worflowEdge",
+                "source": "2PC0224QucEcEQJZwp2d3",
+                "target": "-W_DaOnN8IV3as6WfLnIE",
+                "source_handle": "split-flow-exit-fallback",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "jCCMjQkWVusVyMGeIUuoW",
+                "type": "worflowEdge",
+                "source": "rOpbRZsVRIQaze63yzUNx",
+                "target": "Cgaby5g5AbMuF_27Y7I0Z",
+                "source_handle": "error",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "6rCSzH2zq50e1Wl9A0gh1",
+                "type": "worflowEdge",
+                "source": "Cgaby5g5AbMuF_27Y7I0Z",
+                "target": "tN3LF7vZPt_gczMMeGY2i",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "FL5rXlO53z6NlKoo5BhDL",
+                "type": "worflowEdge",
+                "source": "Cgaby5g5AbMuF_27Y7I0Z",
+                "target": "tN3LF7vZPt_gczMMeGY2i",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              }
+            ],
+            "variables": [],
+            "mcp_server_id": "",
+            "mcp_server_url": "",
+            "mcp_tool_name": ""
+          },
+          "is_internal_tool": false,
+          "input_params": {
+            "customer_phone_number": {
+              "name": "customerPhoneNumber",
+              "description": "customer's phone number for order inquiry.\nPhone number can be digit and '-', area code is not necessary.",
+              "title": "customer's phone number for order inquiry.\nPhone number can be digit and '-', area code is not necessary.",
+              "required": true,
+              "type": "string",
+              "variable_name": "customerPhoneNumber",
+              "value": null
+            },
+            "customer_order_number": {
+              "name": "customerOrderNumber",
+              "description": "Customer's order number, including internal (Autoshack) and external channels order ID",
+              "title": "Customer's order number, including internal (Autoshack) and external channels order ID",
+              "required": true,
+              "type": "string",
+              "variable_name": "customerOrderNumber",
+              "value": null
+            },
+            "customer_email_address": {
+              "name": "customerEmailAddress",
+              "description": "Customer email address for order inquiry.",
+              "title": "Customer email address for order inquiry.",
+              "required": true,
+              "type": "string",
+              "variable_name": "customerEmailAddress",
+              "value": null
+            }
+          },
+          "output_params": {
+            "workflow_status": {
+              "name": "workflow_status",
+              "description": "To track the execution status in workflow.",
+              "title": "To track the execution status in workflow.",
+              "required": true,
+              "type": "string",
+              "variable_name": "workflow_status",
+              "value": null
+            },
+            "reason": {
+              "name": "reason",
+              "description": "To tracking the failed reason in workflow",
+              "title": "To tracking the failed reason in workflow",
+              "required": true,
+              "type": "string",
+              "variable_name": "reason",
+              "value": null
+            },
+            "order_count": {
+              "name": "orderCount",
+              "description": "Total number of orders",
+              "title": "Total number of orders",
+              "required": true,
+              "type": "string",
+              "variable_name": "orderCount",
+              "value": null
+            },
+            "parsed_orders_info": {
+              "name": "parsedOrdersInfo",
+              "description": "The parsed customer order information used to reply to the customer mainly includes salesChannel, dateOrdered, and trackingInfo (shipperName, trackingNumber).",
+              "title": "The parsed customer order information used to reply to the customer mainly includes salesChannel, dateOrdered, and trackingInfo (shipperName, trackingNumber).",
+              "required": true,
+              "type": "string",
+              "variable_name": "parsedOrdersInfo",
+              "value": null
+            }
+          },
+          "tool_version": 1,
+          "tool_type": "WORKFLOW"
+        },
+        {
+          "tool_id": "d5913242-69ed-48ba-9983-52f87c8932e5",
+          "tool_name": "sendTrackingSMS",
+          "tool_description": "Send shipping status inquiry URL link to the user. It should be called after user provides the phone number to receive the text message.",
+          "execute_params": {
+            "connection_id": "",
+            "action_id": "",
+            "nodes": [
+              {
+                "id": "s44_Yk3s1tYQ2eB4iVw6b",
+                "data": {
+                  "name": "sendTrackingSMS",
+                  "variables": [
+                    {
+                      "type": "string",
+                      "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44"
+                    }
+                  ],
+                  "more_details": "Send shipping status inquiry URL link to the user. It should be called after user provides the phone number to receive the text message."
+                },
+                "type": "start-flow",
+                "position": {
+                  "x": -428.1994247280879,
+                  "y": 105.34110337958602
+                }
+              },
+              {
+                "id": "q9lCJ02TZ0x4UNKQgbOml",
+                "data": {
+                  "code": "function validateAndFormatNANP(phone) {\n    // Step 1: Check for null/undefined/empty\n    if (!phone && phone !== 0) {\n      Context.setVariable(\"workflow_status\", \"failure\");\n      Context.setVariable(\"reason\", \"No phone number provided\");\n      return false;\n    }\n\n    // Step 2: Convert to string and clean up\n    let s = String(phone).trim();\n\n    // Step 3: Remove extension markers (ext, x, #, etc.)\n    // e.g. \"123-456-7890 ext 12\" -> \"123-456-7890\"\n    s = s.replace(/\\s*(?:ext|x|#|ext\\.)\\s*\\d+$/i, \"\");\n\n    // Step 4: Extract only digits\n    const digits = s.replace(/\\D+/g, \"\");\n\n    // Step 5: Validate and format (US/Canada both use +1 country code)\n    if (digits.length === 11 && digits.startsWith(\"1\")) {\n      // Country code format: +1xxxxxxxxxx (11 digits, starts with 1)\n      Context.setVariable(\"workflow_status\", \"success\");\n      return `+${digits}`;\n    } else if (digits.length === 10) {\n      // National format: xxxxxxxxxx (10 digits, no country code)\n      Context.setVariable(\"workflow_status\", \"success\");\n      return `+1${digits}`;\n    } else {\n      // Invalid format\n      Context.setVariable(\"workflow_status\", \"failure\");\n      \n      // Distinguish between likely international and format error\n      if (digits.length > 11 || (digits.length > 10 && !digits.startsWith(\"1\"))) {\n        Context.setVariable(\"reason\", \"International phone number not supported\");\n      } else {\n        Context.setVariable(\"reason\", \"Phone number does not match US/Canada formats\");\n      }\n      \n      return false;\n    }\n}\n\nContext.setVariable(\"workflow_status\", \"\")\nconst phone_number = Context.getVariable(\"smsPhoneNumber\")\nconst validateResult = validateAndFormatNANP(phone_number)\n\nif (!validateResult) {\n    Context.setVariable(\"phone_number_acceptable\", \"No\")\n} else {\n    Context.setVariable(\"phone_number_acceptable\", \"Yes\")\n    Context.setVariable(\"smsPhoneNumber\", validateResult)\n}",
+                  "name": "Validate phone number"
+                },
+                "type": "function",
+                "position": {
+                  "x": -93.67467640954942,
+                  "y": 66.59935281909884
+                }
+              },
+              {
+                "id": "IRc9JGGSMyykOJCrg6nTA",
+                "data": {
+                  "name": "Phone number acceptable",
+                  "variable": {
+                    "value": "oFlSsq4s1WTqHDyfodzHV"
+                  },
+                  "conditions": [
+                    {
+                      "id": "jjHBr-sNxuanMP-XlSLXU",
+                      "type": "eq",
+                      "value": "Yes",
+                      "value_type": "string"
+                    }
+                  ]
+                },
+                "type": "split-flow",
+                "position": {
+                  "x": 286.5,
+                  "y": -133.75
+                }
+              },
+              {
+                "id": "PQt3ROrbGD2xr8xCMGvXQ",
+                "data": {
+                  "code": "Context.setVariable(\"workflow_status\",\"failure\")\nContext.setVariable(\"reason\", \"Error occured when executing phone number validation function\")",
+                  "name": "phone number validation function error"
+                },
+                "type": "function",
+                "position": {
+                  "x": 285.683662269348,
+                  "y": 315.6937530012291
+                }
+              },
+              {
+                "id": "wvOYZvkWOyN88PK8iHCoM",
+                "data": {
+                  "name": "error End",
+                  "variables": [
+                    {
+                      "id": null,
+                      "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+                      "first_variable": {
+                        "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+                      "first_variable": {
+                        "variable": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44",
+                      "first_variable": {
+                        "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    }
+                  ]
+                },
+                "type": "end-flow",
+                "position": {
+                  "x": 1515.6649502365897,
+                  "y": 508.8678557517047
+                }
+              },
+              {
+                "id": "xLWOIX1KcqN1tMoQ8dsf8",
+                "data": {
+                  "name": "successful End",
+                  "variables": [
+                    {
+                      "id": null,
+                      "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+                      "first_variable": {
+                        "variable": "cd76cd28-525b-445e-94f1-5faef80b1d23"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44",
+                      "first_variable": {
+                        "variable": "e0387f78-d71b-4fd8-9c4f-6440fd281d44"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    },
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "8c6e6942-ddca-46d9-a49f-28d5e5717e7a",
+                      "first_variable": {
+                        "variable": "8c6e6942-ddca-46d9-a49f-28d5e5717e7a"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    }
+                  ]
+                },
+                "type": "end-flow",
+                "position": {
+                  "x": 1584.3646023810923,
+                  "y": -358.4638562389927
+                }
+              },
+              {
+                "id": "XcH732g7011vci6ewGceA",
+                "data": {
+                  "code": "/**\n * Build tracking URL based on shipper name and tracking numbers\n * @param {string} shipperName - Name of the shipping carrier\n * @param {string[]} trackingNumbers - Array of tracking numbers\n * @returns {string|false} - Constructed tracking URL or false if unsupported\n */\nfunction buildTrackingURL(shipperName, trackingNumbers) {\n\n  // Normalize shipper name (lowercase, trim whitespace)\n  const normalized = shipperName.trim().toLowerCase();\n  \n  // Keyword-based matching - identifies shipper type regardless of full name variation\n  if (normalized.includes('ups')) {\n    const params = trackingNumbers.map((n, i) => `InquiryNumber${i + 1}=${n}`).join('&');\n    return `https://www.ups.com/track?TypeOfInquiryNumber=T&${params}`;\n  }\n  \n  if (normalized.includes('fedex')) {\n    return `https://www.fedex.com/fedextrack/summary?trknbr=${trackingNumbers.join(',')}`;\n  }\n  \n  if (normalized.includes('canpar')) {\n    return `https://www.canpar.com/en/tracking/track.htm?barcode=${trackingNumbers.join(',')}`;\n  }\n  \n  if (normalized.includes('gls')) {\n    return `https://www.gls-canada.com/track?tracking=${trackingNumbers.join(',')}`;\n  }\n  \n  // Unsupported shipper\n  return false;\n}\n\n\n// Main execution\nContext.setVariable(\"workflow_status\", \"\")\n\nconst parsedOrdersInfo = Context.getVariable(\"parsedOrdersInfo\");\n\nif (!parsedOrdersInfo || parsedOrdersInfo.length === 0) {\n  Context.setVariable(\"workflow_status\", \"failure\");\n  Context.setVariable(\"reason\", \"No order information found\");\n} else {\n  // Get the first order\n  const order = parsedOrdersInfo[0];\n  const trackingInfo = order.trackingInfo;\n  \n  if (!trackingInfo || trackingInfo.length === 0) {\n    Context.setVariable(\"workflow_status\", \"failure\");\n    Context.setVariable(\"reason\", \"No tracking information found for the order\");\n  } else {\n    // Extract shipper name from first element (all elements have same shipper for one order)\n    const shipperName = trackingInfo[0].shipperName;\n    \n    // Extract all tracking numbers into array\n    const trackingNumbers = trackingInfo.map(info => info.trackingNumber);\n    \n    // Build tracking URL\n    const trackingURL = buildTrackingURL(shipperName, trackingNumbers);\n    \n    if (!trackingURL) {\n      Context.setVariable(\"workflow_status\", \"failure\");\n      Context.setVariable(\"reason\", `Unsupported shipper: ${shipperName}`);\n    } else {\n      // Generate SMS message\n      const smsMessage = `AutoShack: Thanks for contacting AutoShack customer support.\nYou can check the shipping status of your order using the link below:\n${trackingURL}\nIf you have any other questions, feel free to contact us again.`;\n      \n      // Store results in Context\n      Context.setVariable(\"workflow_status\", \"success\");\n      Context.setVariable(\"shipperName\", shipperName);\n      Context.setVariable(\"trackingNumbers\", trackingNumbers);\n      Context.setVariable(\"trackingURL\", trackingURL);\n      Context.setVariable(\"smsMessage\", smsMessage);\n    }\n  }\n}",
+                  "name": "generate SMS Message"
+                },
+                "type": "function",
+                "position": {
+                  "x": 654.909188218592,
+                  "y": -273.4515029224961
+                }
+              },
+              {
+                "id": "HB-DbO22Uar8i91LwfUdH",
+                "data": {
+                  "code": "Context.setVariable(\"workflow_status\", \"failure\")\nContext.setVariable(\"reason\", \"error occured when executing SMS generate function\")",
+                  "name": "generate sms function error"
+                },
+                "type": "function",
+                "position": {
+                  "x": 1029.2740575853652,
+                  "y": -97.2286538324017
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "pX3Nv3b-pgsElPLDnvTpz",
+                "type": "worflowEdge",
+                "source": "s44_Yk3s1tYQ2eB4iVw6b",
+                "target": "q9lCJ02TZ0x4UNKQgbOml",
+                "source_handle": "start-flow-node-rigth-handle-1",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "nqpcA-PLWL_MpJ9IGh23b",
+                "type": "worflowEdge",
+                "source": "q9lCJ02TZ0x4UNKQgbOml",
+                "target": "IRc9JGGSMyykOJCrg6nTA",
+                "source_handle": "success",
+                "target_handle": "split-flow-left-handle-1"
+              },
+              {
+                "id": "Lwd9VPxi51LFq7AUnPmg1",
+                "type": "worflowEdge",
+                "source": "q9lCJ02TZ0x4UNKQgbOml",
+                "target": "PQt3ROrbGD2xr8xCMGvXQ",
+                "source_handle": "error",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "B29fH_Gekw355QPx-qDhW",
+                "type": "worflowEdge",
+                "source": "PQt3ROrbGD2xr8xCMGvXQ",
+                "target": "wvOYZvkWOyN88PK8iHCoM",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "x4zQk2oR3SfZvdlpD1qaO",
+                "type": "worflowEdge",
+                "source": "PQt3ROrbGD2xr8xCMGvXQ",
+                "target": "wvOYZvkWOyN88PK8iHCoM",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "tgahkNJ_xztUrlyIQiDMn",
+                "type": "worflowEdge",
+                "source": "IRc9JGGSMyykOJCrg6nTA",
+                "target": "XcH732g7011vci6ewGceA",
+                "source_handle": "jjHBr-sNxuanMP-XlSLXU",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "bEQQE9SWPgoOq_a9ee6nH",
+                "type": "worflowEdge",
+                "source": "XcH732g7011vci6ewGceA",
+                "target": "xLWOIX1KcqN1tMoQ8dsf8",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "9GOtwEPXSQVd7K9EWa8R_",
+                "type": "worflowEdge",
+                "source": "XcH732g7011vci6ewGceA",
+                "target": "HB-DbO22Uar8i91LwfUdH",
+                "source_handle": "error",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "o1QIe2UmSDk6q3B-WM5KI",
+                "type": "worflowEdge",
+                "source": "HB-DbO22Uar8i91LwfUdH",
+                "target": "wvOYZvkWOyN88PK8iHCoM",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "LFnvlL9OxWeD-fkqRJQYz",
+                "type": "worflowEdge",
+                "source": "HB-DbO22Uar8i91LwfUdH",
+                "target": "wvOYZvkWOyN88PK8iHCoM",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "e6HBJakHVUMQMhcBze1UI",
+                "type": "worflowEdge",
+                "source": "IRc9JGGSMyykOJCrg6nTA",
+                "target": "wvOYZvkWOyN88PK8iHCoM",
+                "source_handle": "split-flow-exit-fallback",
+                "target_handle": "end-flow-left-handle-1"
+              }
+            ],
+            "variables": [
+              {
+                "id": "oFlSsq4s1WTqHDyfodzHV",
+                "type": "Workflow",
+                "variable_name": "phone_number_acceptable",
+                "tool_reference": [
+                  {
+                    "tool_id": "XSKIQQsdUCgEeOd_Dtv7f",
+                    "agent_id": "083c78a2-56ad-4acb-a7f8-663fedd61fd0"
+                  },
+                  {
+                    "tool_id": "CauLvD3ho3pLFKVFd0cbv",
+                    "agent_id": "083c78a2-56ad-4acb-a7f8-663fedd61fd0"
+                  },
+                  {
+                    "tool_id": "d5913242-69ed-48ba-9983-52f87c8932e5",
+                    "agent_id": "f91a78ff-2857-4527-9e7e-5252f51d17ad"
+                  }
+                ]
+              },
+              {
+                "id": "kAsxfMeZefYHWNnYANkNs",
+                "type": "Workflow",
+                "variable_name": "debug_input_raw",
+                "tool_reference": []
+              }
+            ],
+            "mcp_server_id": "",
+            "mcp_server_url": "",
+            "mcp_tool_name": ""
+          },
+          "is_internal_tool": false,
+          "input_params": {
+            "sms_phone_number": {
+              "name": "smsPhoneNumber",
+              "description": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+              "title": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+              "required": true,
+              "type": "string",
+              "variable_name": "smsPhoneNumber",
+              "value": null
+            }
+          },
+          "output_params": {
+            "workflow_status": {
+              "name": "workflow_status",
+              "description": "To track the execution status in workflow.",
+              "title": "To track the execution status in workflow.",
+              "required": true,
+              "type": "string",
+              "variable_name": "workflow_status",
+              "value": null
+            },
+            "reason": {
+              "name": "reason",
+              "description": "To tracking the failed reason in workflow",
+              "title": "To tracking the failed reason in workflow",
+              "required": true,
+              "type": "string",
+              "variable_name": "reason",
+              "value": null
+            },
+            "sms_phone_number": {
+              "name": "smsPhoneNumber",
+              "description": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+              "title": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+              "required": true,
+              "type": "string",
+              "variable_name": "smsPhoneNumber",
+              "value": null
+            },
+            "sms_message": {
+              "name": "smsMessage",
+              "description": "SMS message is used to send the customer.",
+              "title": "SMS message is used to send the customer.",
+              "required": true,
+              "type": "string",
+              "variable_name": "smsMessage",
+              "value": null
+            }
+          },
+          "tool_version": 1,
+          "tool_type": "WORKFLOW"
+        }
+      ]
+    },
+    {
+      "agent_id": "b96e2e0d-e2cb-4ae0-ad50-8d4fb1ebfd45",
+      "agent_version": 1,
+      "role": "ACTION_AGENT",
+      "agent_name": "FAQ Agent",
+      "goal": "Provides AutoShack policy information (returns, warranties) and general product compatibility guidance from internal knowledge base.",
+      "instruction": "## Customer Intent / Purpose:\nProvides authoritative information on:\n1. **Return and Warranty Policies** - store policies, return windows, warranty coverage, terms and conditions\n2. **General Product Compatibility** - high-level fitment info (e.g., \"passenger vehicles and light trucks\"), not vehicle-specific matching\n\n## Critical Prerequisite:\n- Handles questions about **already-identified products only** - Product Decision Agent must determine product category first\n- Example: Product Decision Agent confirms \"Brake Rotors\" → Customer asks \"Will these fit my 2020 Camry?\" → FAQ Agent\n\n**CRITICAL:** Never use built-in knowledge - all information must come from search_knowledge_internal results.\n\n## **Step-by-Step Execution:**\n\n### Step 1: Receive the user's query from Coordinator\n- Identify the query type: return policy, warranty policy, or general product compatibility\n- Extract key search terms (e.g., product type, policy aspect, general application)\n- Always execute the **getKMSegment** skill to get the **km_segment**\n\n### Step 2: Call the **search_knowledge_internal** tool\n- Use specific, targeted search terms based on the query\n- Examples:\n  * \"return policy 30 days\"\n  * \"warranty coverage brake pads\"\n  * \"CV axle compatibility vehicle types\"\n- Wait for search results before proceeding\n- If results are insufficient, search again with different terms before proceeding to Step 3\n\n### Step 3: Analyze search results\n\n**If search returned valid results:**\n- **Identify** the specific policy type (e.g., standard warranty vs. lifetime warranty, return window, general compatibility)\n- **Extract** all relevant details (timeframes, conditions, exceptions, coverage limits, vehicle type applicability)\n- **Synthesize** the essential information into a concise 2-3 sentence response\n\n**If search failed (no results or tool error):**\n- Note the failure type for appropriate response format in Step 4\n\n### Step 4: Construct and send structured response to Coordinator via **reply_to_coordinator** tool\n\n**CRITICAL:** Preserve exact language from search results - never modify policy wording.\n\n**For Successful Search (`search found relevant results`):**\n```json\n{\n  \"status\": \"success\",\n  \"answer\": \"[2-3 sentences combining policy overview and critical details - timeframes, coverage limits, conditions, part numbers. Preserve exact language from search results.]\",\n  \"source\": \"[Policy name or document reference if available]\"\n}\n```\n\n**Example Response:**\n```json\n{\n  \"status\": \"success\",\n  \"answer\": \"AutoShack offers two warranty options for brake rotors: 1-year standard warranty (covers defects only from purchase date) and lifetime warranty on premium rotors (covers defects for as long as you own the vehicle, requires proof of purchase).\",\n  \"source\": \"AutoShack Warranty Policy v2024\"\n}\n```\n\n**For No Results Found (`search returned no matches`):**\n```json\n{\n  \"status\": \"failure\",\n  \"message\": \"No information found in knowledge base for this query. May need specialist assistance.\"\n}\n```\n\n**For Search Tool Errors (`tool execution failed`):**\n```json\n{\n  \"status\": \"error\",\n  \"message\": \"Knowledge base search system encountered an error\"\n}\n```",
+      "routing_condition": "",
+      "tools": [
+        {
+          "tool_id": "search_knowledge_internal_dee1262f-178a-4f28-909f-0b9de213481d",
+          "tool_version": 1,
+          "tool_type": "REST",
+          "tool_name": "search_knowledge_internal",
+          "tool_description": "This tool is for knowledge management and can retrieve additional information from internal documentations",
+          "execute_params": {
+            "segments": [
+              "%{km_segment}"
+            ],
+            "ring_groups": []
+          },
+          "input_params": {
+            "language": {
+              "description": "language code and region code of the query in BCP 47 format, this should be inferred, do not ask the user about this, example: english in the united states is en-US",
+              "title": null,
+              "required": true,
+              "type": "string",
+              "value": null,
+              "variable_name": null
+            },
+            "query_string": {
+              "description": "query text",
+              "title": null,
+              "required": true,
+              "type": "string",
+              "value": null,
+              "variable_name": null
+            }
+          },
+          "output_params": {},
+          "is_internal_tool": true
+        },
+        {
+          "tool_id": "4609cd00-c40a-4d4c-ba83-bcf011d65d19",
+          "tool_name": "getKMSegment",
+          "tool_description": "Navigate to the related Knowledge Segment according to the provided user infomation",
+          "execute_params": {
+            "connection_id": "",
+            "action_id": "",
+            "nodes": [
+              {
+                "id": "-u8E9O-dtm6BtfZDwF7kH",
+                "data": {
+                  "name": "getKMSegment",
+                  "variables": [
+                    {
+                      "type": "string",
+                      "variable": "1834d53e-16f9-4fa4-a391-4781e43a96de"
+                    }
+                  ],
+                  "more_details": "Navigate to the related Knowledge Segment according to the provided user infomation"
+                },
+                "type": "start-flow",
+                "position": {
+                  "x": -325,
+                  "y": -108
+                }
+              },
+              {
+                "id": "GtHqu72jujFACqV1T5GwU",
+                "data": {
+                  "code": "const lang = Context.getVariable(\"language\");\nif (lang == \"en-US\") { Context.setVariable(\"km_segment\", \"external_us_eng\"); }\nelse if (lang == \"es-MX\") { Context.setVariable(\"km_segment\", \"external_es\"); }\nelse if (lang == \"fr-CA\") { Context.setVariable(\"km_segment\", \"external_fr\"); }",
+                  "name": "navigateToRelatedKMSegment"
+                },
+                "type": "function",
+                "position": {
+                  "x": 98.47727839413733,
+                  "y": -134.52613296351763
+                }
+              },
+              {
+                "id": "Jctoac0cK4mOrCUFRc3Ab",
+                "data": {
+                  "name": "end flow",
+                  "variables": [
+                    {
+                      "id": null,
+                      "type": "",
+                      "variable": "4464da23-db9c-49fc-a302-67d3946a8af3",
+                      "first_variable": {
+                        "variable": "4464da23-db9c-49fc-a302-67d3946a8af3"
+                      },
+                      "second_variable": {
+                        "variable": null
+                      }
+                    }
+                  ]
+                },
+                "type": "end-flow",
+                "position": {
+                  "x": 500.47727839413733,
+                  "y": -71.52613296351763
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "YgVcCw-VOkGwVDxtHTQKD",
+                "type": "worflowEdge",
+                "source": "-u8E9O-dtm6BtfZDwF7kH",
+                "target": "GtHqu72jujFACqV1T5GwU",
+                "source_handle": "start-flow-node-rigth-handle-1",
+                "target_handle": "function-left-handle-1"
+              },
+              {
+                "id": "ZZvaYg7MlWBWTyLjDKlLO",
+                "type": "worflowEdge",
+                "source": "GtHqu72jujFACqV1T5GwU",
+                "target": "Jctoac0cK4mOrCUFRc3Ab",
+                "source_handle": "success",
+                "target_handle": "end-flow-left-handle-1"
+              },
+              {
+                "id": "IeZEztJVeSHo8HTXFw0VN",
+                "type": "worflowEdge",
+                "source": "GtHqu72jujFACqV1T5GwU",
+                "target": "Jctoac0cK4mOrCUFRc3Ab",
+                "source_handle": "error",
+                "target_handle": "end-flow-left-handle-1"
+              }
+            ],
+            "variables": [
+              {
+                "id": "_JHdzat9f5G4lkGsOjQJZ",
+                "type": "Workflow",
+                "variable_name": "lang"
+              }
+            ],
+            "mcp_server_id": "",
+            "mcp_server_url": "",
+            "mcp_tool_name": ""
+          },
+          "is_internal_tool": false,
+          "input_params": {
+            "language": {
+              "name": "language",
+              "description": "detected language type from customer message",
+              "title": "detected language type from customer message",
+              "required": true,
+              "type": "string",
+              "variable_name": "language",
+              "value": null
+            }
+          },
+          "output_params": {
+            "km_segment": {
+              "name": "km_segment",
+              "description": "this is used by Knowledge Segment",
+              "title": "this is used by Knowledge Segment",
+              "required": true,
+              "type": "string",
+              "variable_name": "km_segment",
+              "value": null
+            }
+          },
+          "tool_version": 1,
+          "tool_type": "WORKFLOW"
+        }
+      ]
+    },
+    {
+      "agent_id": "c2a94d6f-a084-4e30-911b-a6ef327d27ab",
+      "agent_version": 1,
+      "role": "ACTION_AGENT",
+      "agent_name": "Product Decision Agent",
+      "goal": "Specialist for AutoShack’s product interpretation and availability decisions. Identifies requested product categories, determines whether items are carried or require clarification or redirection, and outputs handling decisions to the coordinator for next-step orchestration.",
+      "instruction": "## Agent Role\nInterpret product requests, determine if items are sold, identify handling behavior, and output **ONLY structured JSON decisions** to the coordinator.\n\n## MANDATORY Tool Usage\n- You **MUST** use the `search_knowledge_internal` tool for **ALL** decisions\n- You **MUST NOT** rely on built-in knowledge, assumptions, or inference outside the knowledge base\n- Every decision **must be backed by an explicit knowledge base match**\n\n## Step-by-Step Execution\n### Step 1: Extract Product Terms from Request\nReceive raw customer utterance from coordinator. Extract any product-related terms.\n\n**Normalization:** Treat singular/plural as same. Ignore punctuation. Handle misspellings only if in knowledge base.\n\n**Product mentions include:**\n- Product names (\"CV axle\", \"brake rotors\", \"caliper\")\n- Sub-parts (\"CV boot\", \"caliper bracket\", \"coil spring\")\n- Product categories (\"brakes\", \"suspension\", \"axle\")\n- Confirmations with product terms (\"I'll take the whole axle\", \"give me the complete assembly\")\n- Clarification responses (\"just rotors\", \"ATV axle\")\n\n\n### Step 2: Search with the **search_knowledge_internal** tool\nSearch the following knowledge sources in priority order (stop at first match):\n1. **non_sold_subparts.csv** — Match against the `term` field\n2. **not_carried_but_redirectable.csv** — Match against the `term` field\n3. **clarification_rules.csv** — Match against the `trigger_term` field\n4. **product_category_terms.csv** — Match against the `term` field\n\n**Matching Rules:**\n- Use the normalized customer request (from Step 1)\n- Perform **exact match** after normalization (singular/plural treated as same)\n- Match is **case-insensitive**\n- Stop at the first explicit match\n- Do NOT continue searching after a valid match is found\n\n**Field Extraction:**\nWhen a match is found, extract the following fields from the matched CSV row:\n- `category` (if present in CSV)\n- `action` or `script` (response guidance)\n- `question` (for clarification_rules.csv)\n\n\n### Step 3: Determine Handling Decision\nBased on the knowledge base match, determine **ONE** handling type.\n\n**MANDATORY CSV-to-Handling Type Mapping:**\n- Match found in **non_sold_subparts.csv** → `offer_complete`\n- Match found in **not_carried_but_redirectable.csv** → `redirect`\n- Match found in **clarification_rules.csv** → `clarify`\n- Match found in **product_category_terms.csv** → `carried`\n- No match found in any CSV → `unknown`\n\n**The handling_type is determined solely by which CSV file contains the match. Do NOT use a different handling_type.**\n\n\n### Step 4: Output Structured Decision to Coordinator\n\n**CRITICAL:** You only provide structured JSON decisions. The `response_template` field is for Coordinator to use - not for direct customer communication.\n\nSend via **reply_to_coordinator** tool using this format:\n\n| Field | Value |\n|-------|-------|\n| `intent_type` | Always \"product_handling\" |\n| `handling_type` | offer_complete \\| redirect \\| clarify \\| carried \\| unknown |\n| `category` | From CSV `category` column, or `null` if not present |\n| `kb_reference` | Format: \"filename:matched_term\" |\n| `response_template` | From CSV `script`/`question` column, or `null` for \"carried\". Output as-is for Coordinator to adapt naturally. |\n| `confidence` | high \\| medium \\| low |\n\n**Handling Types:**\n\n| Type | Category | Response Template | Use Case |\n|------|----------|-------------------|----------|\n| `offer_complete` | From CSV | From `script` | Sub-part → full assembly |\n| `redirect` | `null` | From `script` | Not carried → alternative |\n| `clarify` | `null` | From `question` | Broad/ambiguous term |\n| `carried` | From CSV | `null` | Valid product category |\n| `unknown` | `null` | \"I can confirm what we carry...\" | No match found |\n\n**Example:**\n```json\n{\n  \"intent_type\": \"product_handling\",\n  \"handling_type\": \"offer_complete\",\n  \"category\": \"CV Axles\",\n  \"kb_reference\": \"non_sold_subparts.csv:cv joint\",\n  \"response_template\": \"We do not sell the CV joint by itself. We sell the complete CV axle assembly. Would you like the complete axle?\",\n  \"confidence\": \"high\"\n}\n```",
+      "routing_condition": "",
+      "tools": [
+        {
+          "tool_id": "search_knowledge_internal_e3bb09a8-731a-4b09-99ae-dbe925552ba3",
+          "tool_version": 1,
+          "tool_type": "REST",
+          "tool_name": "search_knowledge_internal",
+          "tool_description": "This tool is for knowledge management and can retrieve additional information from internal documentations",
+          "execute_params": {
+            "segments": [
+              "product_related"
+            ],
+            "ring_groups": []
+          },
+          "input_params": {
+            "language": {
+              "description": "language code and region code of the query in BCP 47 format, this should be inferred, do not ask the user about this, example: english in the united states is en-US",
+              "title": null,
+              "required": true,
+              "type": "string",
+              "value": null,
+              "variable_name": null
+            },
+            "query_string": {
+              "description": "query text",
+              "title": null,
+              "required": true,
+              "type": "string",
+              "value": null,
+              "variable_name": null
+            }
+          },
+          "output_params": {},
+          "is_internal_tool": true
+        }
+      ]
+    },
+    {
+      "agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+      "agent_version": 1,
+      "role": "SUPERVISING_AGENT",
+      "agent_name": "Coordinator",
+      "goal": "You are the Coordinator for AutoShack, an automotive parts retailer. You orchestrate customer conversations by routing requests to specialized agents, interpreting responses into natural messages, handling escalations to live agents, and maintaining multilingual communication.",
+      "instruction": "## Persona and Communication Style:\n- AutoShack virtual assistant - warm, engaging, conversational tone with natural markers (\"Got it,\" \"Hmm,\" \"I see\")\n- Detect language from user's first message (English, French, Spanish)\n   - Convert to BCP 47 format: en-US, fr-CA, or es-MX\n   - If language cannot be determined, default to en-US\n\n\n## Session State Management:\nYou are responsible for maintaining session state throughout the customer interaction:\n1. **Language Preference:**\n   - Once detected, maintain this language preference for the entire conversation\n2. **Conversation Context:**\n   - Track previous intents to handle follow-up questions\n   - Maintain conversation history for contextual understanding\n\n\n## Brand Policy:\nAutoShack exclusively sells **AutoShack-branded parts**.\n\n\n- **DO NOT ask** customers about brand preference (\"Which brand would you like?\", \"What brand are you looking for?\")\n- If customer asks brand questions (\"What brands do you carry?\", \"Do you have OEM parts?\", \"Any other brands?\"), inform them naturally that we only carry AutoShack-branded parts\n\n\n## Request Routing Execution:\n\n\n**Before Routing:**\n- For order inquiries: Collect identifier (email/phone/order number) first\n  - If missing, ask user to provide at least one identifier\n- For all requests: Include user's exact request + detected language\n\n\n**Routing Function:**\n- Use **transfer_to_agent** to route per decision tree in `routing_condition`\n- Always include: user's request (word-for-word) and detected language\n- Handle hybrid requests sequentially, one agent at a time\n\n\n## Processing Agent Responses:\nWhen your action agents reply, interpret the response as follows:\n\n\n### For **Order Inquiry Agent** response\n\n\n   - **Step 1:** Relay order information\n     - Use agent's `answer` field as-is without modification\n   \n   - **Step 2:** Auto-offer SMS tracking link (only for single orders)\n     - **If `orderCount = 1`:**\n       - After relaying order details, automatically ask: \"I can send you the tracking link via SMS so you can check the shipping status on your phone. Would you like me to do that?\"\n       - Proceed to Step 3a or 3b based on customer response\n     \n     - **If `orderCount >= 2`:**\n       - Use agent's `answer` field to display all orders\n       - Clarify system capability: \"I can send you the tracking link for one order at a time via SMS. Which order would you like tracking information for? Please tell me the order number.\"\n       - WAIT for customer to specify one order number\n       - When customer responds with **order number** → Route back to Order Inquiry Agent with that order number only\n       - Agent will return single order details (now `orderCount = 1`)\n       - Then proceed to Step 2 (auto-offer SMS)\n     \n   - **Step 3a:** If customer agrees to receive SMS\n      1. **IMPORTANT:** [smsPhoneNumber] is SEPARATE from [customerPhoneNumber]. You MUST ask customer for SMS phone number.\n         - Always ask: \"What phone number should I send the tracking link to?\"\n         - Accept customer's response as [smsPhoneNumber]\n      2. Route to Order Inquiry Agent with [smsPhoneNumber] to send SMS\n      3. Based on Agent's response, process result:\n         - **If success:** Confirm: \"I've sent the tracking link to [smsPhoneNumber]\"\n         - **If failure:** Translate failure reason to user-friendly message\n            - Phone number issue → Allow retry (max 2 times)\n            - Other issues → Proceed to Step 3b\n   \n   - **Step 3b:** If customer declines SMS OR SMS fails after retries\n     - Provide verbal tracking information:\n       \"Your order is shipped via [shipperName]. Tracking number(s): [trackingNumbers]. You can check the status on [shipperName]'s website.\"\n\n\n   - **Step 4:** If customer asks for real-time shipping status details\n      - If customer asks for specific delivery updates (e.g., \"Where is my package now?\", \"When will it arrive?\", \"What's the current status?\"):\n      - Explain limitation naturally: \"I've provided the tracking number, but I'm unable to check the real-time shipping status directly from the carrier's system.\"\n      - Reinforce self-service options:\n         - If SMS was sent: \"The tracking link I sent will show you live updates\"\n         - If SMS was declined: \"You can check live updates on [shipperName]'s website using tracking number [trackingNumbers]\"\n      - Offer escalation if needed: \"If you need help interpreting the tracking information, I can connect you with a live agent.\"\n\n\n### For **Product Decision Agent** response\n   - **handling_type = carried**\n      - Acknowledge product availability naturally\n      - Offer to connect customer with a live agent for purchase assistance\n      - **Only route to FAQ Agent if customer explicitly asks about fitment, warranty, or return policy**\n   - **handling_type = offer_complete**\n      - Use `response_template` as guidance, adapt naturally based on conversation context\n      - Guide customer toward the complete assembly\n   - **handling_type = redirect**\n      - Use `response_template` as guidance, adapt naturally based on conversation context\n      - Redirect toward the suggested alternative\n   - **handling_type = clarify**\n      - Use `response_template` to ask clarification question, adapt naturally based on conversation context\n      - **When customer responds with product choice, route response back to Product Decision Agent**\n   - **handling_type = unknown**\n      - Ask neutral follow-up: \"Could you describe the part you need or tell me what it's for?\"\n      - If still unclear after 1-2 attempts, offer escalation\n\n\n   Do NOT override or reinterpret the Product Decision Agent’s determination.\n\n\n### For **FAQ Agent** response\n   - Use the `answer` field as guidance, adapt naturally based on conversation context\n   - Maintain the core information while ensuring natural flow\n   \n### Error Response (from any agent):\n   - Translate technical errors to user-friendly messages\n   - Offer alternatives (retry later, call customer service)\n   - Consider escalation for critical errors\n\n\n\n## Transfer to Human Agent Process:\n\n\n**CRITICAL WORKFLOW - Follow these steps for ALL escalations:**\n\n\n### Step1: Confirm Based on Context\n   - **If customer explicitly requests live agent** → Acknowledge naturally and proceed immediately to Step 2\n   - **If AI initiates escalation** (frustration, out-of-scope, errors) → Ask if they'd like to connect with a live specialist\n     - If customer agrees → Proceed to Step 2\n     - If customer disagrees → Continue attempting to help with current conversation\n   \n### Step2: Route to Transfer Support Agent\n   - MUST route to **Transfer Support Agent** first (not directly to live agent)\n   - Provide complete conversation summary:\n     - All user messages and intents\n     - All agent responses and actions taken\n     - Order/product inquiries and results\n     - Key information collected and unresolved issues\n   \n### Step3: Wait for Confirmation\n   - DO NOT notify customer until Transfer Support Agent confirms summary capture\n   \n### Step4: Complete Transfer\n   - After receiving confirmation, send: \"To better assist you, I'm escalating you to a live agent.\"\n\n\n## Response Formatting:\n- You are responsible for final formatting of all messages to users\n- Translate agent responses into natural language, adapting to conversation context\n- Maintain consistent warm, professional tone\n- When appropriate, naturally invite further assistance (avoid repetitive closing questions)",
+      "routing_condition": "## Request Routing Decision Tree:\n\n1. **Product-Related Requests** → **Product Decision Agent**\n   - Product names/categories (\"rotors\", \"CV axle\", \"brakes\")\n   - Sub-part requests (\"CV boot\", \"caliper bracket\")  \n   - Availability questions (\"do you have...\", \"do you sell...\")\n   - Follow-up responses to product clarifications\n\n2. **Order Status Requests** → **Order Inquiry Agent**\n   - Order details lookup (\"Where is MY order?\")\n   - Tracking SMS delivery (after user agreement)\n\n3. **Policy/General Info Requests** → **FAQ Agent**\n   - Return/warranty policies\n   - General compatibility info (NOT vehicle-specific fitment)\n   - Key: \"HOW to handle\" or \"general policies\", NOT specific order\n\n4. **Transfer Requests** → **Transfer Support Agent**\n   - Customer asks for human/live agent\n   - Frustration or out-of-scope requests\n   - Out-of-scope requests",
+      "tools": []
+    }
+  ],
+  "links": [
+    {
+      "source_agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+      "source_agent_version": 1,
+      "target_agent_id": "9ef6500e-052d-4a28-ac2f-4bbd089c57a5",
+      "target_agent_version": 1
+    },
+    {
+      "source_agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+      "source_agent_version": 1,
+      "target_agent_id": "10b59878-1e8e-4d47-9734-dbff54a0dd70",
+      "target_agent_version": 1
+    },
+    {
+      "source_agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+      "source_agent_version": 1,
+      "target_agent_id": "c2a94d6f-a084-4e30-911b-a6ef327d27ab",
+      "target_agent_version": 1
+    },
+    {
+      "source_agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+      "source_agent_version": 1,
+      "target_agent_id": "b96e2e0d-e2cb-4ae0-ad50-8d4fb1ebfd45",
+      "target_agent_version": 1
+    }
+  ],
+  "markers": [],
+  "variables": {
+    "workflow_status": {
+      "id": "cd76cd28-525b-445e-94f1-5faef80b1d23",
+      "variable_name": "workflow_status",
+      "description": "To track the execution status in workflow.",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "reason": {
+      "id": "9c0cb6b9-10ff-4d1f-9ef7-e95c0aacb1bf",
+      "variable_name": "reason",
+      "description": "To tracking the failed reason in workflow",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "customer_phone_number": {
+      "id": "ce64538a-b15e-4f71-857f-b7216faa0c5d",
+      "variable_name": "customerPhoneNumber",
+      "description": "customer's phone number for order inquiry.\nPhone number can be digit and '-', area code is not necessary.",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "last_received_message": {
+      "id": "d6e4c35b-2d9b-4b0e-8b1c-3092fdc7c128",
+      "variable_name": "Last received message",
+      "description": "Last message received from the contact person",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": false
+    },
+    "language": {
+      "id": "1834d53e-16f9-4fa4-a391-4781e43a96de",
+      "variable_name": "language",
+      "description": "detected language type from customer message",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "application_output": {
+      "id": "9370d191-6dfe-45f0-b0b4-91dc62a88768",
+      "variable_name": "Application output",
+      "description": "Information sent to applications (Autopilot, Copilot, API)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": false
+    },
+    "application_input": {
+      "id": "5b0b3658-d3e1-45d0-b5b0-9bc2e44604d5",
+      "variable_name": "Application Input",
+      "description": "Information provided by applications (Autopilot, Copilot, API)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "customer_order_number": {
+      "id": "a5301669-569f-4d82-a9fe-5e8a3b5e7145",
+      "variable_name": "customerOrderNumber",
+      "description": "Customer's order number, including internal (Autoshack) and external channels order ID",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "debug_value": {
+      "id": "e3e0e209-4cc5-4f2f-93f1-a5db7831b0b1",
+      "variable_name": "debug_value",
+      "description": "used for debugging the parsedOrdersList",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "sms_phone_number": {
+      "id": "e0387f78-d71b-4fd8-9c4f-6440fd281d44",
+      "variable_name": "smsPhoneNumber",
+      "description": "The phone number provided by the user for receiving SMS text messages. Phone number can be digit and '-', area code is not necessary.",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "sms_message": {
+      "id": "8c6e6942-ddca-46d9-a49f-28d5e5717e7a",
+      "variable_name": "smsMessage",
+      "description": "SMS message is used to send the customer.",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "orders_list": {
+      "id": "341b86e6-af2f-4311-941d-a8e956661b52",
+      "variable_name": "ordersList",
+      "description": "The original customer order information returned from the API includes salesChannel, dateOrdered, shipments and package-related details.",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "escalation_data": {
+      "id": "7bb0e187-6f15-40c5-94ee-920e6c914948",
+      "variable_name": "escalation_data",
+      "description": "the gathered information (conversation summary, customer info, etc.) used to escalate to external",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "channel_type": {
+      "id": "3c8136ef-4703-4c15-98fd-7f69bc4976f1",
+      "variable_name": "Channel Type",
+      "description": "The channel type of the current session (voice, digital or agent_assist)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "tracking_url": {
+      "id": "0fb83682-d99b-410f-8730-ab3a88bcebea",
+      "variable_name": "trackingURL",
+      "description": "The URL address users can use to directly query orders",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "km_segment": {
+      "id": "4464da23-db9c-49fc-a302-67d3946a8af3",
+      "variable_name": "km_segment",
+      "description": "this is used by Knowledge Segment",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "channel_name": {
+      "id": "7659f647-d63f-4e1c-98c2-f1c1be630ee4",
+      "variable_name": "Channel Name",
+      "description": "The channel name of the current session (VOICE, CHAT, SMS, FACEBOOK, EMAIL, WHATSAPP)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "last_skill_name": {
+      "id": "b4e31f76-cf5d-4cf0-8f10-5c42a43e9144",
+      "variable_name": "Last skill name",
+      "description": "Name of the last used Skill",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": false
+    },
+    "order_count": {
+      "id": "376f51c6-7b03-425c-97e6-206f7a6c0b63",
+      "variable_name": "orderCount",
+      "description": "Total number of orders",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "session_id": {
+      "id": "c0f3d524-d357-46ed-9c60-6f4a0ce8911b",
+      "variable_name": "Session ID",
+      "description": "Session's identification of a given voice or digital interaction",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "sales_channel": {
+      "id": "5cd21905-eb15-4037-a270-f80675f1f29a",
+      "variable_name": "salesChannel",
+      "description": "Customer Buying Channels (Amazon, eBay, Walmart, Webstore, CSR) ",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "parsed_orders_info": {
+      "id": "6279d707-9288-42da-a2a2-b1e7368d6d89",
+      "variable_name": "parsedOrdersInfo",
+      "description": "The parsed customer order information used to reply to the customer mainly includes salesChannel, dateOrdered, and trackingInfo (shipperName, trackingNumber).",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "interaction_id": {
+      "id": "ecb2d3f5-4556-4dc7-9580-b6d474c16564",
+      "variable_name": "Interaction ID",
+      "description": "Interaction’s identification of a given voice or digital interaction",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "caller_id": {
+      "id": "6a298499-1f34-4d60-8dbb-27fd30e1e332",
+      "variable_name": "Caller ID",
+      "description": "Contact's identification (e.g. phone number)",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": true
+    },
+    "conversation_summary": {
+      "id": "e0232b90-c4b7-4557-ae0a-4ac08c6f414a",
+      "variable_name": "conversationSummary",
+      "description": "Conversation Summary of the ENTIRE conversation from start to current point, not just recent exchanges",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "tracking_numbers": {
+      "id": "269f56e4-20b5-4700-aeaa-86b735e3104b",
+      "variable_name": "trackingNumbers",
+      "description": "the tracking number of packages",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "shipper_name": {
+      "id": "cd0135d0-37a9-476e-a18d-37dfc9b8fee9",
+      "variable_name": "shipperName",
+      "description": "Shipping carrier or fulfillment provider responsible for the shipment.",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    },
+    "previous_response": {
+      "id": "7dcb08cd-748d-47a2-b3d3-c6d089ec89b2",
+      "variable_name": "Previous response",
+      "description": "Last message sent by the AI Agent",
+      "type": "String",
+      "possible_values": [],
+      "source": "System",
+      "references": [],
+      "is_read_only": false
+    },
+    "customer_email_address": {
+      "id": "09b8b396-c5f7-4da6-90b3-fa67e9865a81",
+      "variable_name": "customerEmailAddress",
+      "description": "Customer email address for order inquiry.",
+      "type": "STRING",
+      "possible_values": [],
+      "source": "Custom",
+      "references": [],
+      "is_read_only": false
+    }
+  },
+  "application_output_settings": {
+    "type": "value",
+    "value": ""
+  },
+  "custom_guardrail_settings": null,
+  "welcome_message_settings": null,
+  "language_lock_settings": null
+}

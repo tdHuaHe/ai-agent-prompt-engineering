@@ -1,0 +1,33 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their account balance",
+  "test_type":"user_input_variations",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_account_list",
+      "description": "Show the customer's all account numbers successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_account_balance",
+      "description": "Agent showed the account balance information successfully.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000058580",
+    "selected_account_number": {
+      "value": ["8001", "the first account", "account *1001"],
+      "description": "randomly select an account number from the list"
+    }
+  },
+  "user_simulation_policy": [
+    "Send messages that contain a spelling mistake or typo as a careless customer would."
+  ],
+  "target_turns": 10
+}

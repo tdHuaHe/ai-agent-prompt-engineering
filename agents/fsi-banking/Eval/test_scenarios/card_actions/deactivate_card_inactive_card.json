@@ -1,0 +1,24 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to deactivate their card 3321",
+  "test_type":"sad_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "can_not_deactivate_inactive_card",
+      "description": "Agent said that cannot deactivate an inactive card.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_card_number": {
+      "value": "3321"
+    }
+  },
+  "target_turns": 12
+}

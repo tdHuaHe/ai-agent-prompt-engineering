@@ -1,0 +1,27 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their account balance",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_account_list",
+      "description": "Show the customer's all account numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_account_balance",
+      "description": "Show the customer their selected account balance information successfully.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000058580",
+    "selected_account_number": "*1001"
+  },
+  "target_turns": 10
+}

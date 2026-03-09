@@ -1,0 +1,462 @@
+{
+  "end_date": {
+    "id": "152b00ef-aecd-483d-85ff-106f4945ff75",
+    "variable_name": "end_date",
+    "description": "Set the value when asking the customer for their preferred date, and use it to get available slots.\n\nFollow the format as YYYY-MM-DD.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "service_type_id": {
+    "id": "2ae0f02d-5a82-476c-b810-a4393707ab6a",
+    "variable_name": "service_type_id",
+    "description": "Service type ID of the selected appointment, set the value when user select an appointment from the appointment list.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "workflow_status": {
+    "id": "3635ef36-7913-4c56-943f-7a77c07e0eeb",
+    "variable_name": "workflow_status",
+    "description": "To track the execution result in workflow",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "date_of_today": {
+    "id": "ce14b108-3190-4518-a479-d8ea1921dc8d",
+    "variable_name": "date_of_today",
+    "description": "Today's date, calculated based on the user’s timezone.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "timezone": {
+    "id": "c11ab1bd-fd3b-4979-9879-bb499ca58eb3",
+    "variable_name": "timezone",
+    "description": "Timezone should follow the IANA Time Zone Database format. It is always set to \"America/Los_Angeles\".",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "user_address": {
+    "id": "9cf572e0-9377-4ae3-a7ed-d609e7d050de",
+    "variable_name": "user_address",
+    "description": "The address used to find nearby locations. This can be the user's Zip code.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "last_received_message": {
+    "id": "d6e4c35b-2d9b-4b0e-8b1c-3092fdc7c128",
+    "variable_name": "Last received message",
+    "description": "Last message received from the contact person",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "appointment_id": {
+    "id": "03cb8e38-5fba-4e33-9d6e-a4e17339f895",
+    "variable_name": "appointment_id",
+    "description": "The appointment ID of the selected appointment, set the value when user select an appointment from the appointment list.\n",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "appointment_date": {
+    "id": "134d5570-4de5-47be-bbb1-2f8a760a7d13",
+    "variable_name": "appointment_date",
+    "description": "the UTC date time of an appointment",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "application_output": {
+    "id": "9370d191-6dfe-45f0-b0b4-91dc62a88768",
+    "variable_name": "Application output",
+    "description": "Information sent to applications (Autopilot, Copilot, API)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "weekday_of_today": {
+    "id": "e16d47ea-69da-434e-ad4f-4e1c1239651a",
+    "variable_name": "weekday_of_today",
+    "description": "Today's weekday, calculated based on the user’s timezone.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "application_input": {
+    "id": "5b0b3658-d3e1-45d0-b5b0-9bc2e44604d5",
+    "variable_name": "Application Input",
+    "description": "Information provided by applications (Autopilot, Copilot, API)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "location_id": {
+    "id": "1327a918-fd67-49df-a4a6-1eb69b1f7ec3",
+    "variable_name": "location_id",
+    "description": "Location ID of the selected appointment, set the value when user select an appointment from the appointment list.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "preferred_weekday": {
+    "id": "46eec8d0-25cc-4c33-b6c0-e83679974658",
+    "variable_name": "preferred_weekday",
+    "description": "The user's preferred weekday for scheduling the appointment.\nThis is an enum with valid values: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "patient_name": {
+    "id": "5c74e705-4658-4324-8d63-5dc8f83ad683",
+    "variable_name": "patient_name",
+    "description": "Patient's name.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "medication_request_message": {
+    "id": "2326099e-59c7-4ed4-b325-d9a099c26230",
+    "variable_name": "medication_request_message",
+    "description": "The success message for medications request, generated by workflow.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "max_days": {
+    "id": "e92719e0-f9bd-4d84-bc62-9f94835a48c7",
+    "variable_name": "max_days",
+    "description": "max days used to get available slots, should be an Integer",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "escalation_data": {
+    "id": "ea4689d2-1cec-4c94-aa4d-6f9f6a0c3cc1",
+    "variable_name": "escalation_data",
+    "description": "Information collected for escalation.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "visit_type_name": {
+    "id": "17ad66ab-7455-4b7d-b8a0-7baa40309a72",
+    "variable_name": "visit_type_name",
+    "description": "Name of the lab visit type, either \"glucose test\" or \"regular lab test\".",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "channel_type": {
+    "id": "3c8136ef-4703-4c15-98fd-7f69bc4976f1",
+    "variable_name": "Channel Type",
+    "description": "The channel type of the current session (voice, digital or agent_assist)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "start_date": {
+    "id": "3686b37d-a300-423e-9acb-46b157e06182",
+    "variable_name": "start_date",
+    "description": "Set the value when asking the customer for their preferred date, and use it to get available slots. If the customer does not specify an start date, default it to today's date.\nCustomer can input any format of the date, you need follow the format as YYYY-MM-DD and convert the format if necessary.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "channel_name": {
+    "id": "7659f647-d63f-4e1c-98c2-f1c1be630ee4",
+    "variable_name": "Channel Name",
+    "description": "The channel name of the current session (VOICE, CHAT, SMS, FACEBOOK, EMAIL, WHATSAPP)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "location_address": {
+    "id": "4942a4f6-0e86-458c-ab90-7a107b6b53a1",
+    "variable_name": "location_address",
+    "description": "The address of lab the user wants to visit.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "appointment_id_to_cancel": {
+    "id": "795dd53f-7a51-433d-b54c-a43d065f45e2",
+    "variable_name": "appointment_id_to_cancel",
+    "description": "The appointment id for the appointment that is required to be cancelled.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "last_skill_name": {
+    "id": "b4e31f76-cf5d-4cf0-8f10-5c42a43e9144",
+    "variable_name": "Last skill name",
+    "description": "Name of the last used Skill",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "appointment_id_to_confirm": {
+    "id": "23b59dcf-f6eb-4db7-a9d3-abc7f1f67aa8",
+    "variable_name": "appointment_id_to_confirm",
+    "description": "The appointment id to be confirmed.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "start_date_utc": {
+    "id": "91cce266-425d-4c85-a0f9-a71df343ab6b",
+    "variable_name": "start_date_UTC",
+    "description": "The start date of the selected slot by user from available slot list. After user identifies the slot, store start_date to this variable.\nIt should follow standard UTC format as YYYY-MM-DDTHH:MM:SSZ\n\n",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "external_id_location": {
+    "id": "e56c37ae-f4c8-4ed2-9d7d-8f302c53c87d",
+    "variable_name": "external_id_location",
+    "description": "external id of the identified location",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "medication_id": {
+    "id": "065f3711-dad5-42e9-bdae-26e6ef629f05",
+    "variable_name": "medication_id",
+    "description": "ID of the medication user want to refill.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "session_id": {
+    "id": "c0f3d524-d357-46ed-9c60-6f4a0ce8911b",
+    "variable_name": "Session ID",
+    "description": "Session's identification of a given voice or digital interaction",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "upcoming_appointment_list": {
+    "id": "07620e80-c93f-4940-a0a3-93bc0a7b3fad",
+    "variable_name": "upcoming_appointment_list",
+    "description": "retain the info of future appointments list.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "interaction_id": {
+    "id": "ecb2d3f5-4556-4dc7-9580-b6d474c16564",
+    "variable_name": "Interaction ID",
+    "description": "Interaction’s identification of a given voice or digital interaction",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "available_provider_slots_list": {
+    "id": "94a8ca5c-3d7a-479e-9e66-5902c1cb1c95",
+    "variable_name": "available_provider_slots_list",
+    "description": "Retain the information of all available provider slots.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "preferred_time": {
+    "id": "e3dd5bce-2b5d-4083-9e06-a9aeeed1196f",
+    "variable_name": "preferred_time",
+    "description": "The user's preferred time of day for scheduling a new appointment. This is an enum with valid values: AM or PM.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "location_name": {
+    "id": "d5a0fdcb-9d5e-4624-8956-35499e318f5f",
+    "variable_name": "location_name",
+    "description": "The name of the lab the user wants to visit.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "locations_information": {
+    "id": "f3162a0c-caba-4bd2-baff-fe378d1f8dd2",
+    "variable_name": "locations_information",
+    "description": "Information about the locations selected by the user.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "specific_time": {
+    "id": "4070bdeb-ef86-44c7-bf3d-028aeee45487",
+    "variable_name": "specific_time",
+    "description": "Time specified by the user to identify open time slots, for example, \"3:00 PM\".",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "zip_code_nearby_location": {
+    "id": "f05ba4bc-071a-43e7-9d7d-590aed484626",
+    "variable_name": "zip_code_nearby_location",
+    "description": "User's Zip code used to find nearby locations.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "slot_id": {
+    "id": "c8e8d11d-bb58-4538-87a6-ff5003e1c462",
+    "variable_name": "slot_id",
+    "description": "The id of the of the selected slot by user from available slot list. After user identifies the slot, store id to this variable.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "caller_id": {
+    "id": "6a298499-1f34-4d60-8dbb-27fd30e1e332",
+    "variable_name": "Caller ID",
+    "description": "Contact's identification (e.g. phone number)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "patient_id": {
+    "id": "4f96f18d-1afc-4be0-845a-1a8e21568d8c",
+    "variable_name": "patient_id",
+    "description": "ID of the identified patient.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "patient_mrn": {
+    "id": "9e37b686-44f3-45e8-a8e1-0c946ce12255",
+    "variable_name": "patient_mrn",
+    "description": "Patient's medical record number, used to identify the patient in a healthcare system.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "user_zip_code": {
+    "id": "ce91ec2b-d2e2-4c35-952c-f85bdcb926cd",
+    "variable_name": "user_zip_code",
+    "description": "The Zip code of the user, retrieved during the verification process.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "provider_id": {
+    "id": "2ebe9f01-d739-473b-9182-b9031e0ae73e",
+    "variable_name": "provider_id",
+    "description": "Provider ID of the selected appointment, set the value when user select an appointment from the appointment list.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "unused": {
+    "id": "dc58f075-9bcc-405b-bf43-3fc6b43ba067",
+    "variable_name": "unused",
+    "description": "to mark a returned parameter is not used.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "previous_response": {
+    "id": "7dcb08cd-748d-47a2-b3d3-c6d089ec89b2",
+    "variable_name": "Previous response",
+    "description": "Last message sent by the AI Agent",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  }
+}
