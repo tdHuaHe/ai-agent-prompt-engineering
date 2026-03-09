@@ -1,162 +1,214 @@
 # ai-agent-prompt-engineering
 
-An engineering assembly system for Multi-agent Systems, designed to achieve reuse, composition, and quality management of prompts and tools through modular design.
+An engineering repository for building, governing, and reusing multi-agent templates on our internal AI Agent Platform.
 
 ## Overview
 
-This repository provides a structured framework for building AI agents and multi-agent systems on top of an internal AI Agent Platform (low-code canvas). The final output is a **Multi-agent Template** (JSON configuration file). Each agent is composed of a **Prompt** and a set of **Tools**, where Tools are backed by a Workflow system.
+This repo is the production assembly line for multi-agent template delivery.
 
-**Core Philosophy**:
-- **Modular Reuse**: Provide parameterizable prompt and tool building blocks
-- **Composition over Authoring**: Prioritize composing from modules, then fine-tune
-- **Layered Design**: From low-level modules to top-level multi-agent templates
-- **Engineering Management**: Standardized design, evaluation, and tooling support
+It serves three purposes:
+
+1. `agents/`: manage industry-specific basic templates in a split, reviewable format.
+2. `modules/`: maintain cross-industry reusable best practices for `prompts` and `tools`.
+3. `docs/`: provide platform rules, usage guidance, and context for both humans and Copilot.
+
+The final output is a complete platform-importable system JSON.
+
+## Core Principles
+
+- Modular reuse over rewriting.
+- Composition over ad hoc authoring.
+- Git-based engineering management (diff, review, rollback, traceability).
+- Quality-gated merge through automated build and E2E validation.
 
 ---
 
 ## Repository Structure
 
-```
+```text
 ai-agent-prompt-engineering/
-│
-├── docs/                    # 📘 Design standards and guidelines
-│   ├── philosophy.md        # Why engineering-based assembly
-│   ├── module-guide.md      # How to design good modules
-│   ├── agent-guide.md       # How to compose modules into agents
-│   └── system-guide.md      # How to design multi-agent systems
-│
-├── modules/                 # 🧱 Reusable component building blocks
-│   ├── prompts/            # Prompt building block library
-│   │   ├── auth/           # Authorization-related prompt capabilities
-│   │   ├── input/          # Input understanding capabilities
-│   │   ├── output/         # Output format control
-│   │   └── safety/         # Safety and governance
-│   └── tools/              # Tool/Workflow building block library
-│       ├── auth/           # Authorization verification workflows
-│       ├── data/           # Data processing workflows
-│       └── integration/    # Third-party integration workflows
-│
-├── agents/                 # 🤖 Agent templates (Prompt + Tools composition)
-│   └── [specific business scenario]/
-│
-├── systems/                # 🏗️ Multi-agent templates (final deliverables)
-│   └── [complete business system]/
-│
-├── eval/                   # 🧪 Quality evaluation framework
-│   ├── modules/           # Module-level tests
-│   ├── agents/            # Agent-level tests
-│   └── systems/           # System-level tests
-│
-└── tools/                  # 🛠️ Engineering tools
-    ├── render.py          # Template rendering
-    └── validate.py        # Quality validation
+├── agents/                                  # Industry-specific editable assets
+│   ├── fsi-banking/
+│   │   ├── Settings/
+│   │   │   ├── template.json                # Top-level system fields
+│   │   │   └── links.json                   # Inter-agent routing links
+│   │   ├── Variables/
+│   │   │   └── variables.json               # Shared variables
+│   │   ├── Coordinator/
+│   │   │   ├── Coordinator.json             # Supervisor agent config
+│   │   │   ├── Coordinator.instruction.md   # Supervisor instruction
+│   │   │   ├── Condition.instruction.md     # Routing condition instruction
+│   │   │   └── Action-Agents/
+│   │   │       └── <Action Agent Name>/
+│   │   │           ├── agent.json
+│   │   │           └── instruction.md
+│   │   └── Eval/
+│   │       ├── env.yaml
+│   │       └── test_scenarios/
+│   ├── healthcare/
+│   └── retail/
+├── modules/                                 # Cross-industry reusable library
+│   ├── prompts/                             # Prompt patterns and best practices
+│   │   ├── auth/
+│   │   ├── input/
+│   │   ├── orchestration/
+│   │   ├── output/
+│   │   └── safety/
+│   └── tools/                               # Reusable tool/workflow/function patterns
+│       ├── auth/
+│       ├── data/
+│       └── integration/
+├── docs/                                    # Knowledge base and platform rules
+│   ├── philosophy.md
+│   ├── module-guide.md
+│   ├── agent-guide.md
+│   ├── system-guide.md
+│   └── platform-prompt/
+├── systems/                                 # Full exports and rebuilt outputs
+│   └── <industry>/
+│       ├── exports/
+│       └── builds/
+└── tools/
+    ├── split.py                             # Export JSON -> agents/<industry>/ split files
+    └── build.py                             # agents/<industry>/ -> rebuilt system JSON
 ```
 
 ---
 
-## Layers
+## Standard Workflow
 
-### 1. `modules/` — Reusable Component Library
+### 1. Update Source Export
 
-The foundation of the system. Each module is a validated, parameterizable building block.
+Put an updated full platform export under:
 
-**Prompt modules** (`modules/prompts/`) solve specific prompt-level problems:
-- `auth/requirement` — Enforces mandatory identity verification
-- `input/intent-parsing` — Guides intent identification and entity extraction
-- `output/json-strict` — Forces strict JSON output conforming to a schema
-- `output/structured` — Human-readable structured response format
-- `safety/pii-protection` — Enforces PII handling and data minimization rules
+- `systems/<industry>/exports/*.json`
 
-**Tool modules** (`modules/tools/`) define reusable workflow definitions:
-- `auth/phone-sms` — SMS verification code workflow
-- `auth/bank-card` — Bank card identity verification workflow
-- `data/web-scraping` — Web page content extraction workflow
-- `data/date-parser` — Natural language date parsing workflow
-- `integration/api-caller` — Generic HTTP API caller workflow
+### 2. Split into Reviewable Files
 
-Each module contains:
-- A template file (`.template.md` or `.prompt`) with `{{parameter}}` placeholders
-- A schema file (`.schema.json`) defining and validating parameters
-- A `README.md` with usage instructions and examples
+Use `split.py` to extract editable files into `agents/<industry>/`:
 
-### 2. `agents/` — Agent Templates
+```bash
+python3 tools/split.py systems/fsi-banking/exports/<export-file>.json fsi-banking
+```
 
-Business-scenario-specific agents assembled by composing prompt and tool modules. Each agent defines:
-- `prompt.md` — Composed prompt with module include directives
-- `tools.json` — Tool module references
-- `params.json` — Parameter values for all included modules
-- `README.md` — Agent description and composition notes
+### 3. Open PR on `agents/` Changes
 
-> See [docs/agent-guide.md](docs/agent-guide.md) before creating a new agent.
+PR review is done on split files so change scope is clear at file level.
 
-### 3. `systems/` — Multi-Agent Templates
+### 4. Scope-Aware Test Trigger
 
-Complete multi-agent system configurations — the final deliverables. Each system contains:
-- `system.json` — Full orchestration configuration (importable into the AI Agent Platform)
-- Per-agent prompt, tools, and parameter configurations
-- System-level parameters and environment configuration
+CI detects changed paths and triggers different levels of tests:
 
-> See [docs/system-guide.md](docs/system-guide.md) before creating a new system.
+- Action-agent-only changes: targeted tests + smoke tests.
+- Coordinator/settings/links/variables changes: full regression.
+- Docs-only changes: docs checks only.
 
-### 4. `eval/` — Quality Evaluation Framework
+### 5. Build Before E2E
 
-Layered quality assurance covering the full chain:
-- `eval/modules/` — Module rendering and parameter validation tests
-- `eval/agents/` — Agent functional and safety tests
-- `eval/systems/` — End-to-end business flow tests
+Workflow rebuilds full JSON from `agents/<industry>/` to verify assembly integrity:
 
-### 5. `tools/` — Engineering Tools
+```bash
+python3 tools/build.py test "" fsi-banking
+```
 
-- **`render.py`** — Renders parameterized templates into final configurations
-- **`validate.py`** — Validates module schemas, agent configs, and system JSON files
+Output is written to:
+
+- `systems/<industry>/builds/*_rebuilt.json`
+
+### 6. Import and Run E2E Tests
+
+Rebuilt JSON is auto-imported into the platform test environment and validated with the existing agentic chat automation framework.
+
+### 7. Quality Gate and Review
+
+Only PRs that pass quality gates proceed to human review and merge.
 
 ---
 
 ## Quick Start
 
-### Render a prompt module
+### Split a system export
 
 ```bash
-python tools/render.py modules/prompts/auth/requirement \
-  --params '{"verification_methods": ["SMS code"], "timeout_seconds": 180}'
+python3 tools/split.py systems/fsi-banking/exports/<export-file>.json fsi-banking
 ```
 
-### Validate a module
+### Rebuild a full industry system
 
 ```bash
-python tools/validate.py modules/prompts/auth/requirement
+python3 tools/build.py test "" fsi-banking
 ```
 
-### Render and validate an agent
+### Rebuild with selected action agents (debug mode)
 
 ```bash
-python tools/render.py agents/my-agent --output /tmp/my-agent-prompt.md
-python tools/validate.py agents/my-agent
+python3 tools/build.py test "Authentication Agent,FAQ Agent" fsi-banking
 ```
 
-### Render a system configuration
+### FSI Banking common examples
+
+Split a specific banking export file:
 
 ```bash
-python tools/render.py systems/my-system --output systems/my-system/system.rendered.json
-python tools/validate.py systems/my-system/system.json
+python3 tools/split.py "systems/fsi-banking/exports/fsec-AI-Agent-platform-FSI Providers Multi Agent - hehua-2026-03-09T18-17.json" fsi-banking
+```
+
+Build with selected action agents (`Member Search`, `Account Balance`, `FAQ`):
+
+```bash
+python3 tools/build.py test "Member Search Agent,Account Balance and Transaction Agent,FAQ Agent" fsi-banking
 ```
 
 ---
 
-## Design Guidelines
+## Quality Gate (Recommended Baseline)
 
-| Document | Description |
-|----------|-------------|
-| [docs/philosophy.md](docs/philosophy.md) | Why we use engineering-based assembly |
-| [docs/module-guide.md](docs/module-guide.md) | How to design good reusable modules |
-| [docs/agent-guide.md](docs/agent-guide.md) | How to compose modules into agents |
-| [docs/system-guide.md](docs/system-guide.md) | How to design multi-agent systems |
+Merge should require all of the following:
+
+1. Build succeeds and produces rebuilt JSON.
+2. Rebuilt JSON imports successfully in test environment.
+3. All P0/P1 business scenarios pass.
+4. Overall pass rate meets threshold.
+5. No blocker-level safety/compliance issues.
+
+---
+
+## Phased Plan
+
+### Phase 1: Engineerized Basic Template Governance
+
+- Standardize split-file management in `agents/`.
+- Use Git PR workflow for diff, review, and controlled merge.
+- Enforce automated build + E2E + quality gates.
+
+### Phase 2: Reusable Module Library
+
+- Extract stable cross-industry patterns into `modules/prompts` and `modules/tools`.
+- Reduce duplication and improve consistency.
+- Default to module reuse when creating new capabilities.
+
+### Phase 3: Copilot-Assisted Template Assembly
+
+- Use `docs/` as platform context and policy knowledge.
+- Reuse existing industry basic templates from `agents/`.
+- Reuse best-practice modules from `modules/`.
+- Generate import-ready full template JSON for rapid testing and tuning.
+
+---
+
+## Design Docs
+
+- [docs/philosophy.md](docs/philosophy.md)
+- [docs/module-guide.md](docs/module-guide.md)
+- [docs/agent-guide.md](docs/agent-guide.md)
+- [docs/system-guide.md](docs/system-guide.md)
 
 ---
 
 ## Contributing
 
-1. **Adding a module**: Follow [docs/module-guide.md](docs/module-guide.md). Include a schema, README, and at least one eval test.
-2. **Adding an agent**: Follow [docs/agent-guide.md](docs/agent-guide.md). Compose from existing modules first.
-3. **Adding a system**: Follow [docs/system-guide.md](docs/system-guide.md). Render and validate before submitting.
-4. **All contributions** must pass `tools/validate.py` before merging.
+1. Start from `systems/<industry>/exports`, then split to `agents/<industry>/`.
+2. Keep PR scope explicit and industry-focused.
+3. Ensure build and required tests pass before requesting merge.
+4. Promote proven reusable logic into `modules/`.
+5. Update `docs/` when platform rules or conventions change.

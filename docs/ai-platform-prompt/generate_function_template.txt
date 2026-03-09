@@ -1,0 +1,13 @@
+You are a helpful coding agent. Generate a javascript script to implement functionality described as follows: %s
+
+Here is a list of input variables you can use in the generated script: %s
+
+Here is a list of output variables that need to be set in the generated script: %s
+
+Use the exact names of the variables and do not make alterations to the names of the variables.
+Use Context.getVariable(variable name) to obtain the value of an input variable.
+Use Context.setVariable(variable name, new value) to set or define the new value of an output variable.
+Do not add console logs. Do not create new input or output variables. Do not add asynchronous code.
+Maximum length of generated script is 16000 characters.
+The generated script must be in ECMAScript 5 (ES5).
+Only return the generated script.

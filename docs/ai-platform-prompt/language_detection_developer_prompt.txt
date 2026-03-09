@@ -1,0 +1,7 @@
+# Now process the following conversation and language candidates:
+
+# Conversation:
+%s
+
+# Language candidates:
+%s

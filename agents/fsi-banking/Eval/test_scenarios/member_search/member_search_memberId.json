@@ -1,0 +1,36 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to inquire about banking services. First, provide an invalid ID, if agent prompts it's incorrect, then provide a valid one.",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_invalid_memberID",
+      "description": "Agent identified that this member ID was unavailable.",
+      "required": true
+    }, 
+    {
+      "id": "ask_member_id_again",
+      "description": "Agent asked the customer for their correct member ID again.",
+      "required": true
+    },
+    {
+      "id": "identify_customer_name",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "invalid_member_id": {
+      "value": ["123456", "JohnDoe"],
+      "description": "randomly select a invalid member ID from the list"
+    },
+    "valid_member_id": {
+      "value": ["0000602110", "Lina Michael 0000602110"],
+      "description": "randomly select a valid member ID from the list"
+    }
+  },
+  "user_simulation_policy": [
+    "The messages sent always contain emojis"
+  ],
+  "target_turns": 8
+}

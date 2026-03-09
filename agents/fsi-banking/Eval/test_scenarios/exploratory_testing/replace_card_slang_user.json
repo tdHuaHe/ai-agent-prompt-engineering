@@ -1,0 +1,45 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to replace their non-active card with existing address",
+  "test_type":"user_input_variations",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_nonactive_card_list",
+      "description": "Show the customer's all non-active card numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "get_address_info",
+      "description": "Agent found out the existing address and postal code of the customer",
+      "required": true
+    },  
+    {
+      "id": "replace_card_result",
+      "description": "Inform the customer that the replacement card will be sent to their address",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_card_number": {
+      "value": ["0304"],
+      "description": "randomly select a card number option from the customer's card list"
+    },
+    "shipping_address": {
+      "description": "use the existing shipping address on file"
+    },
+    "postal_code": {
+      "description": "use the existing postal code on file"
+    }
+  },
+  "user_simulation_policy": [
+    "Send messages that contain a spelling mistake or typo as a careless customer would.",
+    "Send messages with abusive words or slang terms as a frustrated customer would."
+  ],
+  "target_turns": 10
+}

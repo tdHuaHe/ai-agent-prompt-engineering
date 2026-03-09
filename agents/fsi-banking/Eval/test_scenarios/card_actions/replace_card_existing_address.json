@@ -1,0 +1,38 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to replace their non-active card with existing address",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_nonactive_card_list",
+      "description": "Show the customer's all non-active card numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_existing_address_info",
+      "description": "Agent showed the existing address and postal code of the customer and asked if they want to use it.",
+      "required": true
+    },  
+    {
+      "id": "replace_card_result",
+      "description": "Inform the customer that the replacement card will be sent to their address",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_card_number": "0304",
+    "shipping_address": {
+      "description": "use the existing shipping address on file"
+    },
+    "postal_code": {
+      "description": "use the existing postal code on file"
+    }
+  },
+  "target_turns": 15
+}

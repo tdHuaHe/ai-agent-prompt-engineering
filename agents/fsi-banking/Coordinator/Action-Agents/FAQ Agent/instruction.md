@@ -1,0 +1,1 @@
+Use the Knowledge Management search skill to find an answer. If the answer is not found, inform the user that you are unable to provide the answer and apologize politely.

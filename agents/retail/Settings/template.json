@@ -1,0 +1,42 @@
+{
+  "account_id": "65baad438ee61f72acdcfa2c",
+  "agent_system_id": "f91a78ff-2857-4527-9e7e-5252f51d17ad",
+  "system_version": 1,
+  "status": "PUBLISHED_UNSELECTED",
+  "agent_system_name": "AutoShack Autopilot Develop version",
+  "agent_system_description": "",
+  "guardrail": "",
+  "conversation_settings": {
+    "enabled": true,
+    "is_dynamic_filler": false,
+    "initial_delay": 1,
+    "filler_interval": 2,
+    "number_of_retries": 1,
+    "initial_messages": [],
+    "retry_messages": [],
+    "channels": [
+      {
+        "channel_type": "default",
+        "languages": [
+          {
+            "language_code": "default",
+            "initial_delay": 1,
+            "filler_interval": 2,
+            "number_of_retries": 1,
+            "initial_messages": [],
+            "retry_messages": []
+          }
+        ]
+      }
+    ]
+  },
+  "welcome_text": "",
+  "markers": [],
+  "application_output_settings": {
+    "type": "value",
+    "value": ""
+  },
+  "custom_guardrail_settings": null,
+  "welcome_message_settings": null,
+  "language_lock_settings": null
+}

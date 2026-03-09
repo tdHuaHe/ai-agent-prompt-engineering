@@ -1,0 +1,32 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their upcoming payment for a loan account",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_account_list",
+      "description": "Agent showed the customer's all active loan and credit account numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_upcoming_payment_information",
+      "description": "Agent showed the upcoming payment information successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_amount_breakdown",
+      "description": "Agent showed the payment amount detail items successfully.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_account_number": "1066"
+  },
+  "target_turns": 12
+}

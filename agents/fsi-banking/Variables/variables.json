@@ -1,0 +1,1199 @@
+{
+  "workflow_status": {
+    "id": "491add00-0628-4d52-8aff-5b3560fcb926",
+    "variable_name": "workflow_status",
+    "description": "This variable represents the execution result of the skill workflow.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "origin_member_id": {
+    "id": "1184e73b-c579-4298-9d79-becfb1030206",
+    "variable_name": "origin_member_id",
+    "description": "The origin member id, it is a 10-digit number.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_type": {
+    "id": "fa7454ec-9699-4bda-8dce-2a829def5895",
+    "variable_name": "account_type",
+    "description": "account_type",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_number_list": {
+    "id": "544aba77-c5fd-48f2-b619-a6fa25029d20",
+    "variable_name": "account_number_list",
+    "description": "account_number_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "active_credit_accounts": {
+    "id": "669bf144-acdf-441e-b578-c35462aa5a36",
+    "variable_name": "active_credit_accounts",
+    "description": "active_credit_accounts",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_list": {
+    "id": "6a2932b1-b955-42a5-8b52-9ef07a34d125",
+    "variable_name": "card_list",
+    "description": "card_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "transaction_list": {
+    "id": "cebf0a50-c84c-42b6-a265-66f962dbe107",
+    "variable_name": "transaction_list",
+    "description": "List of account's transactions",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "current_day": {
+    "id": "5ce1e4d2-a22b-4137-bd70-4373843552c7",
+    "variable_name": "current_day",
+    "description": "The date for today",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_issuer": {
+    "id": "fc1d4ffd-a084-456f-938d-3d7915401273",
+    "variable_name": "card_ issuer",
+    "description": "card_ issuer",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "upcoming_payment_information": {
+    "id": "20020bb1-9615-48a1-b8a2-b55243546566",
+    "variable_name": "upcoming_payment_information",
+    "description": "upcoming_payment_information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payment_frequency": {
+    "id": "7d71137a-c880-4636-9159-19c991776f3c",
+    "variable_name": "payment_frequency",
+    "description": "Allowed values:\nDAILY\nWEEKLY\nBIWEEKLY\nMONTHLY\nQUARTERLY\nSEMIANNUALLY\nANNUALLY",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "interest_rate": {
+    "id": "19c10897-30a4-47d0-9cc6-e9556f3c0b3e",
+    "variable_name": "interest_rate",
+    "description": "interest_rate",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "selected_external_account": {
+    "id": "2d9c63c7-bd0c-402d-a67c-c87be9729247",
+    "variable_name": "selected_external_account",
+    "description": "selected_external_account",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payment_date": {
+    "id": "6fd87645-54d4-44c1-9c1c-7058e6da1e1c",
+    "variable_name": "payment_date",
+    "description": "Transfer execution date. The format is usually YYYY-MM-DD.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_number": {
+    "id": "670ae4f2-746c-45be-bada-2f702029c8ba",
+    "variable_name": "card_number",
+    "description": "card_number",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "external_account_number": {
+    "id": "74a3c4c4-de79-407c-ac8c-894603b8b6b5",
+    "variable_name": "external_account_number",
+    "description": "external_account_number",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_type_option": {
+    "id": "25ece392-0a7b-4925-8122-16e8e4511356",
+    "variable_name": "account_type_option",
+    "description": "account_type_option",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_mlp_breakdown": {
+    "id": "8d87527d-b272-4dad-a3cf-2703e086cba4",
+    "variable_name": "account_mlp_breakdown",
+    "description": "account monthly loan payment breakdown information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "last_interest_paid": {
+    "id": "ba23c2a7-b7c0-424f-b322-f958639be88a",
+    "variable_name": "last_interest_paid",
+    "description": "last_interest_paid",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payoff_breakdown_information": {
+    "id": "6cc2c05b-88e3-495b-9d2a-b7411e9627ee",
+    "variable_name": "payoff_breakdown_information",
+    "description": "payoff_breakdown_information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "daily_per_diem": {
+    "id": "ca953541-ab3d-429e-a139-7c76524101f2",
+    "variable_name": "daily_per_diem",
+    "description": "daily_per_diem",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "mock_external_account_numbers": {
+    "id": "679f6a47-474c-4e18-9a76-276e7bf7e19d",
+    "variable_name": "mock_external_account_numbers",
+    "description": "mock_external_account_numbers",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payoff_date": {
+    "id": "673e5ac2-40c7-4987-9416-22e7883ed5c0",
+    "variable_name": "payoff_date",
+    "description": "payoff_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "iban": {
+    "id": "55f9f9a8-1ccc-4f4a-ab57-e7fba1e6f721",
+    "variable_name": "iban",
+    "description": "The destination account IBAN",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_name": {
+    "id": "177429ba-b3d3-475f-bcdb-5334926fdfac",
+    "variable_name": "card_name",
+    "description": "card_name",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_total_count": {
+    "id": "9f12e763-247b-4536-a26f-69e05af92803",
+    "variable_name": "account_total_count",
+    "description": "Total number of accounts in the collection",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_postal_code": {
+    "id": "9fb3f723-31a0-4aba-aba7-0c8c247c478d",
+    "variable_name": "card_postal_code",
+    "description": "card_postal_code",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_balance_information": {
+    "id": "9f25a6ac-42db-4c58-b6fa-19d91bcb407f",
+    "variable_name": "account_balance_information",
+    "description": "account_balance_information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "transaction_total_count": {
+    "id": "a1a91dcf-04a9-4a40-834b-695256309851",
+    "variable_name": "transaction_total_count",
+    "description": "The total number of transactions in the collection",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "recipient_first_last_name": {
+    "id": "a8785217-20c6-4758-a04a-cb63ec450c26",
+    "variable_name": "recipient_first_last_name",
+    "description": "The full name of the person to whom the customer wants to make the transfer.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_credit_limit": {
+    "id": "e168ef76-7f0b-4f57-8e17-1f26cd84f398",
+    "variable_name": "account_credit_limit",
+    "description": "account_credit_limit",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "active_loan_accounts": {
+    "id": "f2ef80c4-1ef6-40ba-98d5-0f6781e5ef04",
+    "variable_name": "active_loan_accounts",
+    "description": "active_loan_account_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_activation_date": {
+    "id": "dbd6935c-61da-4694-bb28-a33ea460ea09",
+    "variable_name": "card_activation_date",
+    "description": "card_activation_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_holder_name": {
+    "id": "0ad112e0-9d7b-4793-8145-e74e994ee461",
+    "variable_name": "card_holder_name",
+    "description": "card_holder_name",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_number_list": {
+    "id": "006d4880-e67d-479d-be2b-66c8ea7f1644",
+    "variable_name": "card_number_list",
+    "description": "card_number_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "postal_code_found": {
+    "id": "354a7002-dec1-48f6-959d-1c5182ac0de0",
+    "variable_name": "postal_code_found",
+    "description": "postal_code_found",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_expiration_date": {
+    "id": "caaf2118-ae73-4c11-9447-991b5bcdecbf",
+    "variable_name": "card_expiration_date",
+    "description": "card_expiration_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payoff_amount_details": {
+    "id": "b1d080bd-030f-4531-b70b-db230356ea18",
+    "variable_name": "payoff_amount_details",
+    "description": "payoff_amount_details",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_loan_information": {
+    "id": "9977a948-8df7-4138-b31a-d904ab795328",
+    "variable_name": "account_loan_information",
+    "description": "account_loan_information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "application_output": {
+    "id": "9370d191-6dfe-45f0-b0b4-91dc62a88768",
+    "variable_name": "Application output",
+    "description": "Information sent to applications (Autopilot, Copilot, API)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "transfer_account_list": {
+    "id": "505f18f3-d4a3-4cd9-9f9b-faae6f4ed31e",
+    "variable_name": "transfer_account_list",
+    "description": "this is a masked account number list that have available balance to do transfer.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "inactive_card_number_list": {
+    "id": "edac047f-21b4-4643-af42-fa2107d7d747",
+    "variable_name": "inactive_card_number_list",
+    "description": "inactive_card_number_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "transaction_option": {
+    "id": "bddbcbbc-f937-4081-8257-266a1e8ecc78",
+    "variable_name": "transaction_option",
+    "description": "transaction_option",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "term": {
+    "id": "d4ac2ae7-58ec-4956-a5ba-c946483930c8",
+    "variable_name": "term",
+    "description": "term",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "channel_name": {
+    "id": "7659f647-d63f-4e1c-98c2-f1c1be630ee4",
+    "variable_name": "Channel Name",
+    "description": "The channel name of the current session (VOICE, CHAT, SMS, FACEBOOK, EMAIL, WHATSAPP)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "card_account_id": {
+    "id": "7c262c36-c388-4e5c-a266-eeba89589563",
+    "variable_name": "card_account_id",
+    "description": "card_account_id",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "contact_name": {
+    "id": "2a6a9b15-80c1-4cb7-b1a7-5e911aa3e4fc",
+    "variable_name": "contact_name",
+    "description": "This variable represents the customer's name.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "identify_result": {
+    "id": "18b5d9fd-e640-439c-968f-6781097fbb8e",
+    "variable_name": "identify_result",
+    "description": "identify_result",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "session_id": {
+    "id": "c0f3d524-d357-46ed-9c60-6f4a0ce8911b",
+    "variable_name": "Session ID",
+    "description": "Session's identification of a given voice or digital interaction",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "payoff_amount": {
+    "id": "a082d22b-177b-4339-a455-861322f9f7ca",
+    "variable_name": "payoff_amount",
+    "description": "payoff_amount",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payment_list": {
+    "id": "b2f65475-72d5-4f18-91fc-ddb6853a2bb6",
+    "variable_name": "payment_list",
+    "description": "payment_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "destination_member_id": {
+    "id": "708a588b-bd90-40c0-a5fb-fac0b792acb4",
+    "variable_name": "destination_member_id",
+    "description": "The destination member id, it is usually a 10-digit number.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_type": {
+    "id": "c2564bb5-7240-42fa-94d8-b637d563a278",
+    "variable_name": "card_type",
+    "description": "card_type",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "internal_account_number": {
+    "id": "292bb037-aeee-442c-b026-f8e1ee88ffd7",
+    "variable_name": "internal_account_number",
+    "description": "internal_account_number",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_id": {
+    "id": "845070d9-a81e-4c8a-a304-c9b5b0011391",
+    "variable_name": "account_id",
+    "description": "Identification for an account",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "mock_external_account_list": {
+    "id": "f0934042-d06b-4aef-9c30-4a1354d0f789",
+    "variable_name": "mock_external_account_list",
+    "description": "mock_external_account_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_inactivation_date": {
+    "id": "7e5c8b1a-48f0-4c29-af1a-1b4580ec97a7",
+    "variable_name": "card_inactivation_date",
+    "description": "card_inactivation_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_list": {
+    "id": "dd7f52f4-6dc2-40fa-8aa9-111b39353c7f",
+    "variable_name": "account_list",
+    "description": "List of accounts details",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_mlp_information": {
+    "id": "0c35400d-08b7-4361-81bc-d63bc864ab39",
+    "variable_name": "account_mlp_information",
+    "description": "account monthly loan payment information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "pastdue_payment_information": {
+    "id": "f8b247b0-0dab-4249-ac74-031689ceac0f",
+    "variable_name": "pastdue_payment_information",
+    "description": "pastdue_payment_information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "birth_date": {
+    "id": "1aea674d-acac-4a9f-b629-f3ce8c24cf3a",
+    "variable_name": "birth_date",
+    "description": "birth_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payment_total_count": {
+    "id": "a51eb09b-d070-45dd-a53c-76079914466c",
+    "variable_name": "payment_total_count",
+    "description": "payment_total_count",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "active_card_number_list": {
+    "id": "72ccb5c6-9d96-422c-9057-3930a1df11f7",
+    "variable_name": "active_card_number_list",
+    "description": "active_card_number_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "last_interest_paid_date": {
+    "id": "248a48c0-51e4-4911-9775-219cc329e981",
+    "variable_name": "last_interest_paid_date",
+    "description": "last_interest_paid_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "scenario_id": {
+    "id": "27719058-e933-4bf3-aaa8-e38c05d00f3b",
+    "variable_name": "scenario_ID",
+    "description": "scenario_id",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "selected_account_number": {
+    "id": "49690105-5d33-49ba-b1ef-d6dbb60e6fdf",
+    "variable_name": "selected_account_number",
+    "description": "This variable represents the account number that the customer selects to operate on, which is usually contains at least four digits.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "upcoming_payment": {
+    "id": "8c6a56ac-5db9-4c3a-8606-fd163812ac3e",
+    "variable_name": "upcoming_payment",
+    "description": "upcoming_payment",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "contact_search_result": {
+    "id": "e91b676a-2e2c-424b-af63-44daba1b7943",
+    "variable_name": "contact_search_result",
+    "description": "useless variable",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_last_interest": {
+    "id": "95e88f30-93e7-4660-b354-a570cd950b5b",
+    "variable_name": "account_last_interest",
+    "description": "account_last_interest_information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "ytd_interest_paid": {
+    "id": "05972680-1c0a-4b36-ad3f-73dd5384b1bd",
+    "variable_name": "ytd_interest_paid",
+    "description": "ytd_interest_paid",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "pastdue_payment": {
+    "id": "c86e617c-3772-41ba-9022-68c43e91f8a1",
+    "variable_name": "pastdue_payment",
+    "description": "pastdue_payment",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "swift": {
+    "id": "bf333f8e-011f-4853-816b-db3ef4b928d9",
+    "variable_name": "swift",
+    "description": "The destination account Swift code",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "last_skill_name": {
+    "id": "b4e31f76-cf5d-4cf0-8f10-5c42a43e9144",
+    "variable_name": "Last skill name",
+    "description": "Name of the last used Skill",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "external_bank_routing_number": {
+    "id": "b922172d-9721-4a5e-a656-1a77bf09d755",
+    "variable_name": "external_bank_routing_number",
+    "description": "external_bank_routing_number",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_shipping_address": {
+    "id": "416154e5-0099-4b11-b2d3-3e5469e9ccd4",
+    "variable_name": "card_shipping_address",
+    "description": "card_shipping_address",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "loan_amount": {
+    "id": "cd56e545-75c7-46f0-95cf-61b4f485e495",
+    "variable_name": "loan_amount",
+    "description": "loan_amount",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "transaction_type": {
+    "id": "893b03eb-48cb-44f1-850d-6e5c0066b727",
+    "variable_name": "transaction_type",
+    "description": "transaction_type",
+    "type": "STRING",
+    "possible_values": [
+      "UNDEFINED",
+      "CREDIT_CARD",
+      "PAYMENT",
+      "WITHDRAWAL",
+      "DEFAULT",
+      "TRANSFER",
+      "ADD_ON",
+      "DEPOSIT",
+      "PURCHASE",
+      "CHECK",
+      "OTHER",
+      "LOAN_PAYMENTS"
+    ],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_id": {
+    "id": "691c13d7-a1c2-4103-87a4-14e81cdaae3f",
+    "variable_name": "card_id",
+    "description": "card_id",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payment_type": {
+    "id": "0e32a7fa-99aa-4872-ad0f-a1b7441f5f9d",
+    "variable_name": "payment_type",
+    "description": "Allowed values:\nONCE\nRECURRING",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "selected_internal_account": {
+    "id": "eee6f6d5-8eb8-46f6-b34d-70674e120eba",
+    "variable_name": "selected_internal_account",
+    "description": "selected_internal_account",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_expected_delivery_date": {
+    "id": "87f90257-b944-4108-9a62-e3e0478e2595",
+    "variable_name": "card_expected_delivery_date",
+    "description": "card_expected_delivery_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "origin_account_balance": {
+    "id": "ac2c6c09-0bfb-45b9-80c3-01572631d85f",
+    "variable_name": "origin_account_balance",
+    "description": "origin_account_balance",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "caller_id": {
+    "id": "6a298499-1f34-4d60-8dbb-27fd30e1e332",
+    "variable_name": "Caller ID",
+    "description": "Contact's identification (e.g. phone number)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "card_total_count": {
+    "id": "9a547523-699e-4d8c-b6cf-a6c56d27ea78",
+    "variable_name": "card_total_count",
+    "description": "card_total_count",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "destin_bank_routing_number": {
+    "id": "a1ebf915-a36d-4ae3-91ed-265d29ae28ec",
+    "variable_name": "destin_bank_routing_number",
+    "description": "The destination account routing number",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "previous_year_interest_paid": {
+    "id": "00998e74-3a02-4582-a788-faac711d2966",
+    "variable_name": "previous_year_interest_paid",
+    "description": "previous_year_interest_paid",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_number": {
+    "id": "27d10fbc-7602-43d2-a9a8-8077d63eaa8d",
+    "variable_name": "account_number",
+    "description": "account_number",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "account_balance": {
+    "id": "6bfe9107-fb8d-4f56-961a-4a2f3515badf",
+    "variable_name": "account_balance",
+    "description": "account_balance",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "selected_destin_account_number": {
+    "id": "a0128e98-5e24-4949-a47f-5d9c5d7f4c49",
+    "variable_name": "selected_destin_account_number",
+    "description": "selected destination account number, this variable represents the account number that the customer selects to operate on funds transfer, which is usually contains at least four digits.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "destination_account_number": {
+    "id": "d4a107ac-5852-49df-a0c0-54696f28e5d8",
+    "variable_name": "destination_account_number",
+    "description": "The destination account number",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "last_received_message": {
+    "id": "d6e4c35b-2d9b-4b0e-8b1c-3092fdc7c128",
+    "variable_name": "Last received message",
+    "description": "Last message received from the contact person",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "transfer_value": {
+    "id": "260ccc71-e416-4cfe-aeac-5dd2e23e42fc",
+    "variable_name": "transfer_value",
+    "description": "The transfer value",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "maturity_date": {
+    "id": "9e82ec72-f280-4e1d-8fb2-52d79e841625",
+    "variable_name": "maturity_date",
+    "description": "maturity_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "contact_id": {
+    "id": "ef978146-f507-4a5c-b7ba-d63ab8fac441",
+    "variable_name": "contact_id",
+    "description": "This variable represents the contact ID of the customer, which is of numeric type and is usually the same as the member ID.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "origin_account_number": {
+    "id": "e505fc93-0efd-469c-b863-d9b39e2422b4",
+    "variable_name": "origin_account_number",
+    "description": "The origin account number",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "application_input": {
+    "id": "5b0b3658-d3e1-45d0-b5b0-9bc2e44604d5",
+    "variable_name": "Application Input",
+    "description": "Information provided by applications (Autopilot, Copilot, API)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "account_available_balance": {
+    "id": "c81e913a-c6a9-44f6-a526-39a858e3fd8a",
+    "variable_name": "account_available_balance",
+    "description": "account_available_balance",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "loan_start_date": {
+    "id": "1b40249c-2944-41a9-adba-a2a197f3b527",
+    "variable_name": "loan_start_date",
+    "description": "loan_start_date",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "previous_year_taxes_paid": {
+    "id": "957ab6e1-9bc8-4077-9d4e-d69504e92788",
+    "variable_name": "previous_year_taxes_paid",
+    "description": "previous_year_taxes_paid",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "upcoming_payment_details": {
+    "id": "f23ba6d6-91fb-4501-a100-5c164c4eaed3",
+    "variable_name": "upcoming_payment_details",
+    "description": "upcoming_payment_details",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "selected_origin_account_number": {
+    "id": "9ce8f326-4734-4268-8e45-17746a051067",
+    "variable_name": "selected_origin_account_number",
+    "description": "selected original account number, this variable represents the account number that the customer selects to operate on funds transfer, which is usually contains at least four digits.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "mlp_last_payment_information": {
+    "id": "0c514317-e880-45d5-b7d3-824c745cae47",
+    "variable_name": "mlp_last_payment_information",
+    "description": "mlp_last_payment_information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "transfer_direction": {
+    "id": "d674088d-39d2-4659-9065-2b9fe5f293e3",
+    "variable_name": "transfer_direction",
+    "description": "transfer money direction,\nAllowed values:\nIN(funds flowing into this bank)\nOUT(funds flowing out of this bank)",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "channel_type": {
+    "id": "3c8136ef-4703-4c15-98fd-7f69bc4976f1",
+    "variable_name": "Channel Type",
+    "description": "The channel type of the current session (voice, digital or agent_assist)",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "contact_address": {
+    "id": "2f577a32-5bc3-440c-904d-92cc533672f5",
+    "variable_name": "contact_address",
+    "description": "contact_address",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "selected_card_number": {
+    "id": "9cf0f6c2-6274-41b6-aa5d-3e796a306d3f",
+    "variable_name": "selected_card_number",
+    "description": "This variable represents the card number that the customer selects to operate on, which is usually contains at least four digits.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "shipping_address_found": {
+    "id": "314abce7-2e80-4281-9ce1-6ee3cbd33dda",
+    "variable_name": "shipping_address_found",
+    "description": "shipping_address_found",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "member_id": {
+    "id": "976448e9-30d7-47d2-b988-4c10021d0aff",
+    "variable_name": "member_id",
+    "description": "member ID is the customer unique identifier, it is a 10-digit number.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "payoff_amount_information": {
+    "id": "52157751-81c9-4db2-bd7a-43db37abc684",
+    "variable_name": "payoff_amount_information",
+    "description": "payoff_amount_information",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "interaction_id": {
+    "id": "ecb2d3f5-4556-4dc7-9580-b6d474c16564",
+    "variable_name": "Interaction ID",
+    "description": "Interaction's identification of a given voice or digital interaction",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": true
+  },
+  "interest_rate_type": {
+    "id": "793daf3b-c540-4b5a-96fc-f4bbe26bb98d",
+    "variable_name": "interest_rate_type",
+    "description": "interest_rate_type",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "not_active_card_number_list": {
+    "id": "4ebf9418-6b8b-4c99-806f-13209939cd72",
+    "variable_name": "not_active_card_number_list",
+    "description": "not_active_card_number_list",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_status": {
+    "id": "0b6b4297-7c6e-41ea-94b3-8bcdf6f32a4b",
+    "variable_name": "card_status",
+    "description": "card_status",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "pastdue_payment_details": {
+    "id": "df9ae77d-2a32-47fd-8046-73f962b88378",
+    "variable_name": "pastdue_payment_details",
+    "description": "pastdue_payment_details",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "card_new_status": {
+    "id": "36ff52ef-8ab5-4511-a8dc-bad82d775790",
+    "variable_name": "card_new_status",
+    "description": "card_new_status",
+    "type": "STRING",
+    "possible_values": [
+      "LOST",
+      "STOLEN",
+      "CANCELED"
+    ],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "previous_response": {
+    "id": "7dcb08cd-748d-47a2-b3d3-c6d089ec89b2",
+    "variable_name": "Previous response",
+    "description": "Last message sent by the AI Agent",
+    "type": "String",
+    "possible_values": [],
+    "source": "System",
+    "references": [],
+    "is_read_only": false
+  },
+  "transaction_post_date": {
+    "id": "14b06082-fca8-46e0-95ff-c808c93901c8",
+    "variable_name": "transaction_post_date",
+    "description": "The date on which funds are taken or added to an account.",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  },
+  "mlp_last_payment_breakdown": {
+    "id": "5733bd33-d5b6-4d2b-aca2-2f6e667cbc53",
+    "variable_name": "mlp_last_payment_breakdown",
+    "description": "mlp_last_payment_breakdown",
+    "type": "STRING",
+    "possible_values": [],
+    "source": "Custom",
+    "references": [],
+    "is_read_only": false
+  }
+}

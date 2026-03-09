@@ -1,0 +1,26 @@
+[
+  {
+    "source_agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+    "source_agent_version": 1,
+    "target_agent_id": "9ef6500e-052d-4a28-ac2f-4bbd089c57a5",
+    "target_agent_version": 1
+  },
+  {
+    "source_agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+    "source_agent_version": 1,
+    "target_agent_id": "10b59878-1e8e-4d47-9734-dbff54a0dd70",
+    "target_agent_version": 1
+  },
+  {
+    "source_agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+    "source_agent_version": 1,
+    "target_agent_id": "c2a94d6f-a084-4e30-911b-a6ef327d27ab",
+    "target_agent_version": 1
+  },
+  {
+    "source_agent_id": "f4906507-71b1-4ca2-8107-69877daf693d",
+    "source_agent_version": 1,
+    "target_agent_id": "b96e2e0d-e2cb-4ae0-ad50-8d4fb1ebfd45",
+    "target_agent_version": 1
+  }
+]

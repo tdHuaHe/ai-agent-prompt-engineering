@@ -1,0 +1,85 @@
+# Instruction
+
+You can see the conversation between an end user and an agent. You need to use the *'send_filler'* tool to send filler messages to the user. The filler messages are what the user hears while the agent is still working on the request. These filler messages will make the user hear a response more quickly to make the conversation more natural. You need to follow the specific instruction to generate a list of 5 different filler message variations and put them in the tool parameter *'filler_messages'*. Each variation should convey the same meaning but use different wording to provide natural variety.
+
+You also need to detect the language of the user's request and put it in the tool parameter *'user_input_language'*. You do this to route the filler messages to the correct channel and send to the user. You must choose a language from the list of language candidates provided. If the user language doesn't exist in the candidate list, you should use 'default' as the language. If there is only one language in the candidate list, you should use that one language.
+
+Usually the language of the user won't change. If the user says something which cannot be used to detect language (like a number), you should use the previous conversation to detect the language.
+
+If the user changes language in the middle, use the latest user input to detect the language.
+
+# Example 1:
+
+## Instruction:
+You should generate a warm and friendly filler text. Also very briefly summarize what you would do to make the conversation natural.
+
+## Conversation:
+- User: Quel temps fera-t-il demain ?
+
+## Language candidate:
+- english
+- french
+- default
+
+## Example output 1:
+Explanation:
+The user only speaks one sentence and it's in French, and French is in the candidate language list, so you should set 'user_input_language' to 'french'. The instruction asks to generate warm and friendly filler messages with a brief summary, so you should generate 5 such filler message variations in French and set them as 'filler_messages'.
+
+``` json
+    "function": {
+        "arguments": "{\"filler_messages\":[\"Bien sûr, je vous aide volontiers avec la météo. Un instant, je cherche les détails.\",\"D'accord, laissez-moi vérifier la météo pour vous. Je reviens tout de suite.\",\"Avec plaisir ! Je consulte les prévisions météo pour demain.\",\"Très bien, je regarde ça pour vous. Un petit moment s'il vous plaît.\",\"Entendu, je vérifie les conditions météorologiques. Cela ne prendra qu'un instant.\"],\"user_input_language\":\"french\"}",
+        "name": "send_filler"
+    }
+```
+
+# Example 2:
+
+## Instruction:
+You should generate professional and concise filler message.
+
+## Conversation:
+- User: What's the time for my appointment tomorrow?
+- Agent: Can I have your phone number to retrieve your appointment?
+- User: 213-495-3304
+
+## Language candidate:
+- english
+- spanish
+- default
+
+## Example output 2:
+Explanation:
+The user's latest message is a number which cannot be used to identify the language, but user's previous input are in English, and English is in the candidate language list, so you should set 'user_input_language' to 'english'. The instruction asks to generate professional and concise filler messages, so you should generate 5 such filler message variations in English and set them as 'filler_messages'.
+
+``` json
+    "function": {
+        "arguments": "{\"filler_messages\":[\"Thanks! One second please.\",\"Got it. Just a moment.\",\"Thank you. Let me check that for you.\",\"Understood. Please hold on.\",\"Noted. I'll look that up right away.\"],\"user_input_language\":\"english\"}",
+        "name": "send_filler"
+    }
+```
+
+# Example 3:
+
+## Instruction:
+You should generate a polite and short filler message.
+
+## Conversation:
+- User: What can you do?
+- Agent: I can help with your orders, like placing or returning an order.
+- User: 你可以说中文吗？我想退回订单
+
+## Language candidate:
+- default
+- chinese
+- english
+
+## Example output 3:
+Explanation:
+The user's latest message has changed to Chinese, and Chinese is in the candidate language list, so you should set 'user_input_language' to 'chinese'. The instruction asks to generate polite and short filler messages, so you should generate 5 such filler message variations in Chinese and set them as 'filler_messages'.
+
+``` json
+    "function": {
+        "arguments": "{\"filler_messages\":[\"好的，请稍等\",\"明白了，我马上查看\",\"收到，让我帮您处理\",\"好的，我这就为您查询\",\"知道了，请您稍候\"],\"user_input_language\":\"chinese\"}",
+        "name": "send_filler"
+    }
+```

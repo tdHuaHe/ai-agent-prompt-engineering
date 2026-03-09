@@ -1,0 +1,25 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to activate their active card, the last four digits of the card number are 4780",
+  "test_type":"sad_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "can_not_activate_active_card",
+      "description": "Agent said that cannot activate an active card.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_card_number": {
+      "value": "4780",
+      "description": "This card is already active"
+    }
+  },
+  "target_turns": 8
+}

@@ -1,0 +1,30 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to activate their inactive card",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_inactive_card_list",
+      "description": "Show the customer's all inactive card numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "activate_successfully",
+      "description": "Agent showed that the card has been activated successfully",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0001811200",
+    "selected_card_number": {
+      "value": ["9344", "card *9344"],
+      "description": "randomly select a card number from the list"
+    }
+  },
+  "target_turns": 10
+}

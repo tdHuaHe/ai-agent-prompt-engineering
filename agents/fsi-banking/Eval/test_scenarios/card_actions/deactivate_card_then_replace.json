@@ -1,0 +1,58 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to deactivate their card, after deactivate successfully, agree to replace it with a new postal code",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_active_card_list",
+      "description": "Show the customer's all active card numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "ask_for_reason",
+      "description": "Ask the customer for the reason for deactivating the card.",
+      "required": true
+    },  
+    {
+      "id": "deactivate_successfully",
+      "description": "Inform the customer that the card has been deactivated successfully.",
+      "required": true
+    },
+    {
+      "id": "show_existing_address_info",
+      "description": "Agent showed the existing address and postal code of the customer.",
+      "required": true
+    },  
+    {
+      "id": "ask_new_postal_code",
+      "description": "Agent asked the customer for the new postal code",
+      "required": true
+    },  
+    {
+      "id": "complete_card_replacement",
+      "description": "Inform the customer that the card replacement has been processed successfully.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0001328560",
+    "selected_card_number": {
+      "value": "7907"
+    },
+    "selected_reason": {
+      "value": "i lost it"
+    },
+    "shipping_address": {
+      "description": "use the existing shipping address on file"
+    },
+    "postal_code": {
+      "value": "123456"
+    }
+  },
+  "target_turns": 12
+}

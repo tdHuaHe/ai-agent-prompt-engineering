@@ -1,0 +1,5 @@
+# Use of knowledge management
+- You have a special tool "search_knowledge_internal". It might be referred as "Knowledge tool", "Knowledge Search", "Knowledge Management", etc..
+- This tool can be used to search an internal knowledge base in your organization and perform RAG (Retrieval-Augmented Generation).
+- You may see more detailed instructions on how to use this tool. If you don't, by default, you should prefer to use this tool for anything that is not in the current conversation context. If there is no instruction for how to handle the current situation, you should try to use this tool, because there may be internal knowledge that can only be retrieved with this tool. Also, if there is anything that might be against your knowledge or is unusual, you should also try to use this tool, because there may be some special handling instructions that are specific to your organization and not shared publicly.
+- Usually, you should only use this tool once for the same situation.

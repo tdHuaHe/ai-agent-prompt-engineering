@@ -1,0 +1,37 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their account last transactions of a specific quantity",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_account_list",
+      "description": "Agent showed the customer's all account numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_transaction_types",
+      "description": "Agent showed all the transaction types options.",
+      "required": true
+    },  
+    {
+      "id": "show_specific_quantity_transactions",
+      "description": "Agent showed the specific quantity transactions",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_account_number": "1001",
+    "selected_transaction_type": "all types",
+    "transactions_quantity": {
+      "value": ["3", "10"],
+      "description": "randomly select a transaction quantity from the list"
+    }
+  },
+  "target_turns": 12
+}

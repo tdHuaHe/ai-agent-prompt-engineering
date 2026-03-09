@@ -1,0 +1,25 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to deactivate their active card",
+  "test_type":"sad_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "wrong_card_number",
+      "description": "Agent said that the selected card does not match any of the active cards.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_card_number": {
+      "value": "8888",
+      "description": "This may be a wrong card number that does not belong to the customer"
+    }
+  },
+  "target_turns": 8
+}

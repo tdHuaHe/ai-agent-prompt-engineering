@@ -1,0 +1,41 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to replace their card, and provide a new address and postal code",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "show_nonactive_card_list",
+      "description": "Show the customer's all non-active card numbers successfully.",
+      "required": true
+    },  
+    {
+      "id": "ask_new_address_info",
+      "description": "Agent asked the customer for the new address and postal code",
+      "required": true
+    },  
+    {
+      "id": "replace_card_result",
+      "description": "Inform the customer that the replacement card will be sent to their address",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000602110",
+    "selected_card_number": {
+      "value": ["0304"],
+      "description": "randomly select a card number option from the customer's card list"
+    },
+    "shipping_address": {
+      "value": "China, Beijing, Chaoyang District"
+    },
+    "postal_code": {
+      "value": "100000"
+    }
+  },
+  "target_turns": 15
+}

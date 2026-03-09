@@ -1,0 +1,26 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their multiple account balances",
+  "test_type":"happy_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    },  
+    {
+      "id": "show_account_balance_for_multi_accounts",
+      "description": "Show the customer their selected 2 account balance information successfully.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000058580",
+    "selected_account_number_1": "8001",
+    "selected_account_number_2": "1001"
+  },
+  "user_simulation_policy": [
+    "After checking the balance of the first account, then request to check the balance of the second account."
+  ],
+  "target_turns": 12
+}

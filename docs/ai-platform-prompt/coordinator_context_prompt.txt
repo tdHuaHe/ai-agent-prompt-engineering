@@ -1,0 +1,5 @@
+# Conversation context:
+Here is the variable context for this conversation. The variables in the context might be referred as `%{Application Input}` and `%{Channel Type}` and `%{Channel Name}` in the instructions.
+``` json
+VARIABLE_CONTEXT_PLACEHOLDER
+```

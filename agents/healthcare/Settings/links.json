@@ -1,0 +1,38 @@
+[
+  {
+    "source_agent_id": "6d1c568f-98d3-4bc0-bf03-e78f2a3c8e7c",
+    "source_agent_version": 6,
+    "target_agent_id": "0fb44b1c-d9da-4586-9870-5bc354279145",
+    "target_agent_version": 6
+  },
+  {
+    "source_agent_id": "6d1c568f-98d3-4bc0-bf03-e78f2a3c8e7c",
+    "source_agent_version": 6,
+    "target_agent_id": "1ecfebdd-5ce6-45a3-addc-0c6e0e46e415",
+    "target_agent_version": 6
+  },
+  {
+    "source_agent_id": "6d1c568f-98d3-4bc0-bf03-e78f2a3c8e7c",
+    "source_agent_version": 6,
+    "target_agent_id": "216182c8-abd2-4ca6-a124-c212b0867230",
+    "target_agent_version": 6
+  },
+  {
+    "source_agent_id": "6d1c568f-98d3-4bc0-bf03-e78f2a3c8e7c",
+    "source_agent_version": 6,
+    "target_agent_id": "7baff53e-1e57-43cb-9ed3-32a0c0b4d366",
+    "target_agent_version": 6
+  },
+  {
+    "source_agent_id": "6d1c568f-98d3-4bc0-bf03-e78f2a3c8e7c",
+    "source_agent_version": 6,
+    "target_agent_id": "b24ada3a-8cdb-43ab-87f7-d9dc551c1ed5",
+    "target_agent_version": 6
+  },
+  {
+    "source_agent_id": "6d1c568f-98d3-4bc0-bf03-e78f2a3c8e7c",
+    "source_agent_version": 6,
+    "target_agent_id": "d1816a9c-9665-4bea-a3fd-a5e519561aac",
+    "target_agent_version": 6
+  }
+]

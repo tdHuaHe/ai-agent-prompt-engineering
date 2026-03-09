@@ -1,0 +1,311 @@
+{
+  "agent_id": "1ecfebdd-5ce6-45a3-addc-0c6e0e46e415",
+  "agent_version": 6,
+  "role": "ACTION_AGENT",
+  "agent_name": "Patient Activity Agent",
+  "goal": "check patient's past activities.",
+  "instruction": "@instruction.md",
+  "routing_condition": "",
+  "tools": [
+    {
+      "tool_id": "bd867f65-7f75-4eb4-a491-c0ba603e47b1",
+      "tool_name": "Patient Past Visit",
+      "tool_description": "This tool is used to check if patient has past lab or glucose test visit. It should be called after patient is identified.",
+      "execute_params": {
+        "connection_id": "",
+        "action_id": "",
+        "nodes": [
+          {
+            "id": "BH44WKgq7s3x_cdVw7FHl",
+            "data": {
+              "name": "Patient Past Visit",
+              "variables": [],
+              "more_details": "This tool is used to check if patient has past lab or glucose test visit. It should be called after patient is identified."
+            },
+            "type": "start-flow",
+            "position": {
+              "x": -594,
+              "y": -45
+            }
+          },
+          {
+            "id": "JcFctHwb1iC1jdPscGDEo",
+            "data": {
+              "name": "get past encounters",
+              "inputs": [
+                {
+                  "id": "67e44ccf88f43078a55777c1-wmnwSbmqd6DGiMWk_R5jQ",
+                  "name": "interaction_id",
+                  "type": "string",
+                  "title": "interaction_id",
+                  "required": true,
+                  "variable": "ecb2d3f5-4556-4dc7-9580-b6d474c16564",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-X7W-Rtjn1XVTsUqjMFGxe",
+                  "name": "max_days",
+                  "type": "string",
+                  "title": "max_days",
+                  "value": "300",
+                  "required": true,
+                  "input_type": "value"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-1elJbQbCsZLUC1SHqK8I6",
+                  "name": "page",
+                  "type": "string",
+                  "title": "page",
+                  "value": "1",
+                  "required": true,
+                  "input_type": "value"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-Yx0qLhnH4Bb8WPvh1LLIT",
+                  "name": "per_page",
+                  "type": "string",
+                  "title": "per_page",
+                  "value": "50",
+                  "required": true,
+                  "input_type": "value"
+                }
+              ],
+              "outputs": [
+                {
+                  "id": "67e44ccf88f43078a55777c1-g7KPrRI2UlhnY7wQsXYDE",
+                  "name": "count",
+                  "type": "integer",
+                  "title": "Count",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-q8swieJdoqdkPSwOF-lkP",
+                  "name": "total",
+                  "type": "integer",
+                  "title": "Total",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-878yrPXmirOfTy4Oqmtl0",
+                  "name": "page",
+                  "type": "integer",
+                  "title": "Page",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-JiDhngLi2fbuVJgcGf8hl",
+                  "name": "per_page",
+                  "type": "integer",
+                  "title": "Per_page",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-Mvr44iY-qGKneRWYMw5GG",
+                  "name": "total_pages",
+                  "type": "integer",
+                  "title": "Total_pages",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-msoTZIXXoJND0MNCL1MtI",
+                  "name": "_links",
+                  "type": "object",
+                  "title": "_links",
+                  "required": false,
+                  "variable": "",
+                  "input_type": "variable"
+                },
+                {
+                  "id": "67e44ccf88f43078a55777c1-kC3wQajjEBGe_Gjj9jDpw",
+                  "name": "_embedded",
+                  "type": "object",
+                  "title": "_embedded",
+                  "required": true,
+                  "variable": "RmEn0Sl3c4BdTCP_3M-VK",
+                  "input_type": "variable"
+                }
+              ],
+              "action_id": "67e44ccf88f43078a55777c1",
+              "connection_id": "67e44ccf88f43078a55777b9"
+            },
+            "type": "execute-action",
+            "position": {
+              "x": -284.8629188406594,
+              "y": -99.63428030903792
+            }
+          },
+          {
+            "id": "EqIkkBOxHfpX-f-eCSITs",
+            "data": {
+              "code": "/**\n * Extract past encounters and check for lab test or glucose test\n * Returns only the location info of the latest visit if lab/glucose test exists\n */\nfunction getLatestLabOrGlucoseTestLocation(encountersData) {\n    const encounters = encountersData.encounters || [];\n    \n    // Filter encounters for lab tests or glucose tests\n    const labOrGlucoseTests = encounters.filter(encounter => {\n        const type = encounter.type.toLowerCase();\n        return type.includes('lab') || type.includes('glucose');\n    });\n    \n    if (labOrGlucoseTests.length === 0) {\n        return {\n            hasLabOrGlucoseTest: false,\n            location_id: null,\n            location: null\n        };\n    }\n    \n    // Sort by date_time to get the latest one\n    labOrGlucoseTests.sort((a, b) => {\n        return new Date(b.date_time).getTime() - new Date(a.date_time).getTime();\n    });\n    \n    const latestTest = labOrGlucoseTests[0];\n    \n    return {\n        hasLabOrGlucoseTest: true,\n        location_id: latestTest.location_id,\n        location: latestTest.location\n    };\n}\nconst patientEncounters = Context.getVariable(\"past_encounter_list\")\nContext.setVariable(\"workflow_status\", \"\")\n// Run the function\nconst result = getLatestLabOrGlucoseTestLocation(patientEncounters);\nif (result.hasLabOrGlucoseTest) {\n    Context.setVariable(\"workflow_status\", `User has previous lab or glucose test at the location ${result.location}`)\n} else {\n   Context.setVariable(\"workflow_status\", \"User has no previous lab or glucose test\")\n}",
+              "name": "Check if user has previous encounters"
+            },
+            "type": "function",
+            "position": {
+              "x": 98.31101401928672,
+              "y": -139.96837850482171
+            }
+          },
+          {
+            "id": "PVOXlh8HAawOlpfpHYjFv",
+            "data": {
+              "code": "Context.setVariable(\"workflow_status\", \"error happened when retrieving past encounters\")",
+              "name": "action error"
+            },
+            "type": "function",
+            "position": {
+              "x": 127.55323521122997,
+              "y": 64.72716983878108
+            }
+          },
+          {
+            "id": "7CeOUlHmmMXzum7TPdL_y",
+            "data": {
+              "name": "End Flow",
+              "variables": [
+                {
+                  "id": null,
+                  "variable": "3635ef36-7913-4c56-943f-7a77c07e0eeb",
+                  "first_variable": {
+                    "variable": "3635ef36-7913-4c56-943f-7a77c07e0eeb"
+                  },
+                  "second_variable": {
+                    "variable": null
+                  }
+                }
+              ]
+            },
+            "type": "end-flow",
+            "position": {
+              "x": 571.2283153648518,
+              "y": -59.30018211325412
+            }
+          }
+        ],
+        "edges": [
+          {
+            "id": "g7xsCfoEo_qVxjYR5vyZ5",
+            "type": "worflowEdge",
+            "source": "BH44WKgq7s3x_cdVw7FHl",
+            "target": "JcFctHwb1iC1jdPscGDEo",
+            "source_handle": "start-flow-node-rigth-handle-1",
+            "target_handle": "execute-action-node-rigth-handle-1"
+          },
+          {
+            "id": "9WLZXWY8w_4pUl6Rd5C8f",
+            "type": "worflowEdge",
+            "source": "JcFctHwb1iC1jdPscGDEo",
+            "target": "EqIkkBOxHfpX-f-eCSITs",
+            "source_handle": "success",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "u1HOXRPSqI9Qsa_8W5kIl",
+            "type": "worflowEdge",
+            "source": "JcFctHwb1iC1jdPscGDEo",
+            "target": "PVOXlh8HAawOlpfpHYjFv",
+            "source_handle": "error",
+            "target_handle": "function-left-handle-1"
+          },
+          {
+            "id": "BHPJ6v-Valmeky4cIcqdj",
+            "type": "worflowEdge",
+            "source": "EqIkkBOxHfpX-f-eCSITs",
+            "target": "7CeOUlHmmMXzum7TPdL_y",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "JmwtAhSlXcPKzOG7Z1zSY",
+            "type": "worflowEdge",
+            "source": "EqIkkBOxHfpX-f-eCSITs",
+            "target": "7CeOUlHmmMXzum7TPdL_y",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "nZPcGuz0cqFKY1m78YiQL",
+            "type": "worflowEdge",
+            "source": "PVOXlh8HAawOlpfpHYjFv",
+            "target": "7CeOUlHmmMXzum7TPdL_y",
+            "source_handle": "success",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "WQZLa6XkD7jmLjkxLK4qW",
+            "type": "worflowEdge",
+            "source": "PVOXlh8HAawOlpfpHYjFv",
+            "target": "7CeOUlHmmMXzum7TPdL_y",
+            "source_handle": "error",
+            "target_handle": "end-flow-left-handle-1"
+          },
+          {
+            "id": "n5cRzc4fF_5QUiCiuAb8P",
+            "type": "worflowEdge",
+            "source": "JcFctHwb1iC1jdPscGDEo",
+            "target": "7CeOUlHmmMXzum7TPdL_y",
+            "source_handle": "timeout",
+            "target_handle": "end-flow-left-handle-1"
+          }
+        ],
+        "variables": [
+          {
+            "id": "RmEn0Sl3c4BdTCP_3M-VK",
+            "type": "Workflow",
+            "variable_name": "past_encounter_list",
+            "tool_reference": [
+              {
+                "tool_id": "hJeEbWqLOFQ-R8rU_-r6Z",
+                "agent_id": "aab3b64e-160b-4976-b4e0-e19127d05971"
+              },
+              {
+                "tool_id": "PI9stj-TBWzchHqSPup8f",
+                "agent_id": "aab3b64e-160b-4976-b4e0-e19127d05971"
+              },
+              {
+                "tool_id": "SdPKfPlBrUUUHQWXiU2ak",
+                "agent_id": "aab3b64e-160b-4976-b4e0-e19127d05971"
+              },
+              {
+                "tool_id": "9bL5LgJozL562dxARws_w",
+                "agent_id": "4e6c6518-df77-4192-b210-3d18a36e851b"
+              },
+              {
+                "tool_id": "SJEM4TIAx-XdPgQhbA_1A",
+                "agent_id": "4e6c6518-df77-4192-b210-3d18a36e851b"
+              }
+            ]
+          }
+        ],
+        "mcp_server_id": "",
+        "mcp_server_url": "",
+        "mcp_tool_name": ""
+      },
+      "is_internal_tool": false,
+      "input_params": {},
+      "output_params": {
+        "workflow_status": {
+          "name": "workflow_status",
+          "description": "To track the execution result in workflow",
+          "title": "To track the execution result in workflow",
+          "required": true,
+          "type": "string",
+          "variable_name": "workflow_status",
+          "value": null
+        }
+      },
+      "tool_version": 6,
+      "tool_type": "WORKFLOW"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "persona": "a existing bank customer",
+  "scenario_desc": "Customer wants to check their account balance but provides a wrong account number",
+  "test_type":"sad_path",
+  "goal": [
+    {
+      "id": "identify_member",
+      "description": "Agent identified the customer's name successfully.",
+      "required": true
+    }, 
+    {
+      "id": "wrong_account_number",
+      "description": "Agent could not find the account with the provided account number.",
+      "required": true
+    }
+  ],
+  "test_data": {
+    "member_id": "0000058580",
+    "selected_account_number": "1111"
+  },
+  "target_turns": 8
+}
