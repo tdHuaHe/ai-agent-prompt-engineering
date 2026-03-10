@@ -36,12 +36,12 @@ agents/<industry>/
 ## Build Command Example
 
 ```bash
-python3 tools/build.py test "" fsi-banking
+./ai-agent-templates build test --industry fsi-banking
 ```
 
 Subset build example:
 
 ```bash
-python3 tools/build.py test "Member Search Agent,Account Balance and Transaction Agent,FAQ Agent" fsi-banking
+./ai-agent-templates build test --industry fsi-banking --agents "Member Search Agent,Account Balance and Transaction Agent,FAQ Agent"
 ```
 

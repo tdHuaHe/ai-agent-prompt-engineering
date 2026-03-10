@@ -1,0 +1,409 @@
+agent_id: 7baff53e-1e57-43cb-9ed3-32a0c0b4d366
+agent_version: 6
+role: ACTION_AGENT
+agent_name: Initiate Agent
+goal: Initiate some informations that would be used in the future.
+instruction: |-
+  Follow below steps to get information and return them to Coordinator.
+  - Execute `initiate parameters` to get required informations.
+  - Forward today's date, week day of today, user's zip code to the Coordinator.
+routing_condition: ''
+tools:
+- tool_id: e6067bd6-e03d-4c18-abc5-c2527a55093d
+  tool_name: initiate parameters
+  tool_description: It should be called at the beginning of the conversation.
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: H7dRr1gwgL_E_9E-OU2WJ
+      data:
+        name: initiate parameters
+        variables: []
+        more_details: It should be called at the beginning of the conversation.
+      type: start-flow
+      position:
+        x: -156
+        y: 11
+    - id: eTsctYYo5ieQoiSBDmunb
+      data:
+        name: patient look up
+        inputs:
+        - id: 6894ff33f9689e79869d2cc9-JIMi-T3dRYANfoDm8iiXz
+          name: INTERACTION_ID
+          type: string
+          title: interaction_id
+          required: true
+          variable: ecb2d3f5-4556-4dc7-9580-b6d474c16564
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-_ORxBDuVmFslChBs383o8
+          name: MRN
+          type: string
+          title: member_id
+          value: '200042882'
+          required: true
+          input_type: value
+        outputs:
+        - id: 6894ff33f9689e79869d2cc9-RuyBKIcatnRogyTEyI_el
+          name: id
+          type: string
+          title: Patient id
+          required: false
+          variable: 4f96f18d-1afc-4be0-845a-1a8e21568d8c
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-s5Ysx_Ck25vvcga9Le9t7
+          name: name
+          type: string
+          title: Patient's name
+          required: false
+          variable: 5c74e705-4658-4324-8d63-5dc8f83ad683
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-ZfZBVQ6hQwSjf-ows1WYa
+          name: mrn
+          type: string
+          title: Patient's medical record number
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-DAI7mMs8Hvfp7kttslQmr
+          name: ssn
+          type: string
+          title: Patient's social security number
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-v0P-BRzK2hZBovpr_ezXl
+          name: birth_date
+          type: string
+          title: Patient's birth date
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-dgV2P8jVR5nktjphnedNL
+          name: gender
+          type: string
+          title: Patient's gender
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-QoacdCKL26EYzF3lYPJcc
+          name: home_phone_number
+          type: string
+          title: Patient's home phone number
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-p8OXE6yudoKcE70eTCH82
+          name: work_phone_number
+          type: string
+          title: Patient's work phone number
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-bbmGxwd2iaTcoCPLfGlIP
+          name: mobile_phone_number
+          type: string
+          title: Patient's mobile phone number
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-ozXr-7Q_KcCbal14HvQoW
+          name: home_address_city
+          type: string
+          title: Patient's home address city
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-6oIWeHiW9DWHJ63TZ0J4r
+          name: home_address_state
+          type: string
+          title: Patient's home address state
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-M9HSXsHkfgmxPKYwPEmxS
+          name: postal_code
+          type: string
+          title: Patient's postal code
+          required: false
+          variable: ce91ec2b-d2e2-4c35-952c-f85bdcb926cd
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-_gFiGbmnvkLm55qghYVUc
+          name: marital_status
+          type: string
+          title: Patient's marital status
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-wSRsPJ9p3Qkq_aZ-m5Ra3
+          name: language
+          type: string
+          title: Patient's language
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-76sqkSRm_GZinAu9WL10h
+          name: active
+          type: string
+          title: Patient's active flag
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-AYHqk44qLBh_tpJE9SeZJ
+          name: count
+          type: integer
+          title: Number of patients found
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-C46LNIPbOPqMiWn0Q8OZL
+          name: popup_url
+          type: string
+          title: Patient's popup-url
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-iBP075xsZQafqBc378akX
+          name: operation_outcome
+          type: string
+          title: Patient's operation outcome
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-nHExAMeUNz5fiEt6YG3Uq
+          name: self_service_active
+          type: string
+          title: Patient's self service active status
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-6lgqB1Wi2x1qr14Igk-5Y
+          name: pcp_id
+          type: string
+          title: The pcp_id schema
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-HtoMlOrPwD6cIVww-FG4l
+          name: pcp_name
+          type: string
+          title: The pcp_name schema
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6894ff33f9689e79869d2cc9-3TAuRUkqn-zBlOC6JbjwO
+          name: has_pcp
+          type: integer
+          title: The binary has_pcp schema
+          required: false
+          variable: ''
+          input_type: variable
+        action_id: 6894ff33f9689e79869d2cc9
+        connection_id: 67e44ccf88f43078a55777b9
+      type: execute-action
+      position:
+        x: 144.5
+        y: -46.5703125
+    - id: _0yrMAPp66qvjbChDLXdL
+      data:
+        code: |-
+          /**
+           * Generate today's date based on the provided timezone
+           * @param {string} timezone - The timezone string (e.g., 'America/New_York', 'Europe/London')
+           * @returns {Object} Object containing various date formats
+           */
+          function getTodayByTimezone(timezone) {
+              try {
+                  // Create a new Date object for current time
+                  const now = new Date();
+
+                  // Get the date string in the specified timezone (simpler approach)
+                  const dateString = now.toLocaleDateString("en-US", { timeZone: timezone });
+
+                  // Parse the date string (format: MM/DD/YYYY)
+                  const dateParts = dateString.split('/');
+                  const month = dateParts[0].padStart(2, '0');
+                  const day = dateParts[1].padStart(2, '0');
+                  const year = dateParts[2];
+
+                  // Get weekday name
+                  const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                  const localDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                  const weekday = weekdayNames[localDate.getDay()];
+
+                  return {
+                      // Standard formats
+                      iso: `${year}-${month}-${day}`,
+                      us: `${month}/${day}/${year}`,
+                      readable: `${weekday}, ${month}/${day}/${year}`,
+
+                      // Individual components
+                      year: parseInt(year),
+                      month: parseInt(month),
+                      day: parseInt(day),
+                      weekday: weekday,
+
+                      // Timezone info
+                      timezone: timezone
+                  };
+
+              } catch (error) {
+                  throw new Error(`Invalid timezone: ${timezone}. Error: ${error.message}`);
+              }
+          }
+
+          const timezone = "America/Los_Angeles"
+          Context.setVariable("timezone", timezone)
+          const today = getTodayByTimezone(timezone);
+          Context.setVariable("date_of_today", today.iso)
+          Context.setVariable("weekday_of_today", today.weekday)
+        name: set today's date
+      type: function
+      position:
+        x: 421.5
+        y: -23.5703125
+    - id: jB6MkvRXWEfxMJZmlSJeA
+      data:
+        name: End Flow
+        variables:
+        - id: null
+          variable: 4f96f18d-1afc-4be0-845a-1a8e21568d8c
+          first_variable:
+            variable: 4f96f18d-1afc-4be0-845a-1a8e21568d8c
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: ce91ec2b-d2e2-4c35-952c-f85bdcb926cd
+          first_variable:
+            variable: ce91ec2b-d2e2-4c35-952c-f85bdcb926cd
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: ce14b108-3190-4518-a479-d8ea1921dc8d
+          first_variable:
+            variable: ce14b108-3190-4518-a479-d8ea1921dc8d
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: e16d47ea-69da-434e-ad4f-4e1c1239651a
+          first_variable:
+            variable: e16d47ea-69da-434e-ad4f-4e1c1239651a
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          first_variable:
+            variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 5c74e705-4658-4324-8d63-5dc8f83ad683
+          first_variable:
+            variable: 5c74e705-4658-4324-8d63-5dc8f83ad683
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 685.5
+        y: -9.5703125
+    edges:
+    - id: b7qM_uzyNZgRe2pzkH1VR
+      type: worflowEdge
+      source: H7dRr1gwgL_E_9E-OU2WJ
+      target: eTsctYYo5ieQoiSBDmunb
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: execute-action-node-rigth-handle-1
+    - id: SJ-_bT5g-AqPFUUB-JT8x
+      type: worflowEdge
+      source: eTsctYYo5ieQoiSBDmunb
+      target: _0yrMAPp66qvjbChDLXdL
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: VmxdcqMJOXEdTwBt2Hhjf
+      type: worflowEdge
+      source: _0yrMAPp66qvjbChDLXdL
+      target: jB6MkvRXWEfxMJZmlSJeA
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 1X7bUzDsV1TmYn7CMdeM_
+      type: worflowEdge
+      source: _0yrMAPp66qvjbChDLXdL
+      target: jB6MkvRXWEfxMJZmlSJeA
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: GKfDotd9ToSjRXDRNOp2T
+      type: worflowEdge
+      source: eTsctYYo5ieQoiSBDmunb
+      target: jB6MkvRXWEfxMJZmlSJeA
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: ju1mJ1YDPEhdp4odEROg2
+      type: worflowEdge
+      source: eTsctYYo5ieQoiSBDmunb
+      target: jB6MkvRXWEfxMJZmlSJeA
+      source_handle: timeout
+      target_handle: end-flow-left-handle-1
+    variables: []
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params: {}
+  output_params:
+    date_of_today:
+      name: date_of_today
+      description: Today's date, calculated based on the user’s timezone.
+      title: Today's date, calculated based on the user’s timezone.
+      required: true
+      type: string
+      variable_name: date_of_today
+      value: null
+    timezone:
+      name: timezone
+      description: Timezone should follow the IANA Time Zone Database format. It is
+        always set to "America/Los_Angeles".
+      title: Timezone should follow the IANA Time Zone Database format. It is always
+        set to "America/Los_Angeles".
+      required: true
+      type: string
+      variable_name: timezone
+      value: null
+    patient_id:
+      name: patient_id
+      description: ID of the identified patient.
+      title: ID of the identified patient.
+      required: true
+      type: string
+      variable_name: patient_id
+      value: null
+    user_zip_code:
+      name: user_zip_code
+      description: The Zip code of the user, retrieved during the verification process.
+      title: The Zip code of the user, retrieved during the verification process.
+      required: true
+      type: string
+      variable_name: user_zip_code
+      value: null
+    patient_name:
+      name: patient_name
+      description: Patient's name.
+      title: Patient's name.
+      required: true
+      type: string
+      variable_name: patient_name
+      value: null
+    weekday_of_today:
+      name: weekday_of_today
+      description: Today's weekday, calculated based on the user’s timezone.
+      title: Today's weekday, calculated based on the user’s timezone.
+      required: true
+      type: string
+      variable_name: weekday_of_today
+      value: null
+  tool_version: 6
+  tool_type: WORKFLOW

@@ -1,0 +1,712 @@
+agent_id: b24ada3a-8cdb-43ab-87f7-d9dc551c1ed5
+agent_version: 6
+role: ACTION_AGENT
+agent_name: Appointment Management Agent
+goal: |-
+  Facilitates the identification of user appointments for actions including checking, cancellation, confirmation and sending details to user.
+  Confirming an appointment registers the user's intent to attend, updating attendance in the system.
+instruction: |-
+  # Conversational Rules:
+  - If an error occurs, return the error details to the Coordinator immediately.
+    - The Coordinator will handle the escalation.
+    - Do not request any additional information from the Coordinator.
+
+  # Operation Process:
+  Firstly assist user identify the appointment(s) they would like to act on, then do the operation.
+  **Strictly follow below steps**
+  ## Step 1: Identify the appointment
+
+  1. **Execute** `Get Appointment List` skill to retrieve user's appointments
+
+  2. **Apply filtering** based on user criteria:
+     - **Date criteria**: "today", "tomorrow", "next week", specific dates
+     - **Provider criteria**: doctor name, specialty (e.g., "cardiology")
+     - **Location criteria**: specific clinic or facility
+     - **Other criteria**: appointment type, time preferences
+
+  3. **Handle results**:
+     - **Single match** → Use directly (no confirmation needed)
+     - **Multiple matches** → Present list to Coordinator for user selection
+     - **No criteria specified** → Provide all appointments
+
+  ## Step 2, Process user’s Request
+  - Once the specific appointment has been identified, perform the appropriate operation based on the user’s intent:
+    - For a Cancellation Request:
+      - Execute the `Cancel Appointment` skill to cancel the selected appointment.
+    - For a Confirmation Request:
+      - Execute the `Confirm Appointment` skill to confirm the selected appointment.
+    - For a Checking Request:
+      - Show detail of the identified appointment.
+routing_condition: ''
+tools:
+- tool_id: 72a56eef-9b78-4b51-aa5d-1bfd9d8af06e
+  tool_name: Confirm Appointment
+  tool_description: This tool is used to confirm an appointment. It should be called
+    after the specific appointment to be confirmed has been identified.
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: 2-RunQfdpyTIjQ3OJ8nkk
+      data:
+        name: Confirm Appointment
+        variables:
+        - type: string
+          variable: 23b59dcf-f6eb-4db7-a9d3-abc7f1f67aa8
+        more_details: This tool is used to confirm an appointment. It should be called
+          after the specific appointment to be confirmed has been identified.
+      type: start-flow
+      position:
+        x: -245
+        y: -6
+    - id: BUXYM5emgdAz7dQrDxUl-
+      data:
+        name: Confirm Appointment
+        inputs:
+        - id: 67e44ccf4a850f030bde3bc5-1Vhm5I4qfLDJP5TZcSm_J
+          name: appointment_id
+          type: string
+          title: appointment_id
+          required: true
+          variable: 23b59dcf-f6eb-4db7-a9d3-abc7f1f67aa8
+          input_type: variable
+        - id: 67e44ccf4a850f030bde3bc5-UV85h0TA2eZhHWt79DdjQ
+          name: interaction_id
+          type: string
+          title: interaction_id
+          required: true
+          variable: ecb2d3f5-4556-4dc7-9580-b6d474c16564
+          input_type: variable
+        action_id: 67e44ccf4a850f030bde3bc5
+        connection_id: 67e44ccf88f43078a55777b9
+      type: execute-action
+      position:
+        x: 60.48322532670804
+        y: -146.8449260652185
+    - id: 81T5cvncZ_eXr8kah-i-5
+      data:
+        code: Context.setVariable("workflow_status", "action error")
+        name: set action error
+      type: function
+      position:
+        x: 396.2445660223635
+        y: -84.26695941677757
+    - id: REqhHcu1d-qNpp1qveHNI
+      data:
+        code: Context.setVariable("workflow_status", "actioni timeout error")
+        name: set action timeout
+      type: function
+      position:
+        x: 402.34521406211525
+        y: 99.76925644906655
+    - id: dLTgV3FRghzQKstb_TFFL
+      data:
+        name: End Flow
+        variables:
+        - id: null
+          variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          first_variable:
+            variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 719.5789121292055
+        y: -77.14953670373387
+    edges:
+    - id: 2le0mqU-9jEUh5RXxgpMl
+      type: worflowEdge
+      source: 2-RunQfdpyTIjQ3OJ8nkk
+      target: BUXYM5emgdAz7dQrDxUl-
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: execute-action-node-rigth-handle-1
+    - id: w-WIyyFd6KO0lLy59nX0L
+      type: worflowEdge
+      source: BUXYM5emgdAz7dQrDxUl-
+      target: REqhHcu1d-qNpp1qveHNI
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: 4S-a3y2k_lUZ1Y-ysT9Pf
+      type: worflowEdge
+      source: BUXYM5emgdAz7dQrDxUl-
+      target: 81T5cvncZ_eXr8kah-i-5
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: sG6xZY4uKcZByrr1NFnU4
+      type: worflowEdge
+      source: BUXYM5emgdAz7dQrDxUl-
+      target: dLTgV3FRghzQKstb_TFFL
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: MfEz3uc2QCO9Jn_PBhia5
+      type: worflowEdge
+      source: 81T5cvncZ_eXr8kah-i-5
+      target: dLTgV3FRghzQKstb_TFFL
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: iuzssgjTD1wj1regFxPvS
+      type: worflowEdge
+      source: 81T5cvncZ_eXr8kah-i-5
+      target: dLTgV3FRghzQKstb_TFFL
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: jINa2uM8F4bAestJ-g0VF
+      type: worflowEdge
+      source: REqhHcu1d-qNpp1qveHNI
+      target: dLTgV3FRghzQKstb_TFFL
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: HPNB6dAzWmEtz5E6kVNyC
+      type: worflowEdge
+      source: REqhHcu1d-qNpp1qveHNI
+      target: dLTgV3FRghzQKstb_TFFL
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables: []
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    appointment_id_to_confirm:
+      name: appointment_id_to_confirm
+      description: The appointment id to be confirmed.
+      title: The appointment id to be confirmed.
+      required: true
+      type: string
+      variable_name: appointment_id_to_confirm
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: To track the execution result in workflow
+      title: To track the execution result in workflow
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+  tool_version: 6
+  tool_type: WORKFLOW
+- tool_id: c8c3ab1a-6954-47e1-b4d6-d3dde523d4a4
+  tool_name: Get Appointment List
+  tool_description: This tool is used to get Appointment List.
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: s_XkslFGACD92IPFCqUWr
+      data:
+        name: Get Appointment List
+        variables: []
+        more_details: This tool is used to get Appointment List.
+      type: start-flow
+      position:
+        x: -731
+        y: -103
+    - id: _x1ZYWaQipWdowMZkJWZ3
+      data:
+        name: Get appointment list
+        inputs:
+        - id: 6995f81609a02145b9fe4ed5-TSWVuU0HrQS6MFEsReeAI
+          name: interaction_id
+          type: string
+          title: interaction_id
+          required: true
+          variable: ecb2d3f5-4556-4dc7-9580-b6d474c16564
+          input_type: variable
+        - id: 6995f81609a02145b9fe4ed5-5y_Q5vPvnpt7eBNFnAl4o
+          name: timezone
+          type: string
+          title: timezone
+          required: true
+          variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          input_type: variable
+        outputs:
+        - id: 6995f81609a02145b9fe4ed5-Mpny0iCLUwPxFgtoGfgEH
+          name: count
+          type: integer
+          title: Count
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f81609a02145b9fe4ed5-wVFprfjNx_Y9tFn7swa0I
+          name: total
+          type: integer
+          title: Total
+          required: true
+          variable: ''
+          input_type: variable
+        - id: 6995f81609a02145b9fe4ed5-mLoANeH-zKva0QLvzEgl6
+          name: page
+          type: integer
+          title: page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f81609a02145b9fe4ed5-Mnxj7JSCxc8rHPDVTJX4N
+          name: per_page
+          type: integer
+          title: Per Page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f81609a02145b9fe4ed5-oFsaFoZIBXE2VOe_dbp9s
+          name: total_pages
+          type: integer
+          title: Total Pages
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f81609a02145b9fe4ed5-sd6akaFD4z5-FxdMDgE4s
+          name: _links
+          type: object
+          title: Links
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f81609a02145b9fe4ed5-putb80eWJoqyL-_OPXngG
+          name: _embedded
+          type: object
+          title: Embedded
+          required: true
+          variable: 07620e80-c93f-4940-a0a3-93bc0a7b3fad
+          input_type: variable
+        action_id: 6995f81609a02145b9fe4ed5
+        connection_id: 67e44ccf88f43078a55777b9
+      type: execute-action
+      position:
+        x: -262.5
+        y: -188.671875
+    - id: CgeYc7CjjBap_WILHEs6L
+      data:
+        code: |-
+          Context.setVariable("workflow_status", "success")
+
+          const appointmentListJson = Context.getVariable("upcoming_appointment_list")
+
+          // 1. Filter the list first to only include specific service_type_ids
+          const filteredAppointments = appointmentListJson.future_appointments.filter(appt => {
+              const serviceId = String(appt.service_type_id); // Ensure string comparison
+              return serviceId === "2721" || serviceId === "11700";
+          });
+
+          // 2. Map the filtered results to the desired format
+          const finalAppointmentList = filteredAppointments.map(appt => {
+              const {
+                  date_time, timezone, has_service_type_id, comment, cancelled, cancellable, address, patient_instructions,
+                  ...keepFields
+              } = appt;
+
+              // Format date_time as "YYYY-MM-DD hh:mmAM/PM"
+              let formattedDateTime = '';
+              if (date_time) {
+                  const dateObj = new Date(date_time);
+                  const year = dateObj.getFullYear();
+                  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+                  const day = dateObj.getDate().toString().padStart(2, '0');
+                  let hour = dateObj.getHours();
+                  const minute = dateObj.getMinutes().toString().padStart(2, '0');
+                  const ampm = hour >= 12 ? 'PM' : 'AM';
+                  hour = hour % 12 || 12;
+                  const formattedHour = hour.toString().padStart(2, '0');
+                  formattedDateTime = `${year}-${month}-${day} ${formattedHour}:${minute}${ampm}`;
+              }
+
+              return {
+                  ...keepFields,
+                  date_time: formattedDateTime
+              };
+          });
+
+          // 3. Save the cleaned and filtered list back to the Context
+          Context.setVariable("upcoming_appointment_list", finalAppointmentList);
+        name: Filter fields
+      type: function
+      position:
+        x: 124.5
+        y: -433.671875
+    - id: gq3ziL7RxGVSFgdg9NU9v
+      data:
+        code: 'Context.setVariable("workflow_status", "Error: Error happened when
+          trying to get patient''s appointment")'
+        name: set workflow as failure by error
+      type: function
+      position:
+        x: 163.5
+        y: -11.671875
+    - id: ednkJSMLGoYIe7kI6mFXo
+      data:
+        code: Context.setVariable("workflow_status", "action timeout")
+        name: set workflow as failure by timeout
+      type: function
+      position:
+        x: 165.5
+        y: 185.328125
+    - id: EDnVqm79-nHInQmg1-ytv
+      data:
+        name: End Flow
+        variables:
+        - id: null
+          variable: 07620e80-c93f-4940-a0a3-93bc0a7b3fad
+          first_variable:
+            variable: 07620e80-c93f-4940-a0a3-93bc0a7b3fad
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          first_variable:
+            variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 754.875
+        y: -62.671875
+    - id: p2XxouBsE9bL9kxxoZ7Kg
+      data:
+        code: Context.setVariable("workflow_status", "function error")
+        name: set workflow failure by function
+      type: function
+      position:
+        x: 431.75
+        y: -311.4375
+    edges:
+    - id: ai8SVZmcsTJzpH75AcRj-
+      type: worflowEdge
+      source: _x1ZYWaQipWdowMZkJWZ3
+      target: gq3ziL7RxGVSFgdg9NU9v
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: _VxmwyoBD2mEoL_KbyEOw
+      type: worflowEdge
+      source: _x1ZYWaQipWdowMZkJWZ3
+      target: ednkJSMLGoYIe7kI6mFXo
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: wsYE92zJaNTL6qTMRXV-R
+      type: worflowEdge
+      source: gq3ziL7RxGVSFgdg9NU9v
+      target: EDnVqm79-nHInQmg1-ytv
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: HRiUQni_2ZMdkGC1IyCGV
+      type: worflowEdge
+      source: gq3ziL7RxGVSFgdg9NU9v
+      target: EDnVqm79-nHInQmg1-ytv
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: EEuEgoLp4BDrHL2j41zc0
+      type: worflowEdge
+      source: ednkJSMLGoYIe7kI6mFXo
+      target: EDnVqm79-nHInQmg1-ytv
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: zEsNE5xhnKMqWGZJfzQJh
+      type: worflowEdge
+      source: ednkJSMLGoYIe7kI6mFXo
+      target: EDnVqm79-nHInQmg1-ytv
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: C-t3Y-x989bNui3cZcMpc
+      type: worflowEdge
+      source: CgeYc7CjjBap_WILHEs6L
+      target: EDnVqm79-nHInQmg1-ytv
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: YL8ZU9JQqQ3hDExgSZwib
+      type: worflowEdge
+      source: _x1ZYWaQipWdowMZkJWZ3
+      target: CgeYc7CjjBap_WILHEs6L
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: sjwfy_bD0FiIK0t4IUY2v
+      type: worflowEdge
+      source: CgeYc7CjjBap_WILHEs6L
+      target: p2XxouBsE9bL9kxxoZ7Kg
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: PFyCojnfJhiSjyqAlk0hp
+      type: worflowEdge
+      source: p2XxouBsE9bL9kxxoZ7Kg
+      target: EDnVqm79-nHInQmg1-ytv
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: Wi9RHTUhNYzaqEaNuY8F7
+      type: worflowEdge
+      source: p2XxouBsE9bL9kxxoZ7Kg
+      target: EDnVqm79-nHInQmg1-ytv
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: ZE3MgUX_Jyo-iPlAC2Ffi
+      type: worflowEdge
+      source: s_XkslFGACD92IPFCqUWr
+      target: _x1ZYWaQipWdowMZkJWZ3
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: execute-action-node-rigth-handle-1
+    variables: []
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params: {}
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: To track the execution result in workflow
+      title: To track the execution result in workflow
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    upcoming_appointment_list:
+      name: upcoming_appointment_list
+      description: retain the info of future appointments list.
+      title: retain the info of future appointments list.
+      required: true
+      type: string
+      variable_name: upcoming_appointment_list
+      value: null
+  tool_version: 6
+  tool_type: WORKFLOW
+- tool_id: e701c39a-add8-4161-8a3a-05ed07419b9a
+  tool_name: Cancel Appointment
+  tool_description: This tool is used to cancel appointment.  It should be called
+    after the specific appointment to be cancelled has been identified.
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: L_QyPozeSUJgPMJ4SVUA3
+      data:
+        name: Cancel Appointment
+        variables:
+        - type: string
+          variable: 03cb8e38-5fba-4e33-9d6e-a4e17339f895
+        more_details: This tool is used to cancel appointment.  It should be called
+          after the specific appointment to be cancelled has been identified.
+      type: start-flow
+      position:
+        x: -902.0000000000001
+        y: -34.15228117563618
+    - id: ld4TAn4fcJZHe7znaplIJ
+      data:
+        name: End Flow
+        variables:
+        - id: null
+          variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          first_variable:
+            variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 661
+        y: -72.765625
+    - id: an2RG-vpAXNbuTDxbeyXT
+      data:
+        code: |-
+          /**
+           * Validates if an appointment can be cancelled based on its date and service type
+           * @param {string} appointmentId - The ID of the appointment to validate
+           * @param {Array} appointmentsList - The list of appointments to search in
+           * @returns {Object} - Object with canCancel status and reason
+           */
+          function validateAppointmentCancellation(appointmentId, appointmentsList) {
+
+              // Find the appointment by ID
+              const appointment = appointmentsList.find(apt => apt.id === appointmentId);
+
+              // If appointment not found
+              if (!appointment) {
+                  return {
+                      canCancel: false,
+                      reason: "Appointment not found"
+                  };
+              }
+
+              // Check if the appointment is scheduled for today
+              const timezone = Context.getVariable("timezone");
+              const appointmentDate = new Date(appointment.date_time);
+              // Convert today's date to local timezone for proper comparison
+              const today = new Date();
+              const todayString = today.toLocaleDateString("en-CA", {
+                  timeZone: timezone
+              });
+
+              // Convert both dates to YYYY-MM-DD format for comparison
+              const appointmentDateString = appointmentDate.toLocaleDateString("en-CA");
+              if (todayString === appointmentDateString) {
+                  return {
+                      canCancel: false,
+                      reason: "Error: Appointments for today cannot be cancelled"
+                  };
+              }
+
+              // If all checks pass, the appointment can be cancelled
+              return {
+                  canCancel: true,
+                  reason: "Appointment is eligible for cancellation"
+              };
+          }
+
+          const future_appointments_list = Context.getVariable("upcoming_appointment_list")
+          const appointmentId = Context.getVariable("appointment_id")
+          const cancellableFlg = validateAppointmentCancellation(appointmentId, future_appointments_list)
+          if (cancellableFlg.canCancel) {
+              Context.setVariable("cancellable_flag", "Yes")
+          }else{
+              Context.setVariable("cancellable_flag", "No")
+          }
+          Context.setVariable("workflow_status", cancellableFlg.reason)
+        name: check cancellation rules
+      type: function
+      position:
+        x: -608.0913687053817
+        y: -69.9684688378845
+    - id: DEmi9lskCMgGwzgyqWYxE
+      data:
+        name: check if cancellable
+        variable:
+          value: LLCgeZSYQop7l1z2H_85D
+        conditions:
+        - id: AybEIYMpjW5SHZ8DmE-34
+          type: eq
+          value: 'Yes'
+          value_type: string
+      type: split-flow
+      position:
+        x: -301
+        y: -196.1484375
+    - id: CghUxSt758767CCL0_VKU
+      data:
+        name: Cancel Appointment
+        inputs:
+        - id: 67e44ccf46f1ca6dce4bf38f-FXH70WE0_V-4WkJ6K_WYa
+          name: appointment_id
+          type: string
+          title: appointment_id
+          required: true
+          variable: 03cb8e38-5fba-4e33-9d6e-a4e17339f895
+          input_type: variable
+        - id: 67e44ccf46f1ca6dce4bf38f-ttWXBXz8Cxw0wlVblCHl-
+          name: interaction_id
+          type: string
+          title: interaction_id
+          required: true
+          variable: ecb2d3f5-4556-4dc7-9580-b6d474c16564
+          input_type: variable
+        action_id: 67e44ccf46f1ca6dce4bf38f
+        connection_id: 67e44ccf88f43078a55777b9
+      type: execute-action
+      position:
+        x: 89
+        y: -310.1484375
+    - id: _rKVWlqaf-Gs4RVCO5UQV
+      data:
+        code: Context.setVariable("workflow_status","Error happened during cancellation")
+        name: action error
+      type: function
+      position:
+        x: 405
+        y: 13.8515625
+    edges:
+    - id: lZTE3O2Lt-p-vTrE2wcHR
+      type: worflowEdge
+      source: an2RG-vpAXNbuTDxbeyXT
+      target: DEmi9lskCMgGwzgyqWYxE
+      source_handle: success
+      target_handle: split-flow-left-handle-1
+    - id: 0B8vlFDOQpJhM1zP86MHD
+      type: worflowEdge
+      source: DEmi9lskCMgGwzgyqWYxE
+      target: ld4TAn4fcJZHe7znaplIJ
+      source_handle: split-flow-exit-fallback
+      target_handle: end-flow-left-handle-1
+    - id: YxvCcPgY5TWw1-wUXqDcg
+      type: worflowEdge
+      source: DEmi9lskCMgGwzgyqWYxE
+      target: CghUxSt758767CCL0_VKU
+      source_handle: AybEIYMpjW5SHZ8DmE-34
+      target_handle: execute-action-node-rigth-handle-1
+    - id: DDXXM8Zw2OVeP5O9dm0kW
+      type: worflowEdge
+      source: CghUxSt758767CCL0_VKU
+      target: ld4TAn4fcJZHe7znaplIJ
+      source_handle: timeout
+      target_handle: end-flow-left-handle-1
+    - id: A0HLgr_unoQJ3FRtrko3Q
+      type: worflowEdge
+      source: CghUxSt758767CCL0_VKU
+      target: ld4TAn4fcJZHe7znaplIJ
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: ruH6eJGOjm3ja_BZpVCdh
+      type: worflowEdge
+      source: L_QyPozeSUJgPMJ4SVUA3
+      target: an2RG-vpAXNbuTDxbeyXT
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: 4eH2Yp-OW20YO_NGo1b4Z
+      type: worflowEdge
+      source: an2RG-vpAXNbuTDxbeyXT
+      target: ld4TAn4fcJZHe7znaplIJ
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: XDlEJehND2NEMI8cY9ebM
+      type: worflowEdge
+      source: _rKVWlqaf-Gs4RVCO5UQV
+      target: ld4TAn4fcJZHe7znaplIJ
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: q1PPCESYeoMc2KviL66h3
+      type: worflowEdge
+      source: _rKVWlqaf-Gs4RVCO5UQV
+      target: ld4TAn4fcJZHe7znaplIJ
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: 3OlpyoMxSdb6WtC5sQcEE
+      type: worflowEdge
+      source: CghUxSt758767CCL0_VKU
+      target: _rKVWlqaf-Gs4RVCO5UQV
+      source_handle: error
+      target_handle: function-left-handle-1
+    variables:
+    - id: LLCgeZSYQop7l1z2H_85D
+      type: Workflow
+      variable_name: cancellable_flag
+      tool_reference:
+      - tool_id: KJTARacsM369hFJFMOkCU
+        agent_id: 54c43c76-de04-41a0-8ccf-4b28ac4617f2
+      - tool_id: cSCOg55c7UuH68IHipkTm
+        agent_id: aab3b64e-160b-4976-b4e0-e19127d05971
+      - tool_id: -e-zxye1rOhFCOUldk3hd
+        agent_id: a36a9036-f8e7-4342-9cf4-5079c8fb0fb2
+      - tool_id: RW9EMFDl1JvqjvkLGBVkq
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    appointment_id:
+      name: appointment_id
+      description: |-
+        The appointment ID of the selected appointment, set the value when user select an appointment from the appointment list.
+      title: |-
+        The appointment ID of the selected appointment, set the value when user select an appointment from the appointment list.
+      required: true
+      type: string
+      variable_name: appointment_id
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: To track the execution result in workflow
+      title: To track the execution result in workflow
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+  tool_version: 6
+  tool_type: WORKFLOW

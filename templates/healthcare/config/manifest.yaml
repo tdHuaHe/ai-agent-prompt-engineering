@@ -1,0 +1,32 @@
+account_id: 67ddf316f618fe256ad2979e
+agent_system_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+system_version: 36
+status: DRAFT
+agent_system_name: Agentic Care Dev
+agent_system_description: ''
+guardrail: ''
+conversation_settings:
+  enabled: false
+  is_dynamic_filler: false
+  initial_delay: 1
+  filler_interval: 2
+  number_of_retries: 1
+  initial_messages: []
+  retry_messages: []
+  channels:
+  - channel_type: default
+    languages:
+    - language_code: default
+      initial_delay: 1
+      filler_interval: 2
+      number_of_retries: 1
+      initial_messages: []
+      retry_messages: []
+welcome_text: ''
+markers: []
+application_output_settings:
+  type: variable
+  value: 56e94fc8-98c1-4e89-9a87-6fc198fa8850
+custom_guardrail_settings: null
+welcome_message_settings: null
+language_lock_settings: null

@@ -1,0 +1,2468 @@
+agent_id: 0fb44b1c-d9da-4586-9870-5bc354279145
+agent_version: 6
+role: ACTION_AGENT
+agent_name: Appointment Scheduling Agent
+goal: Your job is to identify an appointment using the information provided by the
+  Coordinator, and book it.
+instruction: |-
+  # Follow the steps below to complete the scheduling process.
+
+  ## Step 1. Identify Location
+
+  **When Coordinator Sends:** Location information and request to identify locations
+
+  **Location Identification Rules**
+
+  **Valid Cities:** San Diego, El Cajon, La Mesa, Chula Vista, Coronado
+
+  **Location Names:**
+  - Rancho Bernardo
+  - El Cajon
+  - Fletcher Parkway
+  - Center Drive
+  - Aero Drive
+  - 8010 Frost St.
+  - Genesee Ave
+  - 765 Medical Center Court
+  - Chula Vista
+  - Point Loma
+  - Sharp Coronado Hospital
+
+  **Street Name → Location Name mapping:**
+  - 16776 Bernardo Center Drive → Rancho Bernardo
+  - 230 Avocado Ave → El Cajon
+  - 340 4th Ave → Chula Vista
+  - 2790 Truxtun Road → Point Loma
+  - 250 Prospect Place → Sharp Coronado Hospital
+
+  **ZIP Codes:** 92128, 92020, 91942, 92123, 92117, 91911, 91910, 92106, 92118
+
+  ### 1.1. Match User Input Against Valid Entries
+
+  Check the input against the valid lists (allow reasonable typos and variations).
+  Follow this priority order and stop as soon as one category matches:
+
+  1. **City Match**
+     - If user input matches any valid city name → set `location_address` = matched city
+  2. **Location Name Match**
+     - If input matches any valid location name → set **`location_name`** = exact location name
+  3. **Street Name Match**
+     - If input matches a valid associated street → set **`location_name`** = corresponding **Location Name**
+  4. **ZIP Code Match**
+     - If input matches any ZIP code → set `location_address` = ZIP code
+
+  If none of the above match, proceed as "no valid match."
+
+  ### 1.2. Execute Location Search
+
+  - **If a valid match is found:** Execute `Find Locations` with `location_name` or `location_address`
+  - **If no valid match is found:**
+    - Treat the input as a general address or area description
+    - Execute `Find Nearby Location` with the original input
+
+  ### 1.3. Handle Location Search Results
+
+  - **If exactly one location is returned:** Use the `external_id` of this location without confirmation
+  - **If multiple locations are returned:**
+    - Send the list to Coordinator for user selection
+    - After user selection, extract the `external_id` of the selected location
+  - **If no locations are returned:**
+    - Inform the Coordinator that **no location was found** based on the location information provided by the user.
+
+  ---
+
+  ## Step 2. Process Date and Time Preferences
+
+  **When Coordinator Sends:** Visit type and preferred date/time preferences(optional) to get available slots
+
+  ### 2.1. Calculate Date Parameters
+
+  Calculate `start_date`, `max_days`, `preferred_time`, `specific_time` and `preferred_weekday` based on user input.
+
+  **Date Calculation Rules:**
+  - Always be aware of today’s date and weekday. When communicating dates with user or agent, calculate the target date based on the current date and weekday.
+
+  | User Input Type | Example | `start_date` | `max_days` | Notes |
+  |------------------|----------|---------------|-------------|-------|
+  | **No specific date / flexible** | "Any date", "No preference" | Today | 30 | Default window |
+  | **Specific date** | "March 3rd", "Tomorrow" | Specified date | 7 | Exact date |
+  | **next `weekday`** | "next Wednesday", "next Saturday" | The `weekday` in the week AFTER the current week | 7 | Exact date |
+  | **Recurring weekday** | "all Fridays", "every Friday" | Next upcoming occurrence of that weekday | 30 | List all Friday dates |
+
+  ### 2.2. Calculate Time Parameters
+
+  **`preferred_time`** - Time range preference:
+  - `"AM"` → Morning preference
+  - `"PM"` → Afternoon/evening preference
+  - `"Both"` → No time range preference or flexible
+
+  **`specific_time`** - Exact time preference:
+  - Set to user's exact time if specified (e.g., "3:15 PM", "10:30 AM")
+  - Set to "Any" if no specific time provided
+
+  **`preferred_weekday`** - Exact weekday preference(optional):
+  - Set to the weekday explicitly mentioned by the user
+  - Set to null if no weekday is mentioned
+
+  ### 2.3. Retrieve and Present Available Slots
+
+  1. Execute `Get available slots list` skill with all the above parameters
+  2. Send the workflow_status to Coordinator.
+      - **Use the `start_date` returned by the skill as the user's preferred date unconditionally.** Do not explain.
+
+  ---
+
+  ## Step 3. Finalize Appointment Booking
+  1. Have the Coordinator ask user confirm with their appointment details.
+  2. Extract the slot ID of the selected time slot.
+    - The slot ID should be like "eCIhxLXUND9gyrQ4OP4d0zg3"
+      - If slot ID is not valid
+        - Execute `Get available slots list` skill again with collected visit type, preferred date and time(if available) preference again
+        - Extract the slot ID of the selected time slot from above information
+  3. Execute `Schedule Appointment` with the following information:
+     - Slot id
+     - Location name
+     - Visit type
+  4. Return the booking result to Coordinator
+routing_condition: ''
+tools:
+- tool_id: 7e934ce7-391c-47cf-9073-b63b007a2d13
+  tool_name: Find Nearby Location
+  tool_description: This tool is used to find nearby locations. It should be called
+    after the user provides their address.
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: 5Lnm1vKHfVJHFwabPAW3U
+      data:
+        name: Find Nearby Location
+        variables:
+        - type: string
+          variable: f05ba4bc-071a-43e7-9d7d-590aed484626
+        more_details: This tool is used to find nearby locations. It should be called
+          after the user provides their address.
+      type: start-flow
+      position:
+        x: -643.4026522703675
+        y: 75.97927497333845
+    - id: f8hyK11JmKFmIdEX4Rv42
+      data:
+        name: Error End
+        variables:
+        - id: null
+          variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          first_variable:
+            variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1636.7976099892596
+        y: 194.18820516716485
+    - id: Gb_sj--rj9OZeV-ktY4q8
+      data:
+        name: get geo address
+        inputs:
+        - id: 6995f39683c911d3f9987297-0DvaCaftD2OxJDSJU2o6x
+          name: address
+          type: string
+          title: address
+          required: true
+          variable: f05ba4bc-071a-43e7-9d7d-590aed484626
+          input_type: variable
+        outputs:
+        - id: 6995f39683c911d3f9987297-aCdAEUELXCtyLNjlkEV3O
+          name: _embedded
+          type: object
+          title: _embedded
+          required: false
+          variable: nZuvJZeEx57Ol1LJcbvO_
+          input_type: variable
+        - id: 6995f39683c911d3f9987297-uoC1DXCqeoGst2x5-z51Z
+          name: _links
+          type: object
+          title: _links
+          required: false
+          variable: ''
+          input_type: variable
+        action_id: 6995f39683c911d3f9987297
+        connection_id: 67e44ccf88f43078a55777b9
+      type: execute-action
+      position:
+        x: -261.60542200361124
+        y: -22.930291361877323
+    - id: _WkKcOBTTtqEJXL54LhMO
+      data:
+        code: |-
+          const addresses = Context.getVariable("addresses")
+          const coordinates = addresses.addresses[0].coordinates
+          Context.setVariable("latitude", coordinates.latitude)
+          Context.setVariable("longitude", coordinates.longitude)
+        name: extract coordinates
+      type: function
+      position:
+        x: 165.84276542973495
+        y: -81.05583943538225
+    - id: x7LH2nB2__3vaLzczDFrK
+      data:
+        name: get locations by coordinates
+        inputs:
+        - id: 69a823bd9e628fe1a6e55815-qujtyGZOosCDbsD60OvwD
+          name: latitude
+          type: string
+          title: latitude
+          required: true
+          variable: DPKjRRvQE8A4P4IDaAcUu
+          input_type: variable
+        - id: 69a823bd9e628fe1a6e55815-pYQyuqSAQzTEHbBBjNm0o
+          name: longitude
+          type: string
+          title: longitude
+          required: true
+          variable: 2bDe3gyw8hdjyP3ZGOdkG
+          input_type: variable
+        - id: 69a823bd9e628fe1a6e55815-Jx2devSJvyVfMasGuWvrm
+          name: distance
+          type: string
+          title: distance
+          value: '16000'
+          required: false
+          input_type: value
+        - id: 69a823bd9e628fe1a6e55815-HNSaC58G0ia_iHqO8F_TZ
+          name: per_page
+          type: string
+          title: per_page
+          value: '3'
+          required: true
+          input_type: value
+        outputs:
+        - id: 69a823bd9e628fe1a6e55815-9cG0j6si5drUC7FTNJ7ml
+          name: _embedded
+          type: object
+          title: _embedded
+          required: false
+          variable: iGpEbW_Wl10tHZombRf3z
+          input_type: variable
+        - id: 69a823bd9e628fe1a6e55815-irMKwgoofKeNt39dQWOYv
+          name: count
+          type: integer
+          title: count
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 69a823bd9e628fe1a6e55815-ezCcWjAcBxIclu7zsx0r2
+          name: total_pages
+          type: integer
+          title: total_pages
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 69a823bd9e628fe1a6e55815-aWs3uwxe9YulesyAS8Elk
+          name: total
+          type: integer
+          title: total
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 69a823bd9e628fe1a6e55815-ZBFL3s1kyTgNyu1fpFdcN
+          name: page
+          type: integer
+          title: page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 69a823bd9e628fe1a6e55815-7baDflJno-avjaekxwZr2
+          name: per_page
+          type: integer
+          title: per_page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 69a823bd9e628fe1a6e55815-icZvJ89BKK5-RN9TqsKEl
+          name: _links
+          type: object
+          title: _links
+          required: false
+          variable: ''
+          input_type: variable
+        action_id: 69a823bd9e628fe1a6e55815
+        connection_id: 6938e0a691ca72e4fb3ae645
+      type: execute-action
+      position:
+        x: 604.399561541196
+        y: -113.79657306906134
+    - id: XW4B4A99OZJ2suAxCjxc7
+      data:
+        name: Success End
+        variables:
+        - id: null
+          variable: f3162a0c-caba-4bd2-baff-fe378d1f8dd2
+          first_variable:
+            variable: f3162a0c-caba-4bd2-baff-fe378d1f8dd2
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1422.5607070028063
+        y: -53.60847241725839
+    - id: vopPcN-nGojBkVVlhxt0d
+      data:
+        code: Context.setVariable("workflow_status", "get locations action error")
+        name: get locations error
+      type: function
+      position:
+        x: 1071.0534944368123
+        y: 189.6575778682749
+    - id: b1xGW1j21uytLiNTyVhx4
+      data:
+        code: Context.setVariable("workflow_status", "get locations action timeout")
+        name: get locations timeout
+      type: function
+      position:
+        x: 1066.9415552414457
+        y: 406.32747392329014
+    - id: R30wNikvxOEEa4BpnSbie
+      data:
+        code: Context.setVariable("workflow_status", "get geo address action error")
+        name: get geo address error
+      type: function
+      position:
+        x: 383.4670602798631
+        y: 166.35198458122326
+    - id: nHc7VOwQIbT4XJziV2hGG
+      data:
+        code: Context.setVariable("workflow_status", "get geo address action error")
+        name: get geo address timeout
+      type: function
+      position:
+        x: 388.5298343166156
+        y: 351.64951432636354
+    - id: nwSBTWmJN-h64nTNe-oVT
+      data:
+        code: |-
+          const locations = Context.getVariable("locations_list")
+          const openHoursMap = {
+            "Rancho Bernardo": { BUSINESS_DAYS: "07:00AM-04:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "El Cajon": { BUSINESS_DAYS: "07:00AM-02:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Fletcher Parkway": { BUSINESS_DAYS: "07:00AM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Center Drive": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Aero Drive": { BUSINESS_DAYS: "08:00AM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "8010 Frost St.": { BUSINESS_DAYS: "07:00AM-05:00PM", WEEKEND_SAT: "07:00AM-12:00PM", WEEKEND_SUN: "" },
+            "Genesee Ave": { BUSINESS_DAYS: "07:00AM-12:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "765 Medical Center Court": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "06:00AM-03:00PM", WEEKEND_SUN: "07:00AM-12:00PM" },
+            "Chula Vista": { BUSINESS_DAYS: "07:00AM-04:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Point Loma": { BUSINESS_DAYS: "08:00AM-12:00PM|01:00PM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Sharp Coronado Hospital": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "07:00AM-03:00PM", WEEKEND_SUN: "07:00AM-12:00PM" }
+          };
+
+          const extractedLocations = locations.locations.map(loc => {
+            // Get open hours from openHoursMap using alternative name or main name
+            const alternativeName = loc.alternative_names && loc.alternative_names.length > 0 ? loc.alternative_names[0] : null;
+            const open_hours = (alternativeName && openHoursMap[alternativeName]) || openHoursMap[loc.name] || null;
+            return {
+              name: loc.name,
+              city: loc.address.city,
+              address: loc.address.address,
+              phone_numbers: loc.phone_numbers.map(p => p.phone_number),
+              external_id: loc.external_id,
+              open_hours
+            };
+          });
+
+          Context.setVariable("locations_information", extractedLocations)
+        name: extract locations informations
+      type: function
+      position:
+        x: 1006.1974788594462
+        y: -124.40642457288561
+    edges:
+    - id: PWmBXahgg3nXKtfkdzBMM
+      type: worflowEdge
+      source: 5Lnm1vKHfVJHFwabPAW3U
+      target: Gb_sj--rj9OZeV-ktY4q8
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: execute-action-node-rigth-handle-1
+    - id: BiOzlLqE9BBv4Xft5XVOQ
+      type: worflowEdge
+      source: Gb_sj--rj9OZeV-ktY4q8
+      target: _WkKcOBTTtqEJXL54LhMO
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: AYj-_KlT1ngHPBYSoQ5Lx
+      type: worflowEdge
+      source: _WkKcOBTTtqEJXL54LhMO
+      target: x7LH2nB2__3vaLzczDFrK
+      source_handle: success
+      target_handle: execute-action-node-rigth-handle-1
+    - id: bVkNHoYyiBbBqhygX4jH2
+      type: worflowEdge
+      source: Gb_sj--rj9OZeV-ktY4q8
+      target: R30wNikvxOEEa4BpnSbie
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: rLcQGekYC8MdpVOIcr0rf
+      type: worflowEdge
+      source: Gb_sj--rj9OZeV-ktY4q8
+      target: nHc7VOwQIbT4XJziV2hGG
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: RSKkrBGPDMc3RFq5wmlmB
+      type: worflowEdge
+      source: R30wNikvxOEEa4BpnSbie
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: EJWIBN0ri5Dx4MXvz3Npf
+      type: worflowEdge
+      source: R30wNikvxOEEa4BpnSbie
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: cL5oKnE1HOpDQVrNkw9Aq
+      type: worflowEdge
+      source: nHc7VOwQIbT4XJziV2hGG
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 3S2FxbVT1OBK1NeNIGrtR
+      type: worflowEdge
+      source: nHc7VOwQIbT4XJziV2hGG
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: UtDaGQiz9kagcRoC_pPqJ
+      type: worflowEdge
+      source: x7LH2nB2__3vaLzczDFrK
+      target: vopPcN-nGojBkVVlhxt0d
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: 1EiSXvj03qazInEvfWTDx
+      type: worflowEdge
+      source: x7LH2nB2__3vaLzczDFrK
+      target: b1xGW1j21uytLiNTyVhx4
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: b-gRRR_mhMY_nsLfg8LVx
+      type: worflowEdge
+      source: vopPcN-nGojBkVVlhxt0d
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: tE8B3YQxkifYTQDwli1c4
+      type: worflowEdge
+      source: vopPcN-nGojBkVVlhxt0d
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: 5ZdcvshfHdyMvZiqGFKPU
+      type: worflowEdge
+      source: b1xGW1j21uytLiNTyVhx4
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: kopOF_xfKSSmYdlsuMcUv
+      type: worflowEdge
+      source: b1xGW1j21uytLiNTyVhx4
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: aH_Fq3bmElJOwAL0S-2SK
+      type: worflowEdge
+      source: _WkKcOBTTtqEJXL54LhMO
+      target: f8hyK11JmKFmIdEX4Rv42
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: CAJVjX0oQP9cqGs4S1cPR
+      type: worflowEdge
+      source: x7LH2nB2__3vaLzczDFrK
+      target: nwSBTWmJN-h64nTNe-oVT
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: PaaWDchhzSaIGk405A0Gj
+      type: worflowEdge
+      source: nwSBTWmJN-h64nTNe-oVT
+      target: XW4B4A99OZJ2suAxCjxc7
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 8y8Xfv1R7PXdRDNGtWTH2
+      type: worflowEdge
+      source: nwSBTWmJN-h64nTNe-oVT
+      target: XW4B4A99OZJ2suAxCjxc7
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables:
+    - id: nZuvJZeEx57Ol1LJcbvO_
+      type: Workflow
+      variable_name: addresses
+      tool_reference:
+      - tool_id: juhRA_Ti7qsKLhjlR0_V0
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: M6kkxB84uPDbQMTaUMg2x
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: lY3lIbGBGOgWMm8O7br0X
+        agent_id: aab3b64e-160b-4976-b4e0-e19127d05971
+      - tool_id: WnNWYMT-Yli-Bg7nsk2uW
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: kECNIJ_vMajjrD-Nwp9VX
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: L68cUX5BwpSLVOi5N_nu9
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: zP4ae1Nh8X9YqLi8Na5wP
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    - id: 2bDe3gyw8hdjyP3ZGOdkG
+      type: Workflow
+      variable_name: longitude
+      tool_reference:
+      - tool_id: juhRA_Ti7qsKLhjlR0_V0
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: M6kkxB84uPDbQMTaUMg2x
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: lY3lIbGBGOgWMm8O7br0X
+        agent_id: aab3b64e-160b-4976-b4e0-e19127d05971
+      - tool_id: WnNWYMT-Yli-Bg7nsk2uW
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: kECNIJ_vMajjrD-Nwp9VX
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: L68cUX5BwpSLVOi5N_nu9
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: zP4ae1Nh8X9YqLi8Na5wP
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    - id: DPKjRRvQE8A4P4IDaAcUu
+      type: Workflow
+      variable_name: latitude
+      tool_reference:
+      - tool_id: juhRA_Ti7qsKLhjlR0_V0
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: M6kkxB84uPDbQMTaUMg2x
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: lY3lIbGBGOgWMm8O7br0X
+        agent_id: aab3b64e-160b-4976-b4e0-e19127d05971
+      - tool_id: WnNWYMT-Yli-Bg7nsk2uW
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: kECNIJ_vMajjrD-Nwp9VX
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: L68cUX5BwpSLVOi5N_nu9
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: zP4ae1Nh8X9YqLi8Na5wP
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    - id: iGpEbW_Wl10tHZombRf3z
+      type: Workflow
+      variable_name: locations_list
+      tool_reference:
+      - tool_id: juhRA_Ti7qsKLhjlR0_V0
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: M6kkxB84uPDbQMTaUMg2x
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: lY3lIbGBGOgWMm8O7br0X
+        agent_id: aab3b64e-160b-4976-b4e0-e19127d05971
+      - tool_id: WnNWYMT-Yli-Bg7nsk2uW
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: kECNIJ_vMajjrD-Nwp9VX
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: L68cUX5BwpSLVOi5N_nu9
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: zP4ae1Nh8X9YqLi8Na5wP
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    zip_code_nearby_location:
+      name: zip_code_nearby_location
+      description: User's Zip code used to find nearby locations.
+      title: User's Zip code used to find nearby locations.
+      required: true
+      type: string
+      variable_name: zip_code_nearby_location
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: To track the execution result in workflow
+      title: To track the execution result in workflow
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    locations_information:
+      name: locations_information
+      description: Information about the locations selected by the user.
+      title: Information about the locations selected by the user.
+      required: true
+      type: string
+      variable_name: locations_information
+      value: null
+  tool_version: 6
+  tool_type: WORKFLOW
+- tool_id: 9a04253f-198f-4431-afd2-fc14d2cb0221
+  tool_name: Get available slots list
+  tool_description: This tool is used to retrieve the provider’s list of available
+    slots. It should be called after collecting the customer’s preferred date and
+    time for rescheduling an appointment.
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: 5RvSYZixlqHYoEV7P6Fhg
+      data:
+        name: Get available slots list
+        variables:
+        - type: string
+          variable: 3686b37d-a300-423e-9acb-46b157e06182
+        - type: string
+          variable: e92719e0-f9bd-4d84-bc62-9f94835a48c7
+        - type: string
+          variable: e3dd5bce-2b5d-4083-9e06-a9aeeed1196f
+        - type: string
+          variable: 17ad66ab-7455-4b7d-b8a0-7baa40309a72
+        - type: string
+          variable: e56c37ae-f4c8-4ed2-9d7d-8f302c53c87d
+        - type: string
+          variable: 4070bdeb-ef86-44c7-bf3d-028aeee45487
+        - type: string
+          variable: 46eec8d0-25cc-4c33-b6c0-e83679974658
+        more_details: This tool is used to retrieve the provider’s list of available
+          slots. It should be called after collecting the customer’s preferred date
+          and time for rescheduling an appointment.
+      type: start-flow
+      position:
+        x: -856.4051708466021
+        y: 264.9407569187016
+    - id: K-BMBp5JLijnaKSgJQ6uP
+      data:
+        code: |-
+          let locationProviderMap = new Map([
+            ["101003056", "24091"],
+            ["101003055", "24090"],
+            ["10100708", "20342"],
+            ["101010230", "24095"],
+            ["10101256", "11724080"],
+            ["101010231", "24093"],
+            ["101002156", "40884"],
+            ["101002047", "24096"],
+            ["101002048", "24097"],
+            ["101002050", "24098"],
+            ["10100744", "24089"],
+          ]);
+
+          Context.setVariable("workflow_status", "success")
+
+          let start_date = Context.getVariable("start_date");
+          let original_start_date = start_date
+          const weekday = Context.getVariable("preferred_weekday");
+          const adjustedDate = adjustDateToWeekday(start_date, weekday)
+          start_date = adjustedDate.adjustedDate
+          const date_matched_weekday = adjustedDate.date_matched_weekday
+          Context.setVariable("start_date", start_date)
+          const localeDate = formatDateWithOrdinal(start_date)
+
+          if(date_matched_weekday === "No"){
+              Context.setVariable("workflow_status", `The date for ${weekday} should be ${localeDate}. So the correct match is:  on ${weekday}, ${localeDate}`)
+          }
+
+          const preferred_time = Context.getVariable("preferred_time")
+          if (!preferred_time || preferred_time === "") {
+              Context.setVariable("preferred_time", null)
+          } else {
+              if (preferred_time.indexOf("AM") < 0 && preferred_time.indexOf("PM")< 0){
+              Context.setVariable("preferred_time", null)
+              }
+          }
+
+          const max_days_input = Context.getVariable("max_days");
+          const normalized_max_days = normalizeMaxDays(max_days_input);
+          Context.setVariable("max_days", normalized_max_days);
+
+          const visit_type_name = Context.getVariable("visit_type_name")
+          const location_name = Context.getVariable("location_name")
+          storeAppointmentDetails(visit_type_name, location_name)
+
+          function storeAppointmentDetails(visit_type_name, location_name) {
+              if(visit_type_name.toLowerCase().indexOf("lab")>-1){
+                  Context.setVariable("service_type_id", "11700")
+              }else{
+                  Context.setVariable("service_type_id", "2721")
+              }
+              const externalId = Context.getVariable("external_id_location")
+              Context.setVariable("location_id", externalId)
+
+              let providerID = locationProviderMap.get(externalId);
+              Context.setVariable("provider_id", providerID);
+          }
+
+          /**
+           * Adjust start_date to match the preferred weekday
+           * @param {string} startDate - The starting date (YYYY-MM-DD format)
+           * @param {string} weekday - The preferred weekday (e.g., 'monday', 'tue')
+           * @returns {object} Object with adjustedDate and matchedWeekday flag
+           */
+          function adjustDateToWeekday(startDate, weekday) {
+              let adjustedDate = startDate;
+              let date_matched_weekday = "Yes"
+
+              if (adjustedDate === null || adjustedDate === "") {
+                  adjustedDate = new Date().toISOString().split('T')[0];
+              }
+
+              // Adjust date to match preferred weekday if provided
+              if (weekday && weekday !== "" && weekday !== null) {
+                  const targetDate = new Date(adjustedDate);
+                  const weekdayMap = {
+                      'sunday': 0, 'sun': 0,
+                      'monday': 1, 'mon': 1,
+                      'tuesday': 2, 'tue': 2,
+                      'wednesday': 3, 'wed': 3,
+                      'thursday': 4, 'thu': 4,
+                      'friday': 5, 'fri': 5,
+                      'saturday': 6, 'sat': 6
+                  };
+
+                  const targetWeekday = weekdayMap[weekday.toLowerCase()];
+
+                  if (targetWeekday !== undefined) {
+                      const currentWeekday = targetDate.getDay();
+
+                      // If current day doesn't match preferred weekday, find next occurrence
+                      if (currentWeekday !== targetWeekday) {
+                          date_matched_weekday = "No"
+                          original_start_date = adjustedDate
+                          let daysToAdd = targetWeekday - currentWeekday;
+
+                          // Find the closest occurrence (could be previous or next week)
+                          // If difference is more than 3 days, go to the other direction
+                          if (daysToAdd > 3) {
+                              daysToAdd -= 7; // Go to previous week instead
+                          } else if (daysToAdd < -3) {
+                              daysToAdd += 7; // Go to next week instead
+                          }
+                          targetDate.setDate(targetDate.getDate() + daysToAdd);
+                          adjustedDate = targetDate.toISOString().split('T')[0];
+                      }
+                  }
+              }
+
+              return { adjustedDate, date_matched_weekday };
+          }
+
+          function formatDateWithOrdinal(isoDate, locale = 'en-US') {
+            const d = new Date(isoDate);
+            if (Number.isNaN(d.getTime())) throw new Error('Invalid date string');
+
+            const month = d.toLocaleString(locale, { month: 'long' });
+            const day = d.getDate();
+
+            // Ordinal suffix rules
+            const suffix = (n => {
+              const rem100 = n % 100;
+              if (rem100 >= 11 && rem100 <= 13) return 'th';
+              switch (n % 10) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+              }
+            })(day);
+
+            return `${month} ${day}${suffix}`;
+          }
+
+          /**
+           * Convert max_days to integer and ensure it doesn't exceed 30
+           * @param {any} maxDays - The max days value (can be string, number, or any type)
+           * @returns {number} Integer value capped at 30
+           */
+          function normalizeMaxDays(maxDays) {
+              let days;
+
+              // If it's a string, try to extract digits first
+              if (typeof maxDays === 'string') {
+                  // Extract first number from string (e.g., "3 days" → "3")
+                  const match = maxDays.match(/\d+/);
+                  if (match) {
+                      days = parseInt(match[0]);
+                  } else {
+                      days = NaN; // No digits found
+                  }
+              } else {
+                  // Convert to integer directly
+                  days = parseInt(maxDays);
+              }
+
+              // Handle invalid values (NaN, null, undefined, etc.)
+              if (isNaN(days) || days < 0) {
+                  days = 30; // Default to 30 if invalid
+              }
+
+              // Cap at 30 days maximum
+              if (days > 30) {
+                  days = 30;
+              }
+
+              return days;
+          }
+        name: prepare parameters
+      type: function
+      position:
+        x: -540.253774095485
+        y: 201.29782968367044
+    - id: M4std0jPqw4QMneHbWn1m
+      data:
+        name: Error End
+        variables:
+        - id: null
+          variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          first_variable:
+            variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          first_variable:
+            variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1065.75
+        y: 287.15625
+    - id: NuFs7QXIjgsns2JtU99T-
+      data:
+        code: Context.setVariable("workflow_status", "function error")
+        name: set function error
+      type: function
+      position:
+        x: 702.5797328191643
+        y: 316.0009644939803
+    - id: sAdnL0bpf0CChslbf_nzM
+      data:
+        name: Get available slots list
+        inputs:
+        - id: 699e6dac3101768124328c73-LBzc6E-QO1xiodcLjtA9E
+          name: location_id
+          type: string
+          title: location_id
+          required: true
+          variable: 1327a918-fd67-49df-a4a6-1eb69b1f7ec3
+          input_type: variable
+        - id: 699e6dac3101768124328c73-mALK2CVMPP6ordki2Wm81
+          name: provider_id
+          type: string
+          title: provider_id
+          required: true
+          variable: 2ebe9f01-d739-473b-9182-b9031e0ae73e
+          input_type: variable
+        - id: 699e6dac3101768124328c73-yRDTyUe92ZdXm-hgFn67x
+          name: service_type_id
+          type: string
+          title: service_type_id
+          required: true
+          variable: 2ae0f02d-5a82-476c-b810-a4393707ab6a
+          input_type: variable
+        - id: 699e6dac3101768124328c73-k8w5YcqQE0Dv575uFuKrT
+          name: count
+          type: string
+          title: count
+          value: '50'
+          required: true
+          input_type: value
+        - id: 699e6dac3101768124328c73-IosPoUWHyl_sHo0F39LTp
+          name: max_days
+          type: string
+          title: max_days
+          required: false
+          variable: e92719e0-f9bd-4d84-bc62-9f94835a48c7
+          input_type: variable
+        - id: 699e6dac3101768124328c73-MoMyIdhuUIFqGBn1EZJEE
+          name: preferred_time
+          type: string
+          title: preferred_time
+          required: false
+          variable: e3dd5bce-2b5d-4083-9e06-a9aeeed1196f
+          input_type: variable
+        - id: 699e6dac3101768124328c73-s_ZljA6kevAIRue4kKdbp
+          name: per_page
+          type: string
+          title: per_page
+          value: '50'
+          required: true
+          input_type: value
+        - id: 699e6dac3101768124328c73-RNHyVFBb1gz-9CYDsawcH
+          name: page
+          type: string
+          title: page
+          value: '1'
+          required: true
+          input_type: value
+        - id: 699e6dac3101768124328c73-HAqy42ZfUDgT_NDlJ-IzD
+          name: start_date
+          type: string
+          title: start_date
+          required: true
+          variable: 3686b37d-a300-423e-9acb-46b157e06182
+          input_type: variable
+        - id: 699e6dac3101768124328c73-zs2cYtqselWjxo0BFCV0l
+          name: timezone
+          type: string
+          title: timezone
+          required: false
+          variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          input_type: variable
+        - id: 699e6dac3101768124328c73-6ZjO6wz9YwEECGNbHETFW
+          name: interaction_id
+          type: string
+          title: interaction_id
+          required: true
+          variable: ecb2d3f5-4556-4dc7-9580-b6d474c16564
+          input_type: variable
+        outputs:
+        - id: 699e6dac3101768124328c73-o5EnRpniTtvtMQXhYOg58
+          name: count
+          type: integer
+          title: Count
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 699e6dac3101768124328c73-LGuwKzxtDwxK_kYITsV4r
+          name: total
+          type: integer
+          title: Total
+          required: true
+          variable: ''
+          input_type: variable
+        - id: 699e6dac3101768124328c73-GYOgoYal9Soel98Cbo6BQ
+          name: page
+          type: integer
+          title: Page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 699e6dac3101768124328c73-w8pBg1oqG6KHoDeqrnVMa
+          name: per_page
+          type: integer
+          title: Per Page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 699e6dac3101768124328c73-BQvKq1HXggIFIqeFXfT2K
+          name: total_pages
+          type: integer
+          title: Total Pages
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 699e6dac3101768124328c73-KMBGwkgz4Ia0gYOt21wT_
+          name: _embedded
+          type: object
+          title: Embedded
+          required: true
+          variable: 94a8ca5c-3d7a-479e-9e66-5902c1cb1c95
+          input_type: variable
+        - id: 699e6dac3101768124328c73-FBZ2PTkbOGheNKDwoehTu
+          name: _links
+          type: object
+          title: Links
+          required: false
+          variable: ''
+          input_type: variable
+        action_id: 699e6dac3101768124328c73
+        connection_id: 67e44ccf88f43078a55777b9
+      type: execute-action
+      position:
+        x: -112.09761999607181
+        y: -12.672673366413619
+    - id: eP-yOO77BsPcQrCEB2Vyc
+      data:
+        code: |-
+          const available_provider_slots_list = Context.getVariable("available_provider_slots_list")
+          const preferred_time = Context.getVariable("preferred_time")
+          let filtered_slots = [];
+          if(preferred_time && preferred_time.trim() !== ""){
+              filtered_slots = available_provider_slots_list.provider_slots
+                  .filter(slot => slot.time_preferences_flag === "true")
+                  .map(({ provider_id, location_id, service_type_id, time_zone_id, time_preferences_flag, ...rest }) => rest);
+          }else{
+              filtered_slots = available_provider_slots_list.provider_slots
+              .map(({ provider_id, location_id, service_type_id, time_zone_id, time_preferences_flag, ...rest }) => rest);
+          }
+          const specificTime = Context.getVariable("specific_time")
+          const timezone = Context.getVariable("timezone")
+          const filtered_slots_again = filterSlots(filtered_slots, specificTime)
+
+          const { status: workflow_status, slotsIdentified } = analyzeSlotAvailability(filtered_slots_again);
+
+          if (slotsIdentified) {
+              Context.setVariable("available_provider_slots_list", filtered_slots_again);
+              Context.setVariable("find_valid_slots", "Yes");
+          } else {
+              Context.setVariable("find_valid_slots", "No")
+          }
+          Context.setVariable("workflow_status", workflow_status);
+
+          function filterSlots(slots, specificTime = null, timeGapMinutes = 60, hourlyIntervalMinutes = 60, maxSlots = 3) {
+              if (!slots || !Array.isArray(slots) || slots.length === 0) {
+                  return [];
+              }
+
+              // If fewer than 5 slots, return all without filtering
+              if (slots.length < 5) {
+                  return slots;
+              }
+
+              // Case 1: Filter around specific time
+              if (specificTime) {
+                  const targetTime = parseTimeString(specificTime);
+                  if (targetTime) {
+                      const targetTotalMinutes = targetTime.hour * 60 + targetTime.minute;
+                      // Sort all slots by proximity to the target time and return the closest maxSlots
+                      const sorted = [...slots].sort((a, b) => {
+                          const getMinutes = slot => {
+                              const t = new Date(slot.start_date).toLocaleString("en-US", {
+                                  timeZone: timezone, hour12: false, hour: '2-digit', minute: '2-digit'
+                              });
+                              const [h, m] = t.split(':').map(Number);
+                              return h * 60 + m;
+                          };
+                          return Math.abs(getMinutes(a) - targetTotalMinutes) - Math.abs(getMinutes(b) - targetTotalMinutes);
+                      });
+                      // Return closest maxSlots, re-sorted by time ascending
+                      const closest = sorted.slice(0, maxSlots);
+                      closest.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+                      return closest;
+                  }
+              }
+
+              // Case 2: Filter by hourly intervals
+              return filterByHourlyInterval(slots, hourlyIntervalMinutes);
+          }
+
+          /**
+           * Filter slots around a specific time with configurable gap
+           */
+          function filterAroundSpecificTime(slots, targetTime, gapMinutes) {
+
+             const filteredSlots = slots.filter(slot => {
+                  const slotTime = new Date(slot.start_date);
+
+                  // Convert UTC time to local timezone
+                  const localTimeString = slotTime.toLocaleString("en-US", {
+                      timeZone: timezone,
+                      hour12: false,
+                      hour: '2-digit',
+                      minute: '2-digit'
+                  });
+
+                  // Parse the local time string "HH:MM"
+                  const [slotHour, slotMinute] = localTimeString.split(':').map(Number);
+
+                  // Convert times to minutes for easier comparison
+                  const targetTotalMinutes = targetTime.hour * 60 + targetTime.minute;
+                  const slotTotalMinutes = slotHour * 60 + slotMinute;
+
+                  // Simple time difference check (no cross-day logic needed)
+                  const timeDifference = Math.abs(slotTotalMinutes - targetTotalMinutes);
+
+                  return timeDifference <= gapMinutes;
+              });
+
+              // If no slots found after filtering, return original slots
+              return filteredSlots.length > 0 ? filteredSlots : slots;
+          }
+
+          function filterByHourlyInterval(slots, intervalMinutes, targetTime = null) {
+              if (slots.length === 0) return [];
+
+              // Group slots by date to process each day independently
+              const slotsByDate = {};
+
+              slots.forEach(slot => {
+                  const slotTime = new Date(slot.start_date);
+                  const dateKey = slotTime.toLocaleString("en-US", {
+                      timeZone: timezone,
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit'
+                  });
+
+                  if (!slotsByDate[dateKey]) {
+                      slotsByDate[dateKey] = [];
+                  }
+                  slotsByDate[dateKey].push(slot);
+              });
+
+              const filteredSlots = [];
+
+              // Process each date independently
+              Object.keys(slotsByDate).forEach(dateKey => {
+                  const dateSlotsGroup = slotsByDate[dateKey];
+
+                  // Group slots into buckets aligned to clock hours (or intervalMinutes boundaries)
+                  // Key: which interval bucket this slot falls into
+                  const buckets = {};
+
+                  dateSlotsGroup.forEach(slot => {
+                      const slotTime = new Date(slot.start_date);
+                      const localTimeString = slotTime.toLocaleString("en-US", {
+                          timeZone: timezone,
+                          hour12: false,
+                          hour: '2-digit',
+                          minute: '2-digit'
+                      });
+
+                      const [slotHour, slotMinute] = localTimeString.split(':').map(Number);
+                      const slotTotalMinutes = slotHour * 60 + slotMinute;
+
+                      // Align bucket to clock-based intervalMinutes boundaries (e.g. 0, 60, 120, ...)
+                      const bucketKey = Math.floor(slotTotalMinutes / intervalMinutes);
+
+                      if (!buckets[bucketKey]) {
+                          buckets[bucketKey] = [];
+                      }
+                      buckets[bucketKey].push({ slot, slotTotalMinutes });
+                  });
+
+                  // From each bucket pick the slot closest to the targetTime (if given) or the first slot
+                  Object.keys(buckets).sort((a, b) => Number(a) - Number(b)).forEach(bucketKey => {
+                      const entries = buckets[bucketKey];
+                      let chosen;
+                      if (targetTime) {
+                          const targetTotalMinutes = targetTime.hour * 60 + targetTime.minute;
+                          chosen = entries.reduce((best, entry) =>
+                              Math.abs(entry.slotTotalMinutes - targetTotalMinutes) <
+                              Math.abs(best.slotTotalMinutes - targetTotalMinutes) ? entry : best
+                          );
+                      } else {
+                          chosen = entries[0];
+                      }
+                      filteredSlots.push(chosen.slot);
+                  });
+              });
+
+              // If no filtered slots found, return original slots
+              return filteredSlots.length > 0 ? filteredSlots : slots;
+          }
+
+          /**
+           * Parse time string to hour and minute
+           */
+          function parseTimeString(timeStr) {
+              // Handle formats like "3:15 PM", "15:15", "3:15"
+              const time12HourMatch = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+              const time24HourMatch = timeStr.match(/(\d{1,2}):(\d{2})/);
+
+              if (time12HourMatch) {
+                  let hour = parseInt(time12HourMatch[1]);
+                  const minute = parseInt(time12HourMatch[2]);
+                  const period = time12HourMatch[3].toUpperCase();
+
+                  if (period === 'PM' && hour !== 12) hour += 12;
+                  if (period === 'AM' && hour === 12) hour = 0;
+
+                  return { hour, minute };
+              } else if (time24HourMatch) {
+                  const hour = parseInt(time24HourMatch[1]);
+                  const minute = parseInt(time24HourMatch[2]);
+                  return { hour, minute };
+              }
+
+              return null;
+          }
+
+          /**
+           * Analyze slot availability and return a workflow status message
+           */
+          function analyzeSlotAvailability(slots) {
+              const getHour = slot => {
+                  const timeStr = slot.time;
+                  const match = timeStr.match(/(\d{1,2}):\d{2}\s*(AM|PM)/i);
+                  if (!match) return 0;
+                  let hour = parseInt(match[1]);
+                  const period = match[2].toUpperCase();
+                  if (period === 'PM' && hour !== 12) hour += 12;
+                  if (period === 'AM' && hour === 12) hour = 0;
+                  return hour;
+              };
+
+              if (slots.length === 0) {
+                  return { status: "Unfortunately, no available slots based on current user preference.", slotsIdentified: false };
+              }
+
+              const morningSlots = slots.filter(slot => getHour(slot) < 12);
+              const afternoonSlots = slots.filter(slot => getHour(slot) >= 12);
+              const date = slots[0].date;
+
+              const requestedDateRaw = Context.getVariable("start_date");
+              const requestedDate = new Date(requestedDateRaw).toLocaleDateString("en-US", {
+                  month: 'long', day: 'numeric', year: 'numeric'
+              }).replace(',', '');
+              const isDateMismatch = requestedDate !== date;
+              const prefix = isDateMismatch
+                  ? `I see ${requestedDate} is fully booked, but we have `
+                  : `We have `;
+
+              if (morningSlots.length > 6 && afternoonSlots.length === 0) {
+                  return { status: `${prefix}plenty availability on ${date} ONLY in the morning. Which time do you prefer in the morning?`, slotsIdentified: false };
+              } else if (afternoonSlots.length > 6 && morningSlots.length === 0) {
+                  return { status: `${prefix}plenty availability on ${date} ONLY in the afternoon. Which time do you prefer in the afternoon?`, slotsIdentified: false };
+              } else if (slots.length > 6) {
+                  return { status: `${prefix}plenty availability on ${date} — in the morning and afternoon. Which time do you prefer?`, slotsIdentified: false };
+              } else {
+                  return { status: `${prefix}availability on ${date} at the following times: ${slots.map(s => s.time).join(', ')}. Which time works best for you?`, slotsIdentified: true };
+              }
+          }
+        name: filter slot
+      type: function
+      position:
+        x: 412.6987359207794
+        y: -68.67128803251464
+    - id: Xq59XXlEQV9_63xxqiasY
+      data:
+        code: 'Context.setVariable("workflow_status", "Error: error happened while
+          retrieving available slots.")'
+        name: action error
+      type: function
+      position:
+        x: 406.7181305953651
+        y: 148.33286796918225
+    - id: gbc0lzB4XI1zOQv7ZoOpn
+      data:
+        name: Success End
+        variables:
+        - id: null
+          type: ''
+          variable: 1327a918-fd67-49df-a4a6-1eb69b1f7ec3
+          first_variable:
+            variable: 1327a918-fd67-49df-a4a6-1eb69b1f7ec3
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 2ebe9f01-d739-473b-9182-b9031e0ae73e
+          first_variable:
+            variable: 2ebe9f01-d739-473b-9182-b9031e0ae73e
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 2ae0f02d-5a82-476c-b810-a4393707ab6a
+          first_variable:
+            variable: 2ae0f02d-5a82-476c-b810-a4393707ab6a
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 17ad66ab-7455-4b7d-b8a0-7baa40309a72
+          first_variable:
+            variable: 17ad66ab-7455-4b7d-b8a0-7baa40309a72
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          first_variable:
+            variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 3686b37d-a300-423e-9acb-46b157e06182
+          first_variable:
+            variable: 3686b37d-a300-423e-9acb-46b157e06182
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          first_variable:
+            variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 94a8ca5c-3d7a-479e-9e66-5902c1cb1c95
+          first_variable:
+            variable: 94a8ca5c-3d7a-479e-9e66-5902c1cb1c95
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1059.6724145766989
+        y: -6.672673366413619
+    - id: -jo9LFZ2NdZBGpkxpBBME
+      data:
+        code: Context.setVariable("workflow_status", "action timeout")
+        name: action timeout
+      type: function
+      position:
+        x: 404.70289192247634
+        y: 350.33148263528324
+    - id: HstHEGizikjBGO9oj6ASZ
+      data:
+        code: Context.setVariable("workflow_status", "Error during filte slots")
+        name: filter slot error
+      type: function
+      position:
+        x: 700.1336218650486
+        y: 61.36065463443481
+    - id: S1kJA1Qk467ulyBFCUsy3
+      data:
+        name: if valid slots found
+        variable:
+          value: 1E5o9jQDoK744fqJW8sNK
+        conditions:
+        - id: mO6cwVFC39ewKnWSsKSm7
+          type: eq
+          value: 'Yes'
+          value_type: string
+      type: split-flow
+      position:
+        x: 698.1336218650486
+        y: -106.98309536556519
+    edges:
+    - id: Y4jVvBj9ATeMmhRfbh9y_
+      type: worflowEdge
+      source: 5RvSYZixlqHYoEV7P6Fhg
+      target: K-BMBp5JLijnaKSgJQ6uP
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: ZeCRyGhlYgZJ6fELsvzhn
+      type: worflowEdge
+      source: K-BMBp5JLijnaKSgJQ6uP
+      target: NuFs7QXIjgsns2JtU99T-
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: U7TMThAOsJYdjs5Z862Lk
+      type: worflowEdge
+      source: NuFs7QXIjgsns2JtU99T-
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: F02o5NeKJzP75R9nOQ2ug
+      type: worflowEdge
+      source: NuFs7QXIjgsns2JtU99T-
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: w3Gw6NHwc2wM6R-4Ii3by
+      type: worflowEdge
+      source: sAdnL0bpf0CChslbf_nzM
+      target: eP-yOO77BsPcQrCEB2Vyc
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: ReHeTByXnr6X8esr5T9j9
+      type: worflowEdge
+      source: sAdnL0bpf0CChslbf_nzM
+      target: Xq59XXlEQV9_63xxqiasY
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: r1BNHKB07EsbM4Co-RTW3
+      type: worflowEdge
+      source: sAdnL0bpf0CChslbf_nzM
+      target: -jo9LFZ2NdZBGpkxpBBME
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: DowLyAgwR842WjG8n-JS-
+      type: worflowEdge
+      source: -jo9LFZ2NdZBGpkxpBBME
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: wPr-sbPx7S4W1ZXpvC5Zs
+      type: worflowEdge
+      source: -jo9LFZ2NdZBGpkxpBBME
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: iM8xpP04MzAoKIBs9vnBM
+      type: worflowEdge
+      source: Xq59XXlEQV9_63xxqiasY
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 1VUaVoladCi9iVxvPKbsY
+      type: worflowEdge
+      source: Xq59XXlEQV9_63xxqiasY
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: iYToTTC6HJHuInocqpyjc
+      type: worflowEdge
+      source: HstHEGizikjBGO9oj6ASZ
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: PT7RKqQej-11ZfreUrk5B
+      type: worflowEdge
+      source: HstHEGizikjBGO9oj6ASZ
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: xNSMlBVo08lYK4nfyepxu
+      type: worflowEdge
+      source: eP-yOO77BsPcQrCEB2Vyc
+      target: HstHEGizikjBGO9oj6ASZ
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: 2_FSl8A8sgMCZR9qhCoD6
+      type: worflowEdge
+      source: eP-yOO77BsPcQrCEB2Vyc
+      target: S1kJA1Qk467ulyBFCUsy3
+      source_handle: success
+      target_handle: split-flow-left-handle-1
+    - id: ITQf_FXuiYIXlb9H99lrc
+      type: worflowEdge
+      source: S1kJA1Qk467ulyBFCUsy3
+      target: gbc0lzB4XI1zOQv7ZoOpn
+      source_handle: mO6cwVFC39ewKnWSsKSm7
+      target_handle: end-flow-left-handle-1
+    - id: 0J7LI9W2U5PG9M_20gWKp
+      type: worflowEdge
+      source: S1kJA1Qk467ulyBFCUsy3
+      target: M4std0jPqw4QMneHbWn1m
+      source_handle: split-flow-exit-fallback
+      target_handle: end-flow-left-handle-1
+    - id: px3_CreLf6GcFmBwLDTa5
+      type: worflowEdge
+      source: K-BMBp5JLijnaKSgJQ6uP
+      target: sAdnL0bpf0CChslbf_nzM
+      source_handle: success
+      target_handle: execute-action-node-rigth-handle-1
+    variables:
+    - id: 1E5o9jQDoK744fqJW8sNK
+      type: Workflow
+      variable_name: find_valid_slots
+      tool_reference:
+      - tool_id: iL2TUd9POKtOX3-5sCqn5
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: jok2Xl_rvR-O4X9CCeGoZ
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    preferred_time:
+      name: preferred_time
+      description: 'The user''s preferred time of day for scheduling a new appointment.
+        This is an enum with valid values: AM or PM.'
+      title: 'The user''s preferred time of day for scheduling a new appointment.
+        This is an enum with valid values: AM or PM.'
+      required: true
+      type: string
+      variable_name: preferred_time
+      value: null
+    specific_time:
+      name: specific_time
+      description: Time specified by the user to identify open time slots, for example,
+        "3:00 PM".
+      title: Time specified by the user to identify open time slots, for example,
+        "3:00 PM".
+      required: true
+      type: string
+      variable_name: specific_time
+      value: null
+    external_id_location:
+      name: external_id_location
+      description: external id of the identified location
+      title: external id of the identified location
+      required: true
+      type: string
+      variable_name: external_id_location
+      value: null
+    preferred_weekday:
+      name: preferred_weekday
+      description: |-
+        The user's preferred weekday for scheduling the appointment.
+        This is an enum with valid values: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.
+      title: |-
+        The user's preferred weekday for scheduling the appointment.
+        This is an enum with valid values: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.
+      required: true
+      type: string
+      variable_name: preferred_weekday
+      value: null
+    max_days:
+      name: max_days
+      description: max days used to get available slots, should be an Integer
+      title: max days used to get available slots, should be an Integer
+      required: true
+      type: string
+      variable_name: max_days
+      value: null
+    visit_type_name:
+      name: visit_type_name
+      description: Name of the lab visit type, either "glucose test" or "lab test".
+      title: Name of the lab visit type, either "glucose test" or "lab test".
+      required: true
+      type: string
+      variable_name: visit_type_name
+      value: null
+    start_date:
+      name: start_date
+      description: |-
+        Set the value when asking the customer for their preferred date, and use it to get available slots. If the customer does not specify an start date, default it to today's date.
+        Customer can input any format of the date, you need follow the format as YYYY-MM-DD and convert the format if necessary.
+      title: |-
+        Set the value when asking the customer for their preferred date, and use it to get available slots. If the customer does not specify an start date, default it to today's date.
+        Customer can input any format of the date, you need follow the format as YYYY-MM-DD and convert the format if necessary.
+      required: true
+      type: string
+      variable_name: start_date
+      value: null
+  output_params:
+    service_type_id:
+      name: service_type_id
+      description: Service type ID of the selected appointment, set the value when
+        user select an appointment from the appointment list.
+      title: Service type ID of the selected appointment, set the value when user
+        select an appointment from the appointment list.
+      required: true
+      type: string
+      variable_name: service_type_id
+      value: null
+    workflow_status:
+      name: workflow_status
+      description: To track the execution result in workflow
+      title: To track the execution result in workflow
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    timezone:
+      name: timezone
+      description: Timezone should follow the IANA Time Zone Database format. It is
+        always set to "America/Los_Angeles".
+      title: Timezone should follow the IANA Time Zone Database format. It is always
+        set to "America/Los_Angeles".
+      required: true
+      type: string
+      variable_name: timezone
+      value: null
+    provider_id:
+      name: provider_id
+      description: Provider ID of the selected appointment, set the value when user
+        select an appointment from the appointment list.
+      title: Provider ID of the selected appointment, set the value when user select
+        an appointment from the appointment list.
+      required: true
+      type: string
+      variable_name: provider_id
+      value: null
+    visit_type_name:
+      name: visit_type_name
+      description: Name of the lab visit type, either "glucose test" or "lab test".
+      title: Name of the lab visit type, either "glucose test" or "lab test".
+      required: true
+      type: string
+      variable_name: visit_type_name
+      value: null
+    location_id:
+      name: location_id
+      description: Location ID of the selected appointment, set the value when user
+        select an appointment from the appointment list.
+      title: Location ID of the selected appointment, set the value when user select
+        an appointment from the appointment list.
+      required: true
+      type: string
+      variable_name: location_id
+      value: null
+    available_provider_slots_list:
+      name: available_provider_slots_list
+      description: Retain the information of all available provider slots.
+      title: Retain the information of all available provider slots.
+      required: true
+      type: string
+      variable_name: available_provider_slots_list
+      value: null
+    start_date:
+      name: start_date
+      description: |-
+        Set the value when asking the customer for their preferred date, and use it to get available slots. If the customer does not specify an start date, default it to today's date.
+        Customer can input any format of the date, you need follow the format as YYYY-MM-DD and convert the format if necessary.
+      title: |-
+        Set the value when asking the customer for their preferred date, and use it to get available slots. If the customer does not specify an start date, default it to today's date.
+        Customer can input any format of the date, you need follow the format as YYYY-MM-DD and convert the format if necessary.
+      required: true
+      type: string
+      variable_name: start_date
+      value: null
+  tool_version: 6
+  tool_type: WORKFLOW
+- tool_id: c52bc606-10f7-4a73-a452-7fd6bc6c88e7
+  tool_name: Find Locations
+  tool_description: This tool is used to find locations based on the location name
+    or city. It should be called after the agent identifies a specific location name
+    or city.
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: SBf4LVFeznqGmmKwChDzk
+      data:
+        name: Find Locations
+        variables:
+        - type: string
+          variable: d5a0fdcb-9d5e-4624-8956-35499e318f5f
+        - type: string
+          variable: 4942a4f6-0e86-458c-ab90-7a107b6b53a1
+        more_details: This tool is used to find locations based on the location name
+          or city. It should be called after the agent identifies a specific location
+          name or city.
+      type: start-flow
+      position:
+        x: -1186.4758469301787
+        y: 39.3672572765316
+    - id: f02kynzVI9qbeAL4y9iL0
+      data:
+        name: Error End
+        variables:
+        - id: null
+          variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          first_variable:
+            variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1074.0278387118733
+        y: 277.0883013358529
+    - id: sj6HjnGGfZ6c3czGWJ679
+      data:
+        name: Find location by name&city
+        inputs:
+        - id: 6995f251bd050acd237484da-ABgAN4G_zYfZSM0_hBgEp
+          name: location_name
+          type: string
+          title: location_name
+          required: false
+          variable: d5a0fdcb-9d5e-4624-8956-35499e318f5f
+          input_type: variable
+        - id: 6995f251bd050acd237484da-Kia4NWCS0ltDymZGgC5nd
+          name: address
+          type: string
+          title: address
+          required: false
+          variable: 4942a4f6-0e86-458c-ab90-7a107b6b53a1
+          input_type: variable
+        outputs:
+        - id: 6995f251bd050acd237484da--Zv7lJa1u3YbrjnZBBODR
+          name: _embedded
+          type: object
+          title: _embedded
+          required: false
+          variable: UHkK1msVP9YWej9tdRlAs
+          input_type: variable
+        - id: 6995f251bd050acd237484da-iWgQ0ww4skAOF7qizYY_E
+          name: count
+          type: integer
+          title: count
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f251bd050acd237484da-_rXX5bZmO1T3i4xpO1wMK
+          name: total_pages
+          type: integer
+          title: total_pages
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f251bd050acd237484da-9YCOsBq1nEIw9vv7TOjFr
+          name: total
+          type: integer
+          title: total
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f251bd050acd237484da-A3uD3MSvXP_OadQJ7s-yU
+          name: page
+          type: integer
+          title: page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f251bd050acd237484da-vdHJpjhc8rAqFdvq5lzde
+          name: per_page
+          type: integer
+          title: per_page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6995f251bd050acd237484da-ywhqop0MUWSdc7VxZKkQk
+          name: _links
+          type: object
+          title: _links
+          required: false
+          variable: ''
+          input_type: variable
+        action_id: 6995f251bd050acd237484da
+        connection_id: 67e44ccf88f43078a55777b9
+      type: execute-action
+      position:
+        x: -655.3806730148146
+        y: -327.38743279041597
+    - id: Rk2Hh73D6If9BC13rJe8d
+      data:
+        code: |-
+          const locations = Context.getVariable("locations_list")
+
+
+              const openHoursMap = {
+            "Rancho Bernardo": { BUSINESS_DAYS: "07:00AM-04:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "El Cajon": { BUSINESS_DAYS: "07:00AM-02:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Fletcher Parkway": { BUSINESS_DAYS: "07:00AM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Center Drive": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Aero Drive": { BUSINESS_DAYS: "08:00AM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "8010 Frost St.": { BUSINESS_DAYS: "07:00AM-05:00PM", WEEKEND_SAT: "07:00AM-12:00PM", WEEKEND_SUN: "" },
+            "Genesee Ave": { BUSINESS_DAYS: "07:00AM-12:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "765 Medical Center Court": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "06:00AM-03:00PM", WEEKEND_SUN: "07:00AM-12:00PM" },
+            "Chula Vista": { BUSINESS_DAYS: "07:00AM-04:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Point Loma": { BUSINESS_DAYS: "08:00AM-12:00PM|01:00PM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Sharp Coronado Hospital": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "07:00AM-03:00PM", WEEKEND_SUN: "07:00AM-12:00PM" }
+          };
+
+          const extractedLocations = locations.locations.map(loc => {
+            // Get open hours from openHoursMap using alternative name or main name
+            const alternativeName = loc.alternative_names && loc.alternative_names.length > 0 ? loc.alternative_names[0] : null;
+            const open_hours = (alternativeName && openHoursMap[alternativeName]) || openHoursMap[loc.name] || null;
+            return {
+              name: loc.name,
+              city: loc.address.city,
+              address: loc.address.address,
+              phone_numbers: loc.phone_numbers.map(p => p.phone_number),
+              external_id: loc.external_id,
+              open_hours
+            };
+          });
+
+          Context.setVariable("locations_information", extractedLocations)
+        name: extract locations informations2
+      type: function
+      position:
+        x: 548.7747975080555
+        y: -157.00991794879715
+    - id: iuzkxpINXtLeQvJtOMeik
+      data:
+        code: Context.setVariable("workflow_status", "action error 1st try")
+        name: set action error
+      type: function
+      position:
+        x: 183.12751484161882
+        y: 55.7385614492938
+    - id: sDw26G4M7aLZaTYOTrkBA
+      data:
+        code: Context.setVariable("workflow_status", "action timeout")
+        name: set action timeout
+      type: function
+      position:
+        x: 178.50222241817477
+        y: 246.73949720431477
+    - id: R_DCLijypkc98yuqrhrOR
+      data:
+        name: Success End
+        variables:
+        - id: null
+          variable: f3162a0c-caba-4bd2-baff-fe378d1f8dd2
+          first_variable:
+            variable: f3162a0c-caba-4bd2-baff-fe378d1f8dd2
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1140.5312308238244
+        y: -78.76026885693003
+    - id: 9pedw4-ZSHNNpmLF6OCZx
+      data:
+        code: |-
+          /**
+           * Check if location is valid by name or address
+           * @param {string} locationName - The name of the location to check
+           * @param {string} locationAddress - The address of the location to check
+           * @returns {boolean} - true if location is valid, false otherwise
+           */
+          function validateLocationAddress(locationName, locationAddress) {
+            const locationList = [
+              "Rancho Bernardo",
+              "El Cajon",
+              "Fletcher Parkway",
+              "Center Drive",
+              "Aero Drive",
+              "8010 Frost St.",
+              "Genesee Ave",
+              "765 Medical Center Court",
+              // "Chula Vista",
+              "Point Loma",
+              "Sharp Coronado Hospital"
+              ];
+
+             // Check if location name exists in the list
+              if (locationList.includes(locationName)) {
+                  Context.setVariable("location_address", null)
+              } else if (locationAddress && locationAddress.trim() !== "") {
+                  // If name not found, check if address is not empty
+                Context.setVariable("location_name", null)
+                  //everytime the caller says chula vista, we need to understand what is the right one - because we have two
+                  if (locationName.toLowerCase().includes("chula vista")) {
+                      Context.setVariable("location_address", "Chula Vista")
+                  }
+              } else if (!locationAddress) {
+                  Context.setVariable("location_name", null)
+                  Context.setVariable("location_address", locationName)
+
+              }
+          }
+
+          const location_name = Context.getVariable("location_name")
+          const location_address = Context.getVariable("location_address")
+
+          validateLocationAddress(location_name, location_address)
+        name: Validate location address
+      type: function
+      position:
+        x: -935.8918072190842
+        y: -85.99271088996423
+    - id: xtXOwqqcfWPZYQLTQ_BHL
+      data:
+        code: |-
+          const locations = Context.getVariable("locations_list")
+
+          if (!locations || !locations.locations || locations.locations.length === 0) {
+              Context.setVariable("location_found", "No");
+          } else {
+              Context.setVariable("location_found", "Yes");
+          }
+        name: check. if location is found
+      type: function
+      position:
+        x: -358.6703310568025
+        y: -425.90731925345517
+    - id: VAVEpN6ZXpsU03VfPP5A0
+      data:
+        name: location is found
+        variable:
+          value: KU-cHSDfrmhGN1mh_EFJN
+        conditions:
+        - id: hvKXIgFtotDttXkFLYlnb
+          type: eq
+          value: 'Yes'
+          value_type: string
+      type: split-flow
+      position:
+        x: -54.90454019082383
+        y: -403.406149559679
+    - id: ItEMY4ZCZxckJwumfWsyq
+      data:
+        code: |-
+          const locations = Context.getVariable("locations_list")
+
+
+              const openHoursMap = {
+            "Rancho Bernardo": { BUSINESS_DAYS: "07:00AM-04:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "El Cajon": { BUSINESS_DAYS: "07:00AM-02:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Fletcher Parkway": { BUSINESS_DAYS: "07:00AM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Center Drive": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Aero Drive": { BUSINESS_DAYS: "08:00AM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "8010 Frost St.": { BUSINESS_DAYS: "07:00AM-05:00PM", WEEKEND_SAT: "07:00AM-12:00PM", WEEKEND_SUN: "" },
+            "Genesee Ave": { BUSINESS_DAYS: "07:00AM-12:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "765 Medical Center Court": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "06:00AM-03:00PM", WEEKEND_SUN: "07:00AM-12:00PM" },
+            "Chula Vista": { BUSINESS_DAYS: "07:00AM-04:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Point Loma": { BUSINESS_DAYS: "08:00AM-12:00PM|01:00PM-05:00PM", WEEKEND_SAT: "", WEEKEND_SUN: "" },
+            "Sharp Coronado Hospital": { BUSINESS_DAYS: "06:00AM-06:00PM", WEEKEND_SAT: "07:00AM-03:00PM", WEEKEND_SUN: "07:00AM-12:00PM" }
+          };
+
+          const extractedLocations = locations.locations.map(loc => {
+            // Get open hours from openHoursMap using alternative name or main name
+            const alternativeName = loc.alternative_names && loc.alternative_names.length > 0 ? loc.alternative_names[0] : null;
+            const open_hours = (alternativeName && openHoursMap[alternativeName]) || openHoursMap[loc.name] || null;
+            return {
+              name: loc.name,
+              city: loc.address.city,
+              address: loc.address.address,
+              phone_numbers: loc.phone_numbers.map(p => p.phone_number),
+              external_id: loc.external_id,
+              open_hours
+            };
+          });
+
+          Context.setVariable("locations_information", extractedLocations)
+        name: extract locations informations1
+      type: function
+      position:
+        x: 547.0017491176894
+        y: -377.5298044118364
+    - id: MnFArlqEzIzlOK0SSE8Aq
+      data:
+        code: Context.setVariable("workflow_status", "error while extract location
+          information from func 1")
+        name: error for fun
+      type: function
+      position:
+        x: 869.8935342233781
+        y: -329.1522895702175
+    - id: pcUC_YdEJ4nHmwm_nqn6T
+      data:
+        name: Find Locations again
+        inputs:
+        - id: 6938eabb4a954791ae2378dc-fKL2cXO834izojz0ilBiw
+          name: location_name
+          type: string
+          title: location_name
+          required: false
+          variable: 4942a4f6-0e86-458c-ab90-7a107b6b53a1
+          input_type: variable
+        - id: 6938eabb4a954791ae2378dc-u3WmTqSVij9eDlYdNBt5Q
+          name: address
+          type: string
+          title: address
+          value: ''
+          required: false
+          input_type: value
+        outputs:
+        - id: 6938eabb4a954791ae2378dc-sJIWrcnwVSg5979CPZALm
+          name: _embedded
+          type: object
+          title: _embedded
+          required: false
+          variable: UHkK1msVP9YWej9tdRlAs
+          input_type: variable
+        - id: 6938eabb4a954791ae2378dc-i38zOLyzwq9ULaWtHCVqx
+          name: count
+          type: integer
+          title: count
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6938eabb4a954791ae2378dc-3oQc4YWcuS1JixmmFMkpK
+          name: total_pages
+          type: integer
+          title: total_pages
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6938eabb4a954791ae2378dc-yvfplp3gADAP3JD-_7g_Y
+          name: total
+          type: integer
+          title: total
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6938eabb4a954791ae2378dc-4NEFoG7S5wIXrnBRZGRDd
+          name: page
+          type: integer
+          title: page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6938eabb4a954791ae2378dc-LvxXBK1FUm9SDqg7UpaYd
+          name: per_page
+          type: integer
+          title: per_page
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 6938eabb4a954791ae2378dc-K2PtvdZjCZx3yQ6KKeaK3
+          name: _links
+          type: object
+          title: _links
+          required: false
+          variable: ''
+          input_type: variable
+        action_id: 6938eabb4a954791ae2378dc
+        connection_id: 6938e0a691ca72e4fb3ae645
+      type: execute-action
+      position:
+        x: 231.98537340482267
+        y: -261.6487804888889
+    - id: wY8ti8nPeo_UorkWCOJNz
+      data:
+        code: Context.setVariable("workflow_status", "action error 2nd try")
+        name: set action error2
+      type: function
+      position:
+        x: 559.3773924492665
+        y: 22.991016137379972
+    edges:
+    - id: kGzULn4i8yWfxyROdEE4Q
+      type: worflowEdge
+      source: Rk2Hh73D6If9BC13rJe8d
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: WxTvhalbkHXf5WhiS-u68
+      type: worflowEdge
+      source: sj6HjnGGfZ6c3czGWJ679
+      target: iuzkxpINXtLeQvJtOMeik
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: S31wheoTYtdyjispVeq7S
+      type: worflowEdge
+      source: sj6HjnGGfZ6c3czGWJ679
+      target: sDw26G4M7aLZaTYOTrkBA
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: ObIRXtqGXkAl8SubJkl14
+      type: worflowEdge
+      source: iuzkxpINXtLeQvJtOMeik
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: NZ3eJjVrztffCYhTKjc-f
+      type: worflowEdge
+      source: iuzkxpINXtLeQvJtOMeik
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: 5KxAt1ujnJo0PCuPq8euo
+      type: worflowEdge
+      source: sDw26G4M7aLZaTYOTrkBA
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: vB23AUxBoY13nz3LHRDXh
+      type: worflowEdge
+      source: Rk2Hh73D6If9BC13rJe8d
+      target: R_DCLijypkc98yuqrhrOR
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 6YhTVvrBzPKy8UCpc5SNy
+      type: worflowEdge
+      source: sDw26G4M7aLZaTYOTrkBA
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: rgZUYrcauoGKkjokJLFCA
+      type: worflowEdge
+      source: SBf4LVFeznqGmmKwChDzk
+      target: 9pedw4-ZSHNNpmLF6OCZx
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: LWEeGQ2JgGq_EmgV-UZDS
+      type: worflowEdge
+      source: 9pedw4-ZSHNNpmLF6OCZx
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: RDvJAgGlKM1dnFamTPWSY
+      type: worflowEdge
+      source: 9pedw4-ZSHNNpmLF6OCZx
+      target: sj6HjnGGfZ6c3czGWJ679
+      source_handle: success
+      target_handle: execute-action-node-rigth-handle-1
+    - id: 6frT1BcPkUeetGTRrztQd
+      type: worflowEdge
+      source: xtXOwqqcfWPZYQLTQ_BHL
+      target: VAVEpN6ZXpsU03VfPP5A0
+      source_handle: success
+      target_handle: split-flow-left-handle-1
+    - id: NW39amvC3xgPBtJxsd_Ir
+      type: worflowEdge
+      source: ItEMY4ZCZxckJwumfWsyq
+      target: R_DCLijypkc98yuqrhrOR
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: HsR-R0kjkjJNrBOTGZOVm
+      type: worflowEdge
+      source: VAVEpN6ZXpsU03VfPP5A0
+      target: ItEMY4ZCZxckJwumfWsyq
+      source_handle: hvKXIgFtotDttXkFLYlnb
+      target_handle: function-left-handle-1
+    - id: -UjpbQn3_Gx7zy5W8qQuV
+      type: worflowEdge
+      source: ItEMY4ZCZxckJwumfWsyq
+      target: MnFArlqEzIzlOK0SSE8Aq
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: ZxumFsJQWceXWZVuL94eN
+      type: worflowEdge
+      source: MnFArlqEzIzlOK0SSE8Aq
+      target: R_DCLijypkc98yuqrhrOR
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: -8rdIkdjqsNZ5c7QVy2GA
+      type: worflowEdge
+      source: MnFArlqEzIzlOK0SSE8Aq
+      target: R_DCLijypkc98yuqrhrOR
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: SxK5FwKF5KVaH-xIMAVOS
+      type: worflowEdge
+      source: sj6HjnGGfZ6c3czGWJ679
+      target: xtXOwqqcfWPZYQLTQ_BHL
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: G8E8JvP9P64kCy1IIH_Xi
+      type: worflowEdge
+      source: VAVEpN6ZXpsU03VfPP5A0
+      target: pcUC_YdEJ4nHmwm_nqn6T
+      source_handle: split-flow-exit-fallback
+      target_handle: execute-action-node-rigth-handle-1
+    - id: Rea26_CY_ToMrA0-fh00r
+      type: worflowEdge
+      source: pcUC_YdEJ4nHmwm_nqn6T
+      target: Rk2Hh73D6If9BC13rJe8d
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: ePTtYBPHSiYFYD_OSch44
+      type: worflowEdge
+      source: pcUC_YdEJ4nHmwm_nqn6T
+      target: wY8ti8nPeo_UorkWCOJNz
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: 6iWdt1qEfRUFgaY3MXE4U
+      type: worflowEdge
+      source: pcUC_YdEJ4nHmwm_nqn6T
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: timeout
+      target_handle: end-flow-left-handle-1
+    - id: q_cUu2CMPOYGf6WdI_11F
+      type: worflowEdge
+      source: wY8ti8nPeo_UorkWCOJNz
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: _kJfbKiuKc3oAVbgutvKO
+      type: worflowEdge
+      source: wY8ti8nPeo_UorkWCOJNz
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: SpQmx6JkaNTAK8aW8kwSp
+      type: worflowEdge
+      source: xtXOwqqcfWPZYQLTQ_BHL
+      target: f02kynzVI9qbeAL4y9iL0
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables:
+    - id: UHkK1msVP9YWej9tdRlAs
+      type: Workflow
+      variable_name: locations_list
+      tool_reference:
+      - tool_id: 3TSgdypFA6ddR7WjGHdtX
+        agent_id: 76562ebd-cce6-4312-bc14-ddc9e55329f9
+      - tool_id: a7MFLbTrp07FysfWjvyKo
+        agent_id: aab3b64e-160b-4976-b4e0-e19127d05971
+      - tool_id: M0AvEQsO2_zxx8o8J2H7b
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: 9xlxTou-eK7Ehk0I9XJ5b
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: KWYIhfXjT5nyYcoMA7PUa
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    - id: KU-cHSDfrmhGN1mh_EFJN
+      type: Workflow
+      variable_name: location_found
+      tool_reference:
+      - tool_id: KWYIhfXjT5nyYcoMA7PUa
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    location_address:
+      name: location_address
+      description: The address of lab the user wants to visit.
+      title: The address of lab the user wants to visit.
+      required: true
+      type: string
+      variable_name: location_address
+      value: null
+    location_name:
+      name: location_name
+      description: The name of the lab the user wants to visit.
+      title: The name of the lab the user wants to visit.
+      required: true
+      type: string
+      variable_name: location_name
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: To track the execution result in workflow
+      title: To track the execution result in workflow
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    locations_information:
+      name: locations_information
+      description: Information about the locations selected by the user.
+      title: Information about the locations selected by the user.
+      required: true
+      type: string
+      variable_name: locations_information
+      value: null
+  tool_version: 6
+  tool_type: WORKFLOW
+- tool_id: f3968ff7-5502-4784-b190-9120e7e1b57a
+  tool_name: Schedule Appointment
+  tool_description: This tool is used to schedule appointment. It should be called
+    after user confirms the details of the appointment.
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: UCFDiyImUOBme1Br_G1WC
+      data:
+        name: Schedule Appointment
+        variables:
+        - type: string
+          variable: c8e8d11d-bb58-4538-87a6-ff5003e1c462
+        more_details: This tool is used to schedule appointment. It should be called
+          after user confirms the details of the appointment.
+      type: start-flow
+      position:
+        x: -301
+        y: -248
+    - id: 10y0svVbH3INlF-R6VZQk
+      data:
+        code: |-
+          function setSlotDetails(slotId) {
+              const availalbeSlotsJson = Context.getVariable("available_provider_slots_list")
+              let slotList = null
+              if (availalbeSlotsJson?.provider_slots?.length > 0) {
+                  slotList = availalbeSlotsJson.provider_slots
+              }else{
+                  slotList = availalbeSlotsJson
+              }
+              const slot = slotList.find(slot => slot.id == slotId);
+
+              if (!slot) return null;
+
+              // Context.setVariable("slot_id", slot.id)
+              Context.setVariable("duration", slot.duration)
+              Context.setVariable("start_date_UTC", slot.start_date)
+          }
+          Context.setVariable("workflow_status", "success")
+          const slotId = Context.getVariable("slot_id")
+          setSlotDetails(slotId)
+        name: set slot id
+      type: function
+      position:
+        x: 29.5
+        y: -311.671875
+    - id: 9Xd1Paan0lqvOM-h95tuc
+      data:
+        code: Context.setVariable("workflow_status", "set slod id fail")
+        name: set function error
+      type: function
+      position:
+        x: 355.5
+        y: -37.671875
+    - id: 8UFgXhgxvxOdhlKBMRBAI
+      data:
+        name: End Flow
+        variables:
+        - id: null
+          variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          first_variable:
+            variable: 3635ef36-7913-4c56-943f-7a77c07e0eeb
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1296.25
+        y: -208.671875
+    - id: 6VqN14ZzA3E63XwCUeE5d
+      data:
+        code: 'Context.setVariable("workflow_status", "Error: Error from service when
+          executing scheduling")'
+        name: set schedule error
+      type: function
+      position:
+        x: 707.5
+        y: -341.671875
+    - id: OcppT32UsTJM9v0hbKna0
+      data:
+        code: Context.setVariable("workflow_status", "Timeout when scheduling new
+          apponitment")
+        name: set action timeout
+      type: function
+      position:
+        x: 715.5
+        y: -190.671875
+    - id: SdLgQRryS4pjiyqHrZsrA
+      data:
+        name: scheduling appointment
+        inputs:
+        - id: 69a0e56483c911d3f9cbf17a-y0zMfwIymuTGBI3GLLuvk
+          name: id
+          type: string
+          title: Id
+          required: false
+          variable: c8e8d11d-bb58-4538-87a6-ff5003e1c462
+          input_type: variable
+        - id: 69a0e56483c911d3f9cbf17a-eH8kVpNSBzxTmA1hcyXCa
+          name: service_type_id
+          type: string
+          title: Service_type_id
+          required: false
+          variable: 2ae0f02d-5a82-476c-b810-a4393707ab6a
+          input_type: variable
+        - id: 69a0e56483c911d3f9cbf17a-F83hCR7V25DAXIMNG_qdl
+          name: start_date
+          type: string
+          title: Start_date
+          required: false
+          variable: 91cce266-425d-4c85-a0f9-a71df343ab6b
+          input_type: variable
+        - id: 69a0e56483c911d3f9cbf17a-voOBHcpgaoCrny0-Rc-kX
+          name: provider_id
+          type: string
+          title: Provider_id
+          required: false
+          variable: 2ebe9f01-d739-473b-9182-b9031e0ae73e
+          input_type: variable
+        - id: 69a0e56483c911d3f9cbf17a-nvcyR8ImosKBg5UDBQb0D
+          name: location_id
+          type: string
+          title: Location_id
+          required: false
+          variable: 1327a918-fd67-49df-a4a6-1eb69b1f7ec3
+          input_type: variable
+        - id: 69a0e56483c911d3f9cbf17a-6cCfIr83S8kNuLfh3bhtT
+          name: time_zone_id
+          type: string
+          title: Time_zone_id
+          required: false
+          variable: c11ab1bd-fd3b-4979-9879-bb499ca58eb3
+          input_type: variable
+        - id: 69a0e56483c911d3f9cbf17a-1cssiCDvBoYohpEZQMfYQ
+          name: duration
+          type: integer
+          title: duration
+          required: false
+          variable: 415IywnoIE0iG-xE4yylM
+          input_type: variable
+        - id: 69a0e56483c911d3f9cbf17a-AD4BMurpAJdcoCBrTml3q
+          name: interaction_id
+          type: string
+          title: interaction_id
+          required: true
+          variable: ecb2d3f5-4556-4dc7-9580-b6d474c16564
+          input_type: variable
+        - id: 69a0e56483c911d3f9cbf17a-oGokUwIDrzFLbObzL2KjV
+          name: notes_prefix
+          type: string
+          title: notes_prefix
+          value: Lab visit scheduled by autopilot
+          required: true
+          input_type: value
+        action_id: 69a0e56483c911d3f9cbf17a
+        connection_id: 67e44ccf88f43078a55777b9
+      type: execute-action
+      position:
+        x: 369.25
+        y: -488.4725417704762
+    edges:
+    - id: dXLS_ECCBQ6gQYc9d_uIA
+      type: worflowEdge
+      source: UCFDiyImUOBme1Br_G1WC
+      target: 10y0svVbH3INlF-R6VZQk
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: MG2w3-DSXhp5Y1LqhhXMN
+      type: worflowEdge
+      source: 10y0svVbH3INlF-R6VZQk
+      target: 9Xd1Paan0lqvOM-h95tuc
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: sU0ro7V7U7sAK4NLC8BfQ
+      type: worflowEdge
+      source: 6VqN14ZzA3E63XwCUeE5d
+      target: 8UFgXhgxvxOdhlKBMRBAI
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 0y7Va23iY1WXF1CAh6Cmr
+      type: worflowEdge
+      source: OcppT32UsTJM9v0hbKna0
+      target: 8UFgXhgxvxOdhlKBMRBAI
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 4es6tTbcGGGIAKLMh9sDc
+      type: worflowEdge
+      source: OcppT32UsTJM9v0hbKna0
+      target: 8UFgXhgxvxOdhlKBMRBAI
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: 7vSBI3roVK0bY79F4Hp1x
+      type: worflowEdge
+      source: 9Xd1Paan0lqvOM-h95tuc
+      target: 8UFgXhgxvxOdhlKBMRBAI
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: CBeE0d4WWlAmkL76VzkD7
+      type: worflowEdge
+      source: 9Xd1Paan0lqvOM-h95tuc
+      target: 8UFgXhgxvxOdhlKBMRBAI
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: L3fgOFG7Ka-vkFAzEQmOh
+      type: worflowEdge
+      source: 6VqN14ZzA3E63XwCUeE5d
+      target: 8UFgXhgxvxOdhlKBMRBAI
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: kTbK3vpc0Ps8x20hrLdCN
+      type: worflowEdge
+      source: SdLgQRryS4pjiyqHrZsrA
+      target: 6VqN14ZzA3E63XwCUeE5d
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: PVyLbFN2IOqlgdM6WOFDo
+      type: worflowEdge
+      source: SdLgQRryS4pjiyqHrZsrA
+      target: OcppT32UsTJM9v0hbKna0
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: G24RXAoLKeBjKkdKU6_zY
+      type: worflowEdge
+      source: 10y0svVbH3INlF-R6VZQk
+      target: SdLgQRryS4pjiyqHrZsrA
+      source_handle: success
+      target_handle: execute-action-node-rigth-handle-1
+    - id: twcxF1gUDWibMXLBCRlsq
+      type: worflowEdge
+      source: SdLgQRryS4pjiyqHrZsrA
+      target: 8UFgXhgxvxOdhlKBMRBAI
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    variables:
+    - id: 415IywnoIE0iG-xE4yylM
+      type: Workflow
+      variable_name: duration
+      tool_reference:
+      - tool_id: 71sbV7GsoIdc7IVUK0y-4
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: wYvaFQsO_EiUnL-0dT_VC
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: 7okDabV92rxCALw5dEiiK
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+      - tool_id: jeHuaZ0DPUl5wvjiNMvFJ
+        agent_id: 4e6c6518-df77-4192-b210-3d18a36e851b
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    slot_id:
+      name: slot_id
+      description: The id of the of the selected slot by user from available slot
+        list. After user identifies the slot, store id to this variable.
+      title: The id of the of the selected slot by user from available slot list.
+        After user identifies the slot, store id to this variable.
+      required: true
+      type: string
+      variable_name: slot_id
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: To track the execution result in workflow
+      title: To track the execution result in workflow
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+  tool_version: 6
+  tool_type: WORKFLOW

@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """
 build.py
-Reassembles a full platform system JSON from the split parts under agents/<industry>/.
+Reassembles a full platform system JSON from the split parts under templates/<industry>/.
 
 Reads:
-  agents/<industry>/Settings/template.json       # base fields
-  agents/<industry>/Settings/links.json          # agent routing links
-  agents/<industry>/Variables/variables.json     # all context variables
-  agents/<industry>/Coordinator/Coordinator.json # SUPERVISING_AGENT
-  agents/<industry>/Coordinator/Action-Agents/*/agent.json  # ACTION_AGENTs
+    templates/<industry>/config/manifest.yaml         # system metadata
+    templates/<industry>/config/links.yaml            # agent routing links
+    templates/<industry>/config/variables.yaml        # all context variables
+    templates/<industry>/agents/*.yaml                # SUPERVISING_AGENT + ACTION_AGENTs
 
 Order: coordinator first, then action agents sorted alphabetically by agent_name.
 
@@ -27,11 +26,12 @@ Usage:
 
 Example:
     python3 tools/build.py pr-gate
-    → reads agents/fsi-banking/Eval/env.yaml → account_name=fsec, env_level=qa
+    → reads templates/fsi-banking/eval/env.yaml → account_name=fsec, env_level=qa
     → systems/fsi-banking/builds/fsec_qa_SB - Trinity Voice Automation - Pre-Prod_rebuilt.json
 """
 
 import json, os, sys, glob, yaml
+from datetime import datetime
 
 DEFAULT_INDUSTRY = "fsi-banking"
 
@@ -39,6 +39,10 @@ DEFAULT_INDUSTRY = "fsi-banking"
 def load_json(path: str):
     with open(path, encoding='utf-8') as f:
         return json.load(f)
+
+def load_yaml(path: str):
+    with open(path, encoding='utf-8') as f:
+        return yaml.safe_load(f)
 
 def write_json(path: str, obj) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -61,18 +65,18 @@ def _resolve_refs(agent: dict, agent_dir: str) -> dict:
 
 def build(env_name: str, include_action_agents: set | None = None, industry: str = DEFAULT_INDUSTRY) -> None:
     """
-    env_name: key in agents/<industry>/Eval/env.yaml  (e.g. 'pr-gate', 'nightly')
+    env_name: key in templates/<industry>/eval/env.yaml  (e.g. 'pr-gate', 'nightly')
               provides account_name and env_level for the output filename.
     include_action_agents: if provided, only these ACTION_AGENT names are included.
                            SUPERVISING_AGENTs are always included.
                            Links to excluded agents are automatically dropped.
     Order: coordinator(s) first (alphabetically), then action agents (alphabetically by agent_name).
     """
-    base    = f"agents/{industry}"
+    base    = f"templates/{industry}"
     out_dir = f"systems/{industry}/builds"
 
     # ── Read account_name + env_level from env.yaml ───────────────────────────
-    env_yaml_path = f"{base}/Eval/env.yaml"
+    env_yaml_path = f"{base}/eval/env.yaml"
     with open(env_yaml_path, encoding="utf-8") as f:
         env_config = yaml.safe_load(f)
     envs = env_config.get("environments", {})
@@ -84,9 +88,9 @@ def build(env_name: str, include_action_agents: set | None = None, industry: str
     env_level = envs[env_name]["env_level"]
 
     # ── Load parts ────────────────────────────────────────────────────────────
-    template  = load_json(f"{base}/Settings/template.json")
-    all_links = load_json(f"{base}/Settings/links.json")
-    variables = load_json(f"{base}/Variables/variables.json")
+    template  = load_yaml(f"{base}/config/manifest.yaml")
+    all_links = load_yaml(f"{base}/config/links.yaml")
+    variables = load_yaml(f"{base}/config/variables.yaml")
 
     # ── Derive output filename from system name in template ───────────────────
     system_name = (
@@ -96,30 +100,29 @@ def build(env_name: str, include_action_agents: set | None = None, industry: str
         or industry
     )
     safe_name   = system_name.replace("/", "-")
-    output_name = f"{tenant}_{env_level}_{safe_name}_rebuilt.json"
+    timestamp   = datetime.now().strftime("%Y%m%d-%H%M%S")
+    output_name = f"{tenant}_{env_level}_{safe_name}_{timestamp}_rebuilt.json"
 
-    # ── Load coordinator(s) ──────────────────────────────────────────────────
+    # ── Load agent files by role ──────────────────────────────────────────────
     coordinators = []
-    for path in sorted(glob.glob(f"{base}/Coordinator/Coordinator.json")):
-        a = load_json(path)
-        if isinstance(a, dict) and "agent_name" in a:
-            a = _resolve_refs(a, os.path.dirname(path))
-            coordinators.append(a)
-
-    # ── Load action agents ────────────────────────────────────────────────────
     action_agents_all = []
-    for path in sorted(glob.glob(f"{base}/Coordinator/Action-Agents/*/agent.json")):
-        a = load_json(path)
-        if isinstance(a, dict) and "agent_name" in a:
-            a = _resolve_refs(a, os.path.dirname(path))
+    for path in sorted(glob.glob(f"{base}/agents/*.yaml")):
+        a = load_yaml(path)
+        if not isinstance(a, dict) or "agent_name" not in a:
+            continue
+        if a.get("role") == "SUPERVISING_AGENT":
+            coordinators.append(a)
+        elif a.get("role") == "ACTION_AGENT":
             action_agents_all.append(a)
     action_agents_all.sort(key=lambda a: a["agent_name"])
 
     # ── Filter action agents if subset requested ──────────────────────────────
     if include_action_agents is not None:
-        action_agents_all = [a for a in action_agents_all if a["agent_name"] in include_action_agents]
+        requested = {name.casefold() for name in include_action_agents}
+        action_agents_all = [a for a in action_agents_all if a["agent_name"].casefold() in requested]
+        found = {a["agent_name"].casefold() for a in action_agents_all}
         for name in include_action_agents:
-            if not any(a["agent_name"] == name for a in action_agents_all):
+            if name.casefold() not in found:
                 print(f"  WARNING: agent not found on disk: {name}")
 
     agents = coordinators + action_agents_all
@@ -166,7 +169,7 @@ def build(env_name: str, include_action_agents: set | None = None, industry: str
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python3 tools/build.py <env_name> [agents] [industry]")
-        print("  env_name  environment key in Eval/env.yaml  e.g. pr-gate, nightly")
+        print("  env_name  environment key in eval/env.yaml  e.g. pr-gate, nightly")
         print("  agents    comma-separated action agent names (omit or '' for all)")
         print("  industry  e.g. fsi-banking, healthcare  (default: fsi-banking)")
         sys.exit(1)

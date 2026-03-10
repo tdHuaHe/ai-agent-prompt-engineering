@@ -27,19 +27,19 @@ systems/<industry>/
 Split:
 
 ```bash
-python3 tools/split.py "systems/fsi-banking/exports/<export-file>.json" fsi-banking
+./ai-agent-templates decompose "systems/fsi-banking/exports/<export-file>.json" --industry fsi-banking
 ```
 
 Build full:
 
 ```bash
-python3 tools/build.py test "" fsi-banking
+./ai-agent-templates build test --industry fsi-banking
 ```
 
 Build subset:
 
 ```bash
-python3 tools/build.py test "Member Search Agent,Account Balance and Transaction Agent,FAQ Agent" fsi-banking
+./ai-agent-templates build test --industry fsi-banking --agents "Member Search Agent,Account Balance and Transaction Agent,FAQ Agent"
 ```
 
 ## Quality Gate (Minimum)

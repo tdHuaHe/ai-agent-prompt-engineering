@@ -8,7 +8,7 @@ This repo is the production assembly line for multi-agent template delivery.
 
 It serves three purposes:
 
-1. `agents/`: manage industry-specific basic templates in a split, reviewable format.
+1. `templates/`: manage industry-specific basic templates in a split, reviewable format.
 2. `modules/`: maintain cross-industry reusable best practices for `prompts` and `tools`.
 3. `docs/`: provide platform rules, usage guidance, and context for both humans and Copilot.
 
@@ -27,22 +27,17 @@ The final output is a complete platform-importable system JSON.
 
 ```text
 ai-agent-prompt-engineering/
-├── agents/                                  # Industry-specific editable assets
+├── templates/                               # Industry-specific editable assets
 │   ├── fsi-banking/
-│   │   ├── Settings/
-│   │   │   ├── template.json                # Top-level system fields
-│   │   │   └── links.json                   # Inter-agent routing links
-│   │   ├── Variables/
-│   │   │   └── variables.json               # Shared variables
-│   │   ├── Coordinator/
-│   │   │   ├── Coordinator.json             # Supervisor agent config
-│   │   │   ├── Coordinator.instruction.md   # Supervisor instruction
-│   │   │   ├── Condition.instruction.md     # Routing condition instruction
-│   │   │   └── Action-Agents/
-│   │   │       └── <Action Agent Name>/
-│   │   │           ├── agent.json
-│   │   │           └── instruction.md
-│   │   └── Eval/
+│   │   ├── config/
+│   │   │   ├── manifest.yaml                # Top-level system metadata
+│   │   │   ├── links.yaml                   # Inter-agent routing links
+│   │   │   └── variables.yaml               # Shared context variables
+│   │   ├── agents/
+│   │   │   ├── coordinator.yaml             # Supervisor agent (instruction inline |-block)
+│   │   │   ├── faq agent.yaml
+│   │   │   └── <action agent name>.yaml
+│   │   └── eval/
 │   │       ├── env.yaml
 │   │       └── test_scenarios/
 │   ├── healthcare/
@@ -64,13 +59,13 @@ ai-agent-prompt-engineering/
 │   ├── agent-guide.md
 │   ├── system-guide.md
 │   └── platform-prompt/
-├── systems/                                 # Full exports and rebuilt outputs
+├── systems/                                 # Raw imports and rebuilt outputs
 │   └── <industry>/
-│       ├── exports/
+│       ├── imports/
 │       └── builds/
 └── tools/
-    ├── split.py                             # Export JSON -> agents/<industry>/ split files
-    └── build.py                             # agents/<industry>/ -> rebuilt system JSON
+    ├── split.py                             # Import JSON -> templates/<industry>/ split files
+    └── build.py                             # templates/<industry>/ -> rebuilt system JSON
 ```
 
 ---
@@ -79,19 +74,21 @@ ai-agent-prompt-engineering/
 
 ### 1. Update Source Export
 
-Put an updated full platform export under:
+Put an updated full platform import file under:
 
-- `systems/<industry>/exports/*.json`
+- `systems/<industry>/imports/*.json`
 
 ### 2. Split into Reviewable Files
 
-Use `split.py` to extract editable files into `agents/<industry>/`:
+Use `ai-agent-templates decompose` to extract editable YAML files into `templates/<industry>/`:
 
 ```bash
-python3 tools/split.py systems/fsi-banking/exports/<export-file>.json fsi-banking
+./ai-agent-templates decompose "systems/fsi-banking/imports/<import-file>.json" --industry fsi-banking
 ```
 
-### 3. Open PR on `agents/` Changes
+Each agent is written as a single lowercase `<agent name>.yaml` with instruction rendered as a `|-` block scalar for readability. System metadata, links, and variables are written to `config/`.
+
+### 3. Open PR on `templates/` Changes
 
 PR review is done on split files so change scope is clear at file level.
 
@@ -100,15 +97,15 @@ PR review is done on split files so change scope is clear at file level.
 CI detects changed paths and triggers different levels of tests:
 
 - Action-agent-only changes: targeted tests + smoke tests.
-- Coordinator/settings/links/variables changes: full regression.
+- Coordinator/config changes: full regression.
 - Docs-only changes: docs checks only.
 
 ### 5. Build Before E2E
 
-Workflow rebuilds full JSON from `agents/<industry>/` to verify assembly integrity:
+Workflow rebuilds full JSON from `templates/<industry>/` to verify assembly integrity:
 
 ```bash
-python3 tools/build.py test "" fsi-banking
+./ai-agent-templates compose test --industry fsi-banking
 ```
 
 Output is written to:
@@ -130,33 +127,38 @@ Only PRs that pass quality gates proceed to human review and merge.
 ### Split a system export
 
 ```bash
-python3 tools/split.py systems/fsi-banking/exports/<export-file>.json fsi-banking
+./ai-agent-templates decompose "systems/fsi-banking/imports/<import-file>.json" --industry fsi-banking
 ```
 
 ### Rebuild a full industry system
 
 ```bash
-python3 tools/build.py test "" fsi-banking
+./ai-agent-templates compose test --industry fsi-banking
 ```
+
+`test` here is the environment key from `templates/<industry>/eval/env.yaml`.
 
 ### Rebuild with selected action agents (debug mode)
 
 ```bash
-python3 tools/build.py test "Authentication Agent,FAQ Agent" fsi-banking
+./ai-agent-templates compose test --industry fsi-banking --agents "Authentication Agent,FAQ Agent"
 ```
+
+`--agents` is the parameter used to select an action-agent subset for composition.
+The coordinator agent is always included automatically.
 
 ### FSI Banking common examples
 
-Split a specific banking export file:
+Split a specific banking import file:
 
 ```bash
-python3 tools/split.py "systems/fsi-banking/exports/fsec-AI-Agent-platform-FSI Providers Multi Agent - hehua-2026-03-09T18-17.json" fsi-banking
+./ai-agent-templates decompose "systems/fsi-banking/imports/fsec-AI-Agent-platform-FSI Providers Multi Agent - hehua-2026-03-09T18-17.json" --industry fsi-banking
 ```
 
 Build with selected action agents (`Member Search`, `Account Balance`, `FAQ`):
 
 ```bash
-python3 tools/build.py test "Member Search Agent,Account Balance and Transaction Agent,FAQ Agent" fsi-banking
+./ai-agent-templates compose test --industry fsi-banking --agents "Member Search Agent,Account Balance and Transaction Agent,FAQ Agent"
 ```
 
 ---
@@ -177,7 +179,7 @@ Merge should require all of the following:
 
 ### Phase 1: Engineerized Basic Template Governance
 
-- Standardize split-file management in `agents/`.
+- Standardize split-file management in `templates/`.
 - Use Git PR workflow for diff, review, and controlled merge.
 - Enforce automated build + E2E + quality gates.
 
@@ -190,7 +192,7 @@ Merge should require all of the following:
 ### Phase 3: Copilot-Assisted Template Assembly
 
 - Use `docs/` as platform context and policy knowledge.
-- Reuse existing industry basic templates from `agents/`.
+- Reuse existing industry basic templates from `templates/`.
 - Reuse best-practice modules from `modules/`.
 - Generate import-ready full template JSON for rapid testing and tuning.
 
@@ -207,7 +209,7 @@ Merge should require all of the following:
 
 ## Contributing
 
-1. Start from `systems/<industry>/exports`, then split to `agents/<industry>/`.
+1. Start from `systems/<industry>/imports`, then split to `templates/<industry>/`.
 2. Keep PR scope explicit and industry-focused.
 3. Ensure build and required tests pass before requesting merge.
 4. Promote proven reusable logic into `modules/`.
