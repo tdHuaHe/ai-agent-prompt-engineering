@@ -114,7 +114,8 @@ Output is written to:
 
 ### 6. Import and Run E2E Tests
 
-Rebuilt JSON is auto-imported into the platform test environment and validated with the existing agentic chat automation framework.
+After `compose` generates rebuilt JSON, this repo uses GitHub Actions to trigger the `agenticChat` repo workflow.
+Test cases are managed in this repo (`templates/<industry>/eval/test_scenarios/**`) and passed as workflow inputs to `agenticChat`repo for runner orchestration and execution.
 
 ### 7. Quality Gate and Review
 
