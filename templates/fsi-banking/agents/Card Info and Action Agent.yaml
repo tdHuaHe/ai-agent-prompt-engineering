@@ -1,0 +1,1894 @@
+agent_id: 3860a937-3f5d-49e5-a0f4-c255c268e14c
+agent_version: 14
+role: ACTION_AGENT
+agent_name: Card Info and Action Agent
+goal: This agent responsible for searching card details, and also allow customer to
+  activate an inactive card or deactivate an active card or replace a not active card.
+  After successfully deactivating a card, the agent will ask the customer if they'd
+  like to receive a replacement card.
+instruction: |-
+  # Operation Rules
+  - MUST confirm the final request details with the customer before calling activate & deactivate & replace skills.
+  - Check the selected "card_status":
+    - **Activate request**: Only inactive cards can be activated.
+    - **Deactivate request**: Only active cards can be deactivated.
+    - **Replace request**: Only not active cards can be replaced.
+
+  # Pre-operation
+  ## Complete the following before performing card actions:
+  - Use "contact_id" to execute `Get Card List` skill to obtain:
+    - "card_number_list"`
+    - "active_card_number_list"
+    - "inactive_card_number_list"
+    - "not_active_card_number_list"
+
+
+  # Execution
+  ## Activate Card Steps
+  1. Respond “inactive_card_number_list" to the Coordinator.
+  2. Ask Customer to select an card number from the list.
+  3. Execute `Get Card Details` skill to store card information.
+  4. Only if the customer confirms the request, execute `Activate Card` skill.
+
+  ## Deactivate Card Steps
+  1. Respond "active_card_number_list" to the Coordinator.
+  2. Ask Customer to select an card number from the list.
+  4. Execute `Get Card Details` skill to store card information.
+  5. Ask Coordinator agent to let customer select the "card_new_status" from ["LOST", "STOLEN", "CANCELED"] and fuzzy match it.
+  7. Only if the customer confirms  the request, execute `Deactivate Card` skill.
+
+  ## Replace Card Steps
+  1. Respond `"not_active_card_number_list"` to the Coordinator.
+  2. Ask Customer to select an card number from the list.
+  3. Execute `Get Card Details` skill to store card information.
+  4. Only if the customer confirms the delivery address, execute `Replace Card` skill.
+  5. After replacement successful, inform the customer that their card will be sent to the confirmed address, and they will receive it within **5–7 business days**.
+routing_condition: ''
+tools:
+- tool_id: 6e55484c-40e5-43c8-8d94-e54b069b8ea4
+  tool_name: Activate Card
+  tool_description: Activate Card
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: z19yvDt1D-2CFmBQ7_g7w
+      data:
+        name: Activate Card
+        variables:
+        - type: string
+          variable: 9cf0f6c2-6274-41b6-aa5d-3e796a306d3f
+        more_details: Activate Card
+      type: start-flow
+      position:
+        x: -309.1245530662427
+        y: -7.02811382665606
+    - id: 1lhnh5_r2qunoziSJZ2DU
+      data:
+        name: Activate a card
+        inputs:
+        - id: 68f74bfd6577636b34cc1878-gGYjr5Fy_76gWLT1-3KVo
+          name: contact_id
+          type: string
+          title: contact_id
+          required: true
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          input_type: variable
+        - id: 68f74bfd6577636b34cc1878-RQrvXVfKjUBir5OBSYciI
+          name: card_id
+          type: string
+          title: card_id
+          required: true
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          input_type: variable
+        outputs:
+        - id: 68f74bfd6577636b34cc1878-50Qf51VCnIe_rGeDZLyeg
+          name: confirmation_code
+          type: string
+          title: Confirmation code of the activation
+          required: false
+          variable: ''
+          input_type: variable
+        action_id: 68f74bfd6577636b34cc1878
+        connection_id: 68f74a9cb025fab3c375715b
+      type: execute-action
+      position:
+        x: 154.1761726389463
+        y: -130.86937634527752
+    - id: sBIA3mPaPhpub_k5X26YC
+      data:
+        name: Success end
+        variables:
+        - id: null
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          first_variable:
+            variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          first_variable:
+            variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 732.2255905207774
+        y: -186.35893964208782
+    - id: aLYrbOaiAljDmfsUSiuwx
+      data:
+        code: Context.setVariable("workflow_status", "activate card failed due to
+          api error")
+        name: set workflow as failure by error
+      type: function
+      position:
+        x: 389.9265610616537
+        y: -87.411459092451
+    - id: LH-iK-q_yFHT5pInStld7
+      data:
+        code: Context.setVariable("workflow_status", "activate card failed due to
+          api timeout")
+        name: set workflow as failure by timeout
+      type: function
+      position:
+        x: 392.86176399068717
+        y: 82.804705120351
+    - id: WsregDjwcmRs5bKQenr5F
+      data:
+        name: Fail end
+        variables:
+        - id: null
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          first_variable:
+            variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          first_variable:
+            variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 831.2520586788924
+        y: 256.3263992488554
+    - id: aiB_gsvr1a2_FScyURlrZ
+      data:
+        code: |-
+          function getCardDetails(selectedCardNumber) {
+              const cardList = Context.getVariable("card_list").cards;
+
+              const last4 = String(selectedCardNumber).slice(-4);
+              const card = cardList.find(card => card.card_number.endsWith(last4));
+
+              if (!card) return null;
+
+              Context.setVariable("card_id", card.id)
+              Context.setVariable("card_name", card.card_name)
+              Context.setVariable("card_type", card.card_type)
+              Context.setVariable('card_status', card.status)
+              Context.setVariable('card_account_id', card.account_id)
+
+          }
+
+          const selectedCardNumber = Context.getVariable("selected_card_number")
+          getCardDetails(selectedCardNumber)
+        name: get selected card id
+      type: function
+      position:
+        x: -90.28527031155133
+        y: -11.268189028489289
+    - id: IWVSwAWn60vutNshY47oN
+      data:
+        code: Context.setVariable("workflow_status", "activate card failed due to
+          get card id function error")
+        name: set fail
+      type: function
+      position:
+        x: 170.50488677688082
+        y: 229.39542165025625
+    - id: utGkG-Gd-SNa7gYwuYnOv
+      data:
+        code: Context.setVariable("workflow_status", "activate card successfully")
+        name: set success
+      type: function
+      position:
+        x: 414.5689407946061
+        y: -241.3170646163695
+    edges:
+    - id: HcQc3UYQFDGgk5ODOwU3M
+      type: worflowEdge
+      source: 1lhnh5_r2qunoziSJZ2DU
+      target: aLYrbOaiAljDmfsUSiuwx
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: 4QvV9VT7OeZvGI3VGJtQb
+      type: worflowEdge
+      source: 1lhnh5_r2qunoziSJZ2DU
+      target: LH-iK-q_yFHT5pInStld7
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: PlfchuWXU80JzArGl4It5
+      type: worflowEdge
+      source: aLYrbOaiAljDmfsUSiuwx
+      target: WsregDjwcmRs5bKQenr5F
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: r2HHvUUnS27iTdRVdriLM
+      type: worflowEdge
+      source: aLYrbOaiAljDmfsUSiuwx
+      target: WsregDjwcmRs5bKQenr5F
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: corZSSmKnMwACajDKnvK_
+      type: worflowEdge
+      source: LH-iK-q_yFHT5pInStld7
+      target: WsregDjwcmRs5bKQenr5F
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: vN7cfiYzd7_eUlo9TyoDv
+      type: worflowEdge
+      source: LH-iK-q_yFHT5pInStld7
+      target: WsregDjwcmRs5bKQenr5F
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: k5ARqDxrA9SivuL8mnTQ1
+      type: worflowEdge
+      source: z19yvDt1D-2CFmBQ7_g7w
+      target: aiB_gsvr1a2_FScyURlrZ
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: Ek2SpzH1Agt18dAUc9TfS
+      type: worflowEdge
+      source: aiB_gsvr1a2_FScyURlrZ
+      target: 1lhnh5_r2qunoziSJZ2DU
+      source_handle: success
+      target_handle: execute-action-node-rigth-handle-1
+    - id: LOb-yIKBIosXEiNLXk5jS
+      type: worflowEdge
+      source: aiB_gsvr1a2_FScyURlrZ
+      target: IWVSwAWn60vutNshY47oN
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: 7xRRPUEHJf6XhfAQeUoQu
+      type: worflowEdge
+      source: IWVSwAWn60vutNshY47oN
+      target: WsregDjwcmRs5bKQenr5F
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 1Isix661M68DdKz7y8G5F
+      type: worflowEdge
+      source: IWVSwAWn60vutNshY47oN
+      target: WsregDjwcmRs5bKQenr5F
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: cmPfOuaZiJ5Hi1JL26MP2
+      type: worflowEdge
+      source: 1lhnh5_r2qunoziSJZ2DU
+      target: utGkG-Gd-SNa7gYwuYnOv
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: aMVSA415FrqflHs5Bp8xR
+      type: worflowEdge
+      source: utGkG-Gd-SNa7gYwuYnOv
+      target: sBIA3mPaPhpub_k5X26YC
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: ScwYp4xMmsWJPiB6k04BT
+      type: worflowEdge
+      source: utGkG-Gd-SNa7gYwuYnOv
+      target: sBIA3mPaPhpub_k5X26YC
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables: []
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    selected_card_number:
+      name: selected_card_number
+      description: This variable represents the card number that the customer selects
+        to operate on, which is usually a masked card number that only shows last
+        four digits.
+      title: This variable represents the card number that the customer selects to
+        operate on, which is usually a masked card number that only shows last four
+        digits.
+      required: true
+      type: string
+      variable_name: selected_card_number
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: This variable represents the execution result of the skill workflow.
+      title: This variable represents the execution result of the skill workflow.
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    contact_id:
+      name: contact_id
+      description: This variable represents the contact ID of the customer, which
+        is of numeric type and is usually the same as the member ID.
+      title: This variable represents the contact ID of the customer, which is of
+        numeric type and is usually the same as the member ID.
+      required: true
+      type: string
+      variable_name: contact_id
+      value: null
+    card_id:
+      name: card_id
+      description: card_id
+      title: card_id
+      required: true
+      type: string
+      variable_name: card_id
+      value: null
+  tool_version: 14
+  tool_type: WORKFLOW
+- tool_id: 7e35d3e1-c86a-4e1c-a021-05263f247bb6
+  tool_name: Get Card Details
+  tool_description: Get Card Details
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: uWaO97RgCePCcCI-UR0DS
+      data:
+        name: Get Card Details
+        variables:
+        - type: string
+          variable: 9cf0f6c2-6274-41b6-aa5d-3e796a306d3f
+        more_details: Get Card Details
+      type: start-flow
+      position:
+        x: 0
+        y: 0
+    - id: nxVrXBfHArpXUAsG7lGrr
+      data:
+        code: |-
+          function getCardDetails(selectedCardNumber) {
+              const cardList = Context.getVariable("card_list").cards;
+
+              const last4 = String(selectedCardNumber).slice(-4);
+              const card = cardList.find(card => card.card_number.endsWith(last4));
+
+              if (!card) return null;
+
+              Context.setVariable("card_id", card.id)
+              Context.setVariable("card_name", card.card_name)
+              Context.setVariable("card_type", card.card_type)
+              Context.setVariable("card_activation_date", card.activation_at)
+              Context.setVariable("card_expiration_date", card.expiration_at)
+              Context.setVariable('card_inactivation_date', card.inactive_date)
+              Context.setVariable('card_holder_name', card.holder_name)
+              Context.setVariable('card_issuer', card.issuer)
+              Context.setVariable('card_status', card.status)
+              Context.setVariable('card_account_id', card.account_id)
+
+          }
+
+          const selectedCardNumber = Context.getVariable("selected_card_number")
+          getCardDetails(selectedCardNumber)
+        name: Get selected card info
+      type: function
+      position:
+        x: 231
+        y: -33.515625
+    - id: hViSf3z6wtcfkAk7Xo3Du
+      data:
+        name: Success end
+        variables:
+        - id: null
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          first_variable:
+            variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 177429ba-b3d3-475f-bcdb-5334926fdfac
+          first_variable:
+            variable: 177429ba-b3d3-475f-bcdb-5334926fdfac
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 670ae4f2-746c-45be-bada-2f702029c8ba
+          first_variable:
+            variable: 670ae4f2-746c-45be-bada-2f702029c8ba
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: c2564bb5-7240-42fa-94d8-b637d563a278
+          first_variable:
+            variable: c2564bb5-7240-42fa-94d8-b637d563a278
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: dbd6935c-61da-4694-bb28-a33ea460ea09
+          first_variable:
+            variable: dbd6935c-61da-4694-bb28-a33ea460ea09
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: caaf2118-ae73-4c11-9447-991b5bcdecbf
+          first_variable:
+            variable: caaf2118-ae73-4c11-9447-991b5bcdecbf
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 7e5c8b1a-48f0-4c29-af1a-1b4580ec97a7
+          first_variable:
+            variable: 7e5c8b1a-48f0-4c29-af1a-1b4580ec97a7
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: fc1d4ffd-a084-456f-938d-3d7915401273
+          first_variable:
+            variable: fc1d4ffd-a084-456f-938d-3d7915401273
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 0b6b4297-7c6e-41ea-94b3-8bcdf6f32a4b
+          first_variable:
+            variable: 0b6b4297-7c6e-41ea-94b3-8bcdf6f32a4b
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          first_variable:
+            variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 588
+        y: -1.515625
+    - id: h3atW7nGBakh6b7Kn-fST
+      data:
+        code: Context.setVariable("workflow_status", "get card details fail")
+        name: Set workflow as function failure
+      type: function
+      position:
+        x: 587.0600080954129
+        y: 77.20803348739132
+    - id: JJfNgKM4rAHZkFbxhVKIh
+      data:
+        name: Error end
+        variables:
+        - id: null
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 6a2932b1-b955-42a5-8b52-9ef07a34d125
+          first_variable:
+            variable: 6a2932b1-b955-42a5-8b52-9ef07a34d125
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 891.5283003035233
+        y: 136.12206374893677
+    edges:
+    - id: i6Q6ANMki-HMhdJCO_6QU
+      type: worflowEdge
+      source: uWaO97RgCePCcCI-UR0DS
+      target: nxVrXBfHArpXUAsG7lGrr
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: W7rRQk3tGv4l7sJjZsK08
+      type: worflowEdge
+      source: nxVrXBfHArpXUAsG7lGrr
+      target: hViSf3z6wtcfkAk7Xo3Du
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: VahCRETsDsecP1WJPh8Ug
+      type: worflowEdge
+      source: nxVrXBfHArpXUAsG7lGrr
+      target: h3atW7nGBakh6b7Kn-fST
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: c5d6uJfl_EBh0RN3pTsyh
+      type: worflowEdge
+      source: h3atW7nGBakh6b7Kn-fST
+      target: JJfNgKM4rAHZkFbxhVKIh
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: SPdl5pE0AcretOsuXLEWq
+      type: worflowEdge
+      source: h3atW7nGBakh6b7Kn-fST
+      target: JJfNgKM4rAHZkFbxhVKIh
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables: []
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    selected_card_number:
+      name: selected_card_number
+      description: selected_card_number
+      title: selected_card_number
+      required: true
+      type: string
+      variable_name: selected_card_number
+      value: null
+  output_params:
+    card_status:
+      name: card_status
+      description: card_status
+      title: card_status
+      required: true
+      type: string
+      variable_name: card_status
+      value: null
+    workflow_status:
+      name: workflow_status
+      description: workflow_status
+      title: workflow_status
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    card_account_id:
+      name: card_account_id
+      description: card_account_id
+      title: card_account_id
+      required: true
+      type: string
+      variable_name: card_account_id
+      value: null
+    card_activation_date:
+      name: card_activation_date
+      description: card_activation_date
+      title: card_activation_date
+      required: true
+      type: string
+      variable_name: card_activation_date
+      value: null
+    card_issuer:
+      name: card_ issuer
+      description: card_ issuer
+      title: card_ issuer
+      required: true
+      type: string
+      variable_name: card_ issuer
+      value: null
+    card_number:
+      name: card_number
+      description: card_number
+      title: card_number
+      required: true
+      type: string
+      variable_name: card_number
+      value: null
+    card_expiration_date:
+      name: card_expiration_date
+      description: card_expiration_date
+      title: card_expiration_date
+      required: true
+      type: string
+      variable_name: card_expiration_date
+      value: null
+    card_name:
+      name: card_name
+      description: card_name
+      title: card_name
+      required: true
+      type: string
+      variable_name: card_name
+      value: null
+    card_inactivation_date:
+      name: card_inactivation_date
+      description: card_inactivation_date
+      title: card_inactivation_date
+      required: true
+      type: string
+      variable_name: card_inactivation_date
+      value: null
+    card_list:
+      name: card_list
+      description: card_list
+      title: card_list
+      required: true
+      type: string
+      variable_name: card_list
+      value: null
+    card_type:
+      name: card_type
+      description: card_type
+      title: card_type
+      required: true
+      type: string
+      variable_name: card_type
+      value: null
+    card_id:
+      name: card_id
+      description: card_id
+      title: card_id
+      required: true
+      type: string
+      variable_name: card_id
+      value: null
+  tool_version: 14
+  tool_type: WORKFLOW
+- tool_id: ba9da27f-cdfe-4370-9500-d98d269eaee8
+  tool_name: Deactivate Card
+  tool_description: Deactivate Card
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: KOkN78V__7zbTVGpZe4Bx
+      data:
+        name: Deactivate Card
+        variables:
+        - type: string
+          variable: 36ff52ef-8ab5-4511-a8dc-bad82d775790
+        - type: string
+          variable: 9cf0f6c2-6274-41b6-aa5d-3e796a306d3f
+        more_details: Deactivate Card
+      type: start-flow
+      position:
+        x: -234
+        y: -17
+    - id: eJvKcg46UJoiKp3nYY1Dy
+      data:
+        name: Success end
+        variables:
+        - id: null
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          first_variable:
+            variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 670ae4f2-746c-45be-bada-2f702029c8ba
+          first_variable:
+            variable: 670ae4f2-746c-45be-bada-2f702029c8ba
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 0b6b4297-7c6e-41ea-94b3-8bcdf6f32a4b
+          first_variable:
+            variable: 0b6b4297-7c6e-41ea-94b3-8bcdf6f32a4b
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          first_variable:
+            variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 880.1390982602762
+        y: -208.47104047136241
+    - id: Ic6I77GoGjwY4vJuoAQOh
+      data:
+        name: Deactivate a card
+        inputs:
+        - id: 68f74bffa873362388a602b0-K8GY91o939dLIFFlCun5V
+          name: reason_description
+          type: string
+          title: reason_description
+          required: false
+          variable: ''
+          input_type: variable
+        - id: 68f74bffa873362388a602b0-TwZlnO5eGnFY8hA_jz_Xf
+          name: new_status
+          type: string
+          title: new_status
+          required: true
+          variable: 36ff52ef-8ab5-4511-a8dc-bad82d775790
+          input_type: variable
+        - id: 68f74bffa873362388a602b0-M9kgLCaB_CRX3k0q9gYKE
+          name: contact_id
+          type: string
+          title: contact_id
+          required: true
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          input_type: variable
+        - id: 68f74bffa873362388a602b0-b2_Ci7C6ysXPSRCPjIkBv
+          name: card_id
+          type: string
+          title: card_id
+          required: true
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          input_type: variable
+        outputs:
+        - id: 68f74bffa873362388a602b0-xUi4DHGBEGLP1A5Q5XGWk
+          name: confirmation_code
+          type: string
+          title: Confirmation code of the deactivation
+          required: false
+          variable: ''
+          input_type: variable
+        action_id: 68f74bffa873362388a602b0
+        connection_id: 68f74a9cb025fab3c375715b
+      type: execute-action
+      position:
+        x: 214.0695491301381
+        y: -177.45684897103277
+    - id: _4fPaHVUov16b0LOk7PpD
+      data:
+        code: Context.setVariable("workflow_status", "deactivate card failed duo to
+          api error")
+        name: set workflow as failure by error
+      type: function
+      position:
+        x: 463.6358238590575
+        y: -97.2233045942971
+    - id: jh1S1lEFGSrkSdOFR1XgN
+      data:
+        code: Context.setVariable("workflow_status", "deactivate card failed duo to
+          api timeout")
+        name: set workflow as failure by timeout
+      type: function
+      position:
+        x: 457.19653800757857
+        y: 77.32163228475275
+    - id: -o77x4234bSJ5wCh1P8rc
+      data:
+        name: Fail end
+        variables:
+        - id: null
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          first_variable:
+            variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 670ae4f2-746c-45be-bada-2f702029c8ba
+          first_variable:
+            variable: 670ae4f2-746c-45be-bada-2f702029c8ba
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          first_variable:
+            variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 903.7868640015405
+        y: 232.06584558642325
+    - id: vlEhbXmRaToF03003M8km
+      data:
+        code: |-
+          function getCardDetails(selectedCardNumber) {
+              const cardList = Context.getVariable("card_list").cards;
+
+              const last4 = String(selectedCardNumber).slice(-4);
+              const card = cardList.find(card => card.card_number.endsWith(last4));
+
+              if (!card) return null;
+
+              Context.setVariable("card_id", card.id)
+              Context.setVariable("card_name", card.card_name)
+              Context.setVariable("card_type", card.card_type)
+              Context.setVariable('card_status', card.status)
+              // Context.setVariable('card_account_id', card.account_id)
+
+          }
+
+          const selectedCardNumber = Context.getVariable("selected_card_number")
+          getCardDetails(selectedCardNumber)
+        name: get selected card id
+      type: function
+      position:
+        x: -3.1567464606312967
+        y: -39.460913163181345
+    - id: evg5hODkaHWrEcMRH9j1b
+      data:
+        code: Context.setVariable("workflow_status", "deactivate card failed duo to
+          get card id function error")
+        name: set fail
+      type: function
+      position:
+        x: 234.8986199890515
+        y: 237.35760791841392
+    - id: Pmjwf1KrC7t5H9C3u2u4R
+      data:
+        code: Context.setVariable("workflow_status", "deactivate card successfully")
+        name: set success
+      type: function
+      position:
+        x: 510.89861998905144
+        y: -272.78417904502896
+    edges:
+    - id: XX4pSXOOaCdD1AutgU9yE
+      type: worflowEdge
+      source: _4fPaHVUov16b0LOk7PpD
+      target: -o77x4234bSJ5wCh1P8rc
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: CLBcG8abQWj-Ocmn-ClSa
+      type: worflowEdge
+      source: _4fPaHVUov16b0LOk7PpD
+      target: -o77x4234bSJ5wCh1P8rc
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: VVWcFLssrEPtEKqo4yqMR
+      type: worflowEdge
+      source: jh1S1lEFGSrkSdOFR1XgN
+      target: -o77x4234bSJ5wCh1P8rc
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 8n3vBMwN0jKRJNVGhtNS3
+      type: worflowEdge
+      source: jh1S1lEFGSrkSdOFR1XgN
+      target: -o77x4234bSJ5wCh1P8rc
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: q6ouPIb3x9CDTJetCm0PJ
+      type: worflowEdge
+      source: Ic6I77GoGjwY4vJuoAQOh
+      target: _4fPaHVUov16b0LOk7PpD
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: RUfGRM8vhyGx0e6-IYC1p
+      type: worflowEdge
+      source: Ic6I77GoGjwY4vJuoAQOh
+      target: jh1S1lEFGSrkSdOFR1XgN
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: AcCivyJYqv63Lzg65Dk8T
+      type: worflowEdge
+      source: KOkN78V__7zbTVGpZe4Bx
+      target: vlEhbXmRaToF03003M8km
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: IcoqMt4xIXmSWFdodXnBX
+      type: worflowEdge
+      source: vlEhbXmRaToF03003M8km
+      target: Ic6I77GoGjwY4vJuoAQOh
+      source_handle: success
+      target_handle: execute-action-node-rigth-handle-1
+    - id: OHashirVoUUAzhfBravJe
+      type: worflowEdge
+      source: vlEhbXmRaToF03003M8km
+      target: evg5hODkaHWrEcMRH9j1b
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: rAjx7NwEuLvJSF_ETeWEj
+      type: worflowEdge
+      source: evg5hODkaHWrEcMRH9j1b
+      target: -o77x4234bSJ5wCh1P8rc
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: TCsXzZXYht_5V6vQ0ZZe9
+      type: worflowEdge
+      source: evg5hODkaHWrEcMRH9j1b
+      target: -o77x4234bSJ5wCh1P8rc
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: TqZxYO7ukT3QdPoJmpiuG
+      type: worflowEdge
+      source: Ic6I77GoGjwY4vJuoAQOh
+      target: Pmjwf1KrC7t5H9C3u2u4R
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: div8sLlobr9h0lfsPg0-D
+      type: worflowEdge
+      source: Pmjwf1KrC7t5H9C3u2u4R
+      target: eJvKcg46UJoiKp3nYY1Dy
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: ZgUFEOVkJg5Uh-8DatuzA
+      type: worflowEdge
+      source: Pmjwf1KrC7t5H9C3u2u4R
+      target: eJvKcg46UJoiKp3nYY1Dy
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables: []
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    card_new_status:
+      name: card_new_status
+      description: card_new_status
+      title: card_new_status
+      required: true
+      type: string
+      variable_name: card_new_status
+      value: null
+    selected_card_number:
+      name: selected_card_number
+      description: This variable represents the card number that the customer selects
+        to operate on, which is usually a masked card number that only shows last
+        four digits.
+      title: This variable represents the card number that the customer selects to
+        operate on, which is usually a masked card number that only shows last four
+        digits.
+      required: true
+      type: string
+      variable_name: selected_card_number
+      value: null
+  output_params:
+    card_status:
+      name: card_status
+      description: card_status
+      title: card_status
+      required: true
+      type: string
+      variable_name: card_status
+      value: null
+    workflow_status:
+      name: workflow_status
+      description: This variable represents the execution result of the skill workflow.
+      title: This variable represents the execution result of the skill workflow.
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    card_number:
+      name: card_number
+      description: card_number
+      title: card_number
+      required: true
+      type: string
+      variable_name: card_number
+      value: null
+    contact_id:
+      name: contact_id
+      description: This variable represents the contact ID of the customer, which
+        is of numeric type and is usually the same as the member ID.
+      title: This variable represents the contact ID of the customer, which is of
+        numeric type and is usually the same as the member ID.
+      required: true
+      type: string
+      variable_name: contact_id
+      value: null
+    card_id:
+      name: card_id
+      description: card_id
+      title: card_id
+      required: true
+      type: string
+      variable_name: card_id
+      value: null
+  tool_version: 14
+  tool_type: WORKFLOW
+- tool_id: bdd0724b-4375-40a9-9155-bf032e60983d
+  tool_name: Replace Card
+  tool_description: Replace Card
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: kqqvh7iFGGv13fK_071pG
+      data:
+        name: Replace Card
+        variables:
+        - type: string
+          variable: 416154e5-0099-4b11-b2d3-3e5469e9ccd4
+        - type: string
+          variable: 9fb3f723-31a0-4aba-aba7-0c8c247c478d
+        - type: string
+          variable: 670ae4f2-746c-45be-bada-2f702029c8ba
+        more_details: Replace Card
+      type: start-flow
+      position:
+        x: -595
+        y: -13
+    - id: j3NVShKvYmJsivsyGTt1D
+      data:
+        name: Replace a card
+        inputs:
+        - id: 68f74c006577636b34cc187d-jW6g3xum7gte-iesSb57M
+          name: account_id
+          type: string
+          title: account_id
+          required: true
+          variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          input_type: variable
+        - id: 68f74c006577636b34cc187d-axO4PBVSnkzjSUooJi4rC
+          name: address
+          type: object
+          title: address
+          required: true
+          variable: 4HEGOdxck3hbLIGJFHAHH
+          input_type: variable
+        - id: 68f74c006577636b34cc187d-OgfX62qOnm2TEhBKpWHo0
+          name: contact_id
+          type: string
+          title: contact_id
+          required: true
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          input_type: variable
+        - id: 68f74c006577636b34cc187d-6EATuQpH8_LINxDfc6Nja
+          name: card_id
+          type: string
+          title: card_id
+          required: true
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          input_type: variable
+        outputs:
+        - id: 68f74c006577636b34cc187d-gvG-dWqSXuFksuH88K9tD
+          name: expected_delivery_date
+          type: string
+          title: expected_delivery_date
+          required: false
+          variable: 87f90257-b944-4108-9a62-e3e0478e2595
+          input_type: variable
+        action_id: 68f74c006577636b34cc187d
+        connection_id: 68f74a9cb025fab3c375715b
+      type: execute-action
+      position:
+        x: 213.5
+        y: -155.0234375
+    - id: mA_clijggsnqTRQTOYBkj
+      data:
+        code: |-
+          var card_shipping_address = Context.getVariable("card_shipping_address")
+          var card_postal_code = Context.getVariable("card_postal_code")
+          var card_address = {
+                  "shipping_address": card_shipping_address,
+                  "postal_code": card_postal_code
+          }
+
+          Context.setVariable("card_address", JSON.stringify(card_address))
+          Context.setVariable("workflow_status", "reset")
+        name: Set card address
+      type: function
+      position:
+        x: -47.5
+        y: -42.0234375
+    - id: tmfRaVVBozcoyaa525ZEs
+      data:
+        name: Success end
+        variables:
+        - id: null
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          first_variable:
+            variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          first_variable:
+            variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          first_variable:
+            variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 416154e5-0099-4b11-b2d3-3e5469e9ccd4
+          first_variable:
+            variable: 416154e5-0099-4b11-b2d3-3e5469e9ccd4
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 9fb3f723-31a0-4aba-aba7-0c8c247c478d
+          first_variable:
+            variable: 9fb3f723-31a0-4aba-aba7-0c8c247c478d
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 766.5467584426578
+        y: -131.68576695708
+    - id: tXPs9cQtFv0lek2DcX8j2
+      data:
+        name: Fail end
+        variables:
+        - id: null
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          first_variable:
+            variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          first_variable:
+            variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          first_variable:
+            variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 416154e5-0099-4b11-b2d3-3e5469e9ccd4
+          first_variable:
+            variable: 416154e5-0099-4b11-b2d3-3e5469e9ccd4
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 9fb3f723-31a0-4aba-aba7-0c8c247c478d
+          first_variable:
+            variable: 9fb3f723-31a0-4aba-aba7-0c8c247c478d
+          second_variable:
+            variable: null
+        - id: null
+          type: ''
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 778.6625503057837
+        y: 392.91227117840896
+    - id: JBEoVy2m6lKB-_jQXA-Au
+      data:
+        code: |-
+          function getCardDetails(selectedCardNumber) {
+              const cardList = Context.getVariable("card_list").cards;
+
+              const last4 = String(selectedCardNumber).slice(-4);
+              const card = cardList.find(card => card.card_number.endsWith(last4));
+
+              if (!card) return null;
+
+              Context.setVariable("card_id", card.id)
+              Context.setVariable("card_name", card.card_name)
+              Context.setVariable("card_type", card.card_type)
+              Context.setVariable('card_status', card.status)
+              Context.setVariable('card_account_id', card.account_id)
+
+          }
+
+          const selectedCardNumber = Context.getVariable("selected_card_number")
+          getCardDetails(selectedCardNumber)
+        name: get selected card id
+      type: function
+      position:
+        x: -354.2772337333939
+        y: -14.853389582981137
+    - id: GBK8kdoggilFdqQIrKHbB
+      data:
+        code: Context.setVariable("workflow_status", "replace card failed due to get
+          card id function failed")
+        name: set fail
+      type: function
+      position:
+        x: -39.82751960705798
+        y: 158.94789010984994
+    - id: eO_8BK-BHc0dJsCmNWR-Z
+      data:
+        code: Context.setVariable("workflow_status", "replace card failed due to api
+          error")
+        name: set action error
+      type: function
+      position:
+        x: 533.8171665467371
+        y: -66.08960498375792
+    - id: Lm8IupeUACvJg0IjhI_55
+      data:
+        code: Context.setVariable("workflow_status", "replace card failed due to api
+          timeout")
+        name: set action timeout
+      type: function
+      position:
+        x: 526.7847448250618
+        y: 115.74872810527341
+    - id: Z3rMbv_YESV3fqipJzNp7
+      data:
+        name: Fail end
+        variables:
+        - id: null
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 416154e5-0099-4b11-b2d3-3e5469e9ccd4
+          first_variable:
+            variable: 416154e5-0099-4b11-b2d3-3e5469e9ccd4
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          first_variable:
+            variable: 691c13d7-a1c2-4103-87a4-14e81cdaae3f
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 9fb3f723-31a0-4aba-aba7-0c8c247c478d
+          first_variable:
+            variable: 9fb3f723-31a0-4aba-aba7-0c8c247c478d
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          first_variable:
+            variable: 7c262c36-c388-4e5c-a266-eeba89589563
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          first_variable:
+            variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 786.9843485270458
+        y: 14.28092897824488
+    - id: wqrVwxJTumbPOf7SyfE-D
+      data:
+        code: Context.setVariable("workflow_status", "replace card failed due to set
+          card address fail")
+        name: set card address fail
+      type: function
+      position:
+        x: 221.3767157694511
+        y: 90.63293624214754
+    - id: hhiFQXI0vv-Ax6bIr54R6
+      data:
+        code: Context.setVariable("workflow_status", "replace card successfully")
+        name: set action success
+      type: function
+      position:
+        x: 529.4921742635229
+        y: -211.71769253579555
+    edges:
+    - id: eTE8XSVAy8uPsaubfSKhY
+      type: worflowEdge
+      source: mA_clijggsnqTRQTOYBkj
+      target: j3NVShKvYmJsivsyGTt1D
+      source_handle: success
+      target_handle: execute-action-node-rigth-handle-1
+    - id: 23mmMgVdvmS5Qlj8E2rTb
+      type: worflowEdge
+      source: kqqvh7iFGGv13fK_071pG
+      target: JBEoVy2m6lKB-_jQXA-Au
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: gd6TEhLDowjRH-39hPlre
+      type: worflowEdge
+      source: JBEoVy2m6lKB-_jQXA-Au
+      target: mA_clijggsnqTRQTOYBkj
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: wu1IknE_KtgG9ErxK1--p
+      type: worflowEdge
+      source: JBEoVy2m6lKB-_jQXA-Au
+      target: GBK8kdoggilFdqQIrKHbB
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: 4jA89cswWxBcy3pmIVxWD
+      type: worflowEdge
+      source: j3NVShKvYmJsivsyGTt1D
+      target: eO_8BK-BHc0dJsCmNWR-Z
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: RryQQRar0NVadqVwC0ICz
+      type: worflowEdge
+      source: j3NVShKvYmJsivsyGTt1D
+      target: Lm8IupeUACvJg0IjhI_55
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: WoDTupnA52NlF2GAKm7if
+      type: worflowEdge
+      source: GBK8kdoggilFdqQIrKHbB
+      target: tXPs9cQtFv0lek2DcX8j2
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: TGsNPkJkdz1vj9THFYK7P
+      type: worflowEdge
+      source: GBK8kdoggilFdqQIrKHbB
+      target: tXPs9cQtFv0lek2DcX8j2
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: GTzraw0QppBT6-8r-8ef2
+      type: worflowEdge
+      source: mA_clijggsnqTRQTOYBkj
+      target: wqrVwxJTumbPOf7SyfE-D
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: t8MYIdy6RBFEjuk4aXNtK
+      type: worflowEdge
+      source: wqrVwxJTumbPOf7SyfE-D
+      target: tXPs9cQtFv0lek2DcX8j2
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: 7voUq179FC8q8cUl5rmxc
+      type: worflowEdge
+      source: wqrVwxJTumbPOf7SyfE-D
+      target: tXPs9cQtFv0lek2DcX8j2
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: Xl8wChyLmOT3QkRJKSzY3
+      type: worflowEdge
+      source: eO_8BK-BHc0dJsCmNWR-Z
+      target: Z3rMbv_YESV3fqipJzNp7
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: wrO35EzVi-WGAHyd8tXRp
+      type: worflowEdge
+      source: eO_8BK-BHc0dJsCmNWR-Z
+      target: Z3rMbv_YESV3fqipJzNp7
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: szTgphaK6_tDpChAha7LO
+      type: worflowEdge
+      source: Lm8IupeUACvJg0IjhI_55
+      target: Z3rMbv_YESV3fqipJzNp7
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: jD3pamTt7xMk5JEvlozd0
+      type: worflowEdge
+      source: Lm8IupeUACvJg0IjhI_55
+      target: Z3rMbv_YESV3fqipJzNp7
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: fZNNDnjj1NRf5SNhMjjQI
+      type: worflowEdge
+      source: j3NVShKvYmJsivsyGTt1D
+      target: hhiFQXI0vv-Ax6bIr54R6
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: L_nmnCEsgxHs3kB_kXf7g
+      type: worflowEdge
+      source: hhiFQXI0vv-Ax6bIr54R6
+      target: tmfRaVVBozcoyaa525ZEs
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: wf9HT97aot1MngFSKNevR
+      type: worflowEdge
+      source: hhiFQXI0vv-Ax6bIr54R6
+      target: tmfRaVVBozcoyaa525ZEs
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables:
+    - id: 4HEGOdxck3hbLIGJFHAHH
+      type: Workflow
+      variable_name: card_address
+      tool_reference:
+      - tool_id: PFFmjTW0Hch82G8V6otEJ
+        agent_id: f5c743b6-ca44-4be3-bb30-cd1cd7040bd9
+      - tool_id: OsTaOROqNkkZaKWVPJGWo
+        agent_id: f5c743b6-ca44-4be3-bb30-cd1cd7040bd9
+      - tool_id: OsTaOROqNkkZaKWVPJGWo
+        agent_id: 65130ec0-23ec-41fd-a81f-2a96120ddaa8
+      - tool_id: nneZuSJ0EkghqNONhrTFU
+        agent_id: 65130ec0-23ec-41fd-a81f-2a96120ddaa8
+      - tool_id: CFKgzJfy7wiSYmCYLAWvF
+        agent_id: 270cfe11-8364-4fad-bf18-86b008d46040
+      - tool_id: 09o4BIaV6rpzv78WYGs0x
+        agent_id: 2e4da0d6-5853-4878-a704-41f858675649
+      - tool_id: 09o4BIaV6rpzv78WYGs0x
+        agent_id: c73945a7-e742-4746-93fa-d3e7845d8732
+      - tool_id: bdd0724b-4375-40a9-9155-bf032e60983d
+        agent_id: c73945a7-e742-4746-93fa-d3e7845d8732
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    card_number:
+      name: card_number
+      description: card_number
+      title: card_number
+      required: true
+      type: string
+      variable_name: card_number
+      value: null
+    card_shipping_address:
+      name: card_shipping_address
+      description: card_shipping_address
+      title: card_shipping_address
+      required: true
+      type: string
+      variable_name: card_shipping_address
+      value: null
+    card_postal_code:
+      name: card_postal_code
+      description: card_postal_code
+      title: card_postal_code
+      required: true
+      type: string
+      variable_name: card_postal_code
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: This variable represents the execution result of the skill workflow.
+      title: This variable represents the execution result of the skill workflow.
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    card_account_id:
+      name: card_account_id
+      description: card_account_id
+      title: card_account_id
+      required: true
+      type: string
+      variable_name: card_account_id
+      value: null
+    card_shipping_address:
+      name: card_shipping_address
+      description: card_shipping_address
+      title: card_shipping_address
+      required: true
+      type: string
+      variable_name: card_shipping_address
+      value: null
+    card_postal_code:
+      name: card_postal_code
+      description: card_postal_code
+      title: card_postal_code
+      required: true
+      type: string
+      variable_name: card_postal_code
+      value: null
+    contact_id:
+      name: contact_id
+      description: This variable represents the contact ID of the customer, which
+        is of numeric type and is usually the same as the member ID.
+      title: This variable represents the contact ID of the customer, which is of
+        numeric type and is usually the same as the member ID.
+      required: true
+      type: string
+      variable_name: contact_id
+      value: null
+    card_id:
+      name: card_id
+      description: card_id
+      title: card_id
+      required: true
+      type: string
+      variable_name: card_id
+      value: null
+  tool_version: 14
+  tool_type: WORKFLOW
+- tool_id: c8221dc1-3b51-4962-93dd-a0ca755609e6
+  tool_name: Get Card List
+  tool_description: Get Card List
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: ho-Ftw8UXw6q22bZSg4Ir
+      data:
+        name: Get Card List
+        variables:
+        - type: string
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+        more_details: Get Card List
+      type: start-flow
+      position:
+        x: -294
+        y: -16
+    - id: 03Df7nGMiB1Q5wIvCVlBv
+      data:
+        name: Get card list
+        inputs:
+        - id: 68f74c016577636b34cc1882-dYDgSLGXegyBNxw84W6fL
+          name: contact_id
+          type: string
+          title: contact_id
+          required: true
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          input_type: variable
+        outputs:
+        - id: 68f74c016577636b34cc1882-U3qRNxTmQjepJ55Ns7rED
+          name: total
+          type: integer
+          title: Total
+          required: true
+          variable: 9a547523-699e-4d8c-b6cf-a6c56d27ea78
+          input_type: variable
+        - id: 68f74c016577636b34cc1882-kEUihS9P8PErJxbnD5lzZ
+          name: _embedded
+          type: object
+          title: Embedded
+          required: true
+          variable: 6a2932b1-b955-42a5-8b52-9ef07a34d125
+          input_type: variable
+        action_id: 68f74c016577636b34cc1882
+        connection_id: 68f74a9cb025fab3c375715b
+      type: execute-action
+      position:
+        x: 241.5
+        y: -44.515625
+    - id: bpVba4syQEM0_uUjORDdE
+      data:
+        code: Context.setVariable("workflow_status", "get card list error")
+        name: set workflow as failure by error
+      type: function
+      position:
+        x: 455.53096831879475
+        y: 57.20566013084691
+    - id: fDDV0KeWj4WJZSEaCGsoe
+      data:
+        code: Context.setVariable("workflow_status", "get card list timeout")
+        name: set workflow as failure by timeout
+      type: function
+      position:
+        x: 454.5
+        y: 254.484375
+    - id: CMuC5Sh3Gw2ksZ5ggrdRW
+      data:
+        name: Fail End Flow
+        variables:
+        - id: null
+          type: string
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1106.6506830465748
+        y: 271.00031296958207
+    - id: U-UGML67w1XA7NHKJJlIc
+      data:
+        code: |-
+          const cardList = Context.getVariable("card_list").cards
+          const cardNumbers = cardList.map(card => card.card_number)
+          // Context.setVariable('card_number_list', cardNumbers)
+
+          const maskedCardNumbers = cardNumbers.map(card => {
+            return "******" + card.slice(-4);
+          });
+          Context.setVariable('card_number_list', maskedCardNumbers);
+
+          const activeCardNumbers = cardList.filter(c => c.status === "ACTIVE").map(c => c.card_number)
+          const maskedActiveCardNumbers = activeCardNumbers.map(card => {
+            return "******" + card.slice(-4);
+          });
+          Context.setVariable('active_card_number_list', maskedActiveCardNumbers)
+
+          const inactiveCardNumbers = cardList.filter(c => c.status === "INACTIVE").map(c => c.card_number)
+          const maskedInactiveCardNumbers = inactiveCardNumbers.map(card => {
+            return "******" + card.slice(-4);
+          });
+          Context.setVariable('inactive_card_number_list', maskedInactiveCardNumbers)
+
+          const nonactiveCardNumbers = cardList.filter(c => c.status !== "ACTIVE").map(c => c.card_number)
+          const maskedNonactiveCardNumbers = nonactiveCardNumbers.map(card => {
+            return "******" + card.slice(-4);
+          });
+          Context.setVariable('not_active_card_number_list', maskedNonactiveCardNumbers)
+        name: Get card number list
+      type: function
+      position:
+        x: 474.612217542847
+        y: -91.54300082715486
+    - id: 6BgA9ILSm5KW6jbYCeh8M
+      data:
+        code: Context.setVariable("workflow_status", "get card number function error")
+        name: set workflow failure by function
+      type: function
+      position:
+        x: 765.4506268864099
+        y: -9.46367305533974
+    - id: WgmqfbvoQ7KeuFkAW81Kc
+      data:
+        name: Fail End Flow 2
+        variables:
+        - id: null
+          variable: 9a547523-699e-4d8c-b6cf-a6c56d27ea78
+          first_variable:
+            variable: 9a547523-699e-4d8c-b6cf-a6c56d27ea78
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 6a2932b1-b955-42a5-8b52-9ef07a34d125
+          first_variable:
+            variable: 6a2932b1-b955-42a5-8b52-9ef07a34d125
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1092.5751743979554
+        y: 121.57108423772382
+    - id: 1uMCyxRD_N5qfw1ZBKliY
+      data:
+        name: Success End
+        variables:
+        - id: null
+          type: string
+          variable: 006d4880-e67d-479d-be2b-66c8ea7f1644
+          first_variable:
+            variable: 006d4880-e67d-479d-be2b-66c8ea7f1644
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 72ccb5c6-9d96-422c-9057-3930a1df11f7
+          first_variable:
+            variable: 72ccb5c6-9d96-422c-9057-3930a1df11f7
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: edac047f-21b4-4643-af42-fa2107d7d747
+          first_variable:
+            variable: edac047f-21b4-4643-af42-fa2107d7d747
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 4ebf9418-6b8b-4c99-806f-13209939cd72
+          first_variable:
+            variable: 4ebf9418-6b8b-4c99-806f-13209939cd72
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 6a2932b1-b955-42a5-8b52-9ef07a34d125
+          first_variable:
+            variable: 6a2932b1-b955-42a5-8b52-9ef07a34d125
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 9a547523-699e-4d8c-b6cf-a6c56d27ea78
+          first_variable:
+            variable: 9a547523-699e-4d8c-b6cf-a6c56d27ea78
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1085.5462084939068
+        y: -99.54901194911952
+    - id: nLMWJyKeXOEAqNpIGe3N-
+      data:
+        code: |-
+          var contact_id = Context.getVariable("contact_id");
+          var member_id = Context.getVariable("member_id");
+
+          if (contact_id === null || contact_id === undefined || contact_id === '' || isNaN(contact_id)) {
+            Context.setVariable("contact_id", member_id);
+          }
+        name: confirm contact id
+      type: function
+      position:
+        x: -64.89179086563303
+        y: -31.501758100851458
+    edges:
+    - id: 66_0zyVOODofAOKXnKxuJ
+      type: worflowEdge
+      source: 03Df7nGMiB1Q5wIvCVlBv
+      target: bpVba4syQEM0_uUjORDdE
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: Awh629hp2mexqrbOwY0HW
+      type: worflowEdge
+      source: 03Df7nGMiB1Q5wIvCVlBv
+      target: fDDV0KeWj4WJZSEaCGsoe
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: fA8Z7t2wahX6CL4LxGnfJ
+      type: worflowEdge
+      source: bpVba4syQEM0_uUjORDdE
+      target: CMuC5Sh3Gw2ksZ5ggrdRW
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: kzadvbp74eLKItd_x2plT
+      type: worflowEdge
+      source: bpVba4syQEM0_uUjORDdE
+      target: CMuC5Sh3Gw2ksZ5ggrdRW
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: ZMAu3KGFAW96vTaKhBx-8
+      type: worflowEdge
+      source: fDDV0KeWj4WJZSEaCGsoe
+      target: CMuC5Sh3Gw2ksZ5ggrdRW
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: ccmKCY2hh_nn2vyvypstJ
+      type: worflowEdge
+      source: fDDV0KeWj4WJZSEaCGsoe
+      target: CMuC5Sh3Gw2ksZ5ggrdRW
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: DvU1pmsz6Mn4tl7eJbtL4
+      type: worflowEdge
+      source: 03Df7nGMiB1Q5wIvCVlBv
+      target: U-UGML67w1XA7NHKJJlIc
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: FdUZO085xHm_BMvJ6Her2
+      type: worflowEdge
+      source: U-UGML67w1XA7NHKJJlIc
+      target: 6BgA9ILSm5KW6jbYCeh8M
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: 0kxknRFY7J3ZoWTQmKHMv
+      type: worflowEdge
+      source: 6BgA9ILSm5KW6jbYCeh8M
+      target: WgmqfbvoQ7KeuFkAW81Kc
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: -ZDc7TzGFb6BVJYew_nn1
+      type: worflowEdge
+      source: 6BgA9ILSm5KW6jbYCeh8M
+      target: WgmqfbvoQ7KeuFkAW81Kc
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: w12GjXWKq3Q2nYpV4HR1J
+      type: worflowEdge
+      source: U-UGML67w1XA7NHKJJlIc
+      target: 1uMCyxRD_N5qfw1ZBKliY
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: zPTOXJuDNeoSmpdfJMOUV
+      type: worflowEdge
+      source: ho-Ftw8UXw6q22bZSg4Ir
+      target: nLMWJyKeXOEAqNpIGe3N-
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: LLaKLeqWnsxTI6XDsYEnh
+      type: worflowEdge
+      source: nLMWJyKeXOEAqNpIGe3N-
+      target: 03Df7nGMiB1Q5wIvCVlBv
+      source_handle: success
+      target_handle: execute-action-node-rigth-handle-1
+    - id: iHlLA2m0S93T76u2zx86W
+      type: worflowEdge
+      source: nLMWJyKeXOEAqNpIGe3N-
+      target: CMuC5Sh3Gw2ksZ5ggrdRW
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables: []
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    contact_id:
+      name: contact_id
+      description: This variable represents the contact ID of the customer, which
+        is of numeric type and is usually the same as the member ID.
+      title: This variable represents the contact ID of the customer, which is of
+        numeric type and is usually the same as the member ID.
+      required: true
+      type: string
+      variable_name: contact_id
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: workflow_status
+      title: workflow_status
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    card_number_list:
+      name: card_number_list
+      description: card_number_list
+      title: card_number_list
+      required: true
+      type: string
+      variable_name: card_number_list
+      value: null
+    inactive_card_number_list:
+      name: inactive_card_number_list
+      description: inactive_card_number_list
+      title: inactive_card_number_list
+      required: true
+      type: string
+      variable_name: inactive_card_number_list
+      value: null
+    card_total_count:
+      name: card_total_count
+      description: card_total_count
+      title: card_total_count
+      required: true
+      type: string
+      variable_name: card_total_count
+      value: null
+    active_card_number_list:
+      name: active_card_number_list
+      description: active_card_number_list
+      title: active_card_number_list
+      required: true
+      type: string
+      variable_name: active_card_number_list
+      value: null
+    card_list:
+      name: card_list
+      description: card_list
+      title: card_list
+      required: true
+      type: string
+      variable_name: card_list
+      value: null
+    not_active_card_number_list:
+      name: not_active_card_number_list
+      description: not_active_card_number_list
+      title: not_active_card_number_list
+      required: true
+      type: string
+      variable_name: not_active_card_number_list
+      value: null
+  tool_version: 14
+  tool_type: WORKFLOW

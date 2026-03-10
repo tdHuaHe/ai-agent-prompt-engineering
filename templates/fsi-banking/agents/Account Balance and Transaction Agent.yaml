@@ -1,0 +1,861 @@
+agent_id: 0657820c-4bc4-4a38-a8f8-c20248f324a4
+agent_version: 14
+role: ACTION_AGENT
+agent_name: Account Balance and Transaction Agent
+goal: This agent is responsible for retrieving customer' account list, and save the
+  account information of the customer that they want to operate on. And also can get
+  account balance and transactions information for specific account.
+instruction: |-
+  # Pre-operation
+  ## The following steps MUST be completed before querying the balance and transaction
+  1. Ask the coordinator to get “account_number_list”.
+  2. Ask Coordinator agent to let customer select an account number from the list.
+
+  # Execution
+  ## Account Balance Steps
+  1. Execute `Get Account Balance` skill to get the specific "account_balance_information".
+  2. Respond the "account_balance_information" to the coordinator.
+
+  ## Transactions Steps
+  1. Ask Coordinator to let the customer select a transaction type from ["Credit_Card", Payment", Withdrawal", Transfer", Add_on", "Deposit", Purchase", "Loan_Payments”, "Other"] and fuzzy match it, also can select all transaction types.
+  2. Execute `Get Transaction List` skill to get transaction list.
+  3. Respond the required transaction information to the coordinator.
+routing_condition: ''
+tools:
+- tool_id: be812db5-4d52-466a-b118-1cff250ecf72
+  tool_name: Get Transaction List
+  tool_description: Get Transaction List
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: 7js9RUrzta6yeRHyYu_QL
+      data:
+        name: Get Transaction List
+        variables:
+        - type: string
+          variable: 893b03eb-48cb-44f1-850d-6e5c0066b727
+        - type: string
+          variable: 49690105-5d33-49ba-b1ef-d6dbb60e6fdf
+        more_details: Get Transaction List
+      type: start-flow
+      position:
+        x: -749.9263798673675
+        y: 52.93506673475332
+    - id: O3A0bgK_1m0PA0oz8Yfve
+      data:
+        name: Get all transactions
+        inputs:
+        - id: 68f74c07a873362388a602c4-g7Cdcx585oExJkVCWa1Es
+          name: contact_id
+          type: string
+          title: contact_id
+          required: true
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          input_type: variable
+        - id: 68f74c07a873362388a602c4-LqUeiCDE3tjj9FWTTuxvz
+          name: account_id
+          type: string
+          title: account_id
+          required: true
+          variable: 845070d9-a81e-4c8a-a304-c9b5b0011391
+          input_type: variable
+        - id: 68f74c07a873362388a602c4-TciNSx6zs661G0ZUAv0BD
+          name: limit
+          type: string
+          title: limit
+          value: '100'
+          required: true
+          input_type: value
+        - id: 68f74c07a873362388a602c4-tqI28lHE7piD6nTYyIHo-
+          name: skip
+          type: string
+          title: skip
+          value: '0'
+          required: true
+          input_type: value
+        outputs:
+        - id: 68f74c07a873362388a602c4-CSl1aXOV8Q79xZ_Uff0wf
+          name: total
+          type: integer
+          title: Total transactions
+          required: true
+          variable: a1a91dcf-04a9-4a40-834b-695256309851
+          input_type: variable
+        - id: 68f74c07a873362388a602c4-cIKkq_1UegbAodQWPG_C8
+          name: _embedded
+          type: object
+          title: Embedded list
+          required: true
+          variable: cebf0a50-c84c-42b6-a265-66f962dbe107
+          input_type: variable
+        action_id: 68f74c07a873362388a602c4
+        connection_id: 68f74a9cb025fab3c375715b
+      type: execute-action
+      position:
+        x: 365.0642536293371
+        y: 129.80027842849216
+    - id: htZJkhgGTgL3DwayIiyMl
+      data:
+        name: Success end
+        variables:
+        - id: null
+          variable: cebf0a50-c84c-42b6-a265-66f962dbe107
+          first_variable:
+            variable: cebf0a50-c84c-42b6-a265-66f962dbe107
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: a1a91dcf-04a9-4a40-834b-695256309851
+          first_variable:
+            variable: a1a91dcf-04a9-4a40-834b-695256309851
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 893b03eb-48cb-44f1-850d-6e5c0066b727
+          first_variable:
+            variable: 893b03eb-48cb-44f1-850d-6e5c0066b727
+          second_variable:
+            variable: null
+        - id: W1Bc9Rl8KHDW_DZwt3Mlb
+          type: string
+          variable: bddbcbbc-f937-4081-8257-266a1e8ecc78
+          first_variable:
+            variable: W1Bc9Rl8KHDW_DZwt3Mlb
+          second_variable:
+            variable: bddbcbbc-f937-4081-8257-266a1e8ecc78
+        - id: null
+          type: string
+          variable: 845070d9-a81e-4c8a-a304-c9b5b0011391
+          first_variable:
+            variable: 845070d9-a81e-4c8a-a304-c9b5b0011391
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 801.7646849810362
+        y: -303.56463436572835
+    - id: bVR-kbl-X4ucZV5hdAKfX
+      data:
+        code: Context.setVariable("workflow_status", "action error")
+        name: set workflow as failure by error
+      type: function
+      position:
+        x: 731.3687142279193
+        y: 198.45847744651448
+    - id: U49eFxnLPKt4xQrElgkJJ
+      data:
+        code: Context.setVariable("workflow_status", "action timeout")
+        name: set workflow as failure by timeout
+      type: function
+      position:
+        x: 735.6580453014236
+        y: 373.5928177804391
+    - id: TF01Jap9vrRKI1Wp-Ew5u
+      data:
+        name: Fail end
+        variables:
+        - id: null
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 893b03eb-48cb-44f1-850d-6e5c0066b727
+          first_variable:
+            variable: 893b03eb-48cb-44f1-850d-6e5c0066b727
+          second_variable:
+            variable: null
+        - id: W1Bc9Rl8KHDW_DZwt3Mlb
+          type: string
+          variable: bddbcbbc-f937-4081-8257-266a1e8ecc78
+          first_variable:
+            variable: W1Bc9Rl8KHDW_DZwt3Mlb
+          second_variable:
+            variable: bddbcbbc-f937-4081-8257-266a1e8ecc78
+        - id: null
+          type: string
+          variable: 845070d9-a81e-4c8a-a304-c9b5b0011391
+          first_variable:
+            variable: 845070d9-a81e-4c8a-a304-c9b5b0011391
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 1100.693465136092
+        y: 146.54560551853885
+    - id: aerwrwQK5Od8cfMd8Nu62
+      data:
+        name: Get transaction by type
+        inputs:
+        - id: 68f74c07b025fab3c37574f2-4xtztC54PJuIlNHhWU0bb
+          name: contact_id
+          type: string
+          title: contact_id
+          required: true
+          variable: ef978146-f507-4a5c-b7ba-d63ab8fac441
+          input_type: variable
+        - id: 68f74c07b025fab3c37574f2-VX5oQkrjNnxuhSGMRkdyH
+          name: account_id
+          type: string
+          title: account_id
+          required: true
+          variable: 845070d9-a81e-4c8a-a304-c9b5b0011391
+          input_type: variable
+        - id: 68f74c07b025fab3c37574f2-QWUhs9FefLADBlWYbLstM
+          name: transaction_type
+          type: string
+          title: transaction_type
+          required: true
+          variable: 893b03eb-48cb-44f1-850d-6e5c0066b727
+          input_type: variable
+        - id: 68f74c07b025fab3c37574f2-j2No-Xps3Mdh_34je8QfT
+          name: limit
+          type: string
+          title: limit
+          value: '100'
+          required: true
+          input_type: value
+        - id: 68f74c07b025fab3c37574f2-6mPh_0G9bx3JfNQ6GFg5Y
+          name: skip
+          type: string
+          title: skip
+          value: '0'
+          required: true
+          input_type: value
+        outputs:
+        - id: 68f74c07b025fab3c37574f2-UbhUPV3YZAuS02HQWPbQ7
+          name: total
+          type: integer
+          title: Total transactions
+          required: true
+          variable: a1a91dcf-04a9-4a40-834b-695256309851
+          input_type: variable
+        - id: 68f74c07b025fab3c37574f2-RSy7NdvcZrtoDtVk5tEmz
+          name: _embedded
+          type: object
+          title: Embedded list
+          required: true
+          variable: cebf0a50-c84c-42b6-a265-66f962dbe107
+          input_type: variable
+        action_id: 68f74c07b025fab3c37574f2
+        connection_id: 68f74a9cb025fab3c375715b
+      type: execute-action
+      position:
+        x: 365.2274203531641
+        y: -92.12824988565426
+    - id: HbxmHT-5g7vJpdnjQNHq8
+      data:
+        name: If specific type
+        variable:
+          value: W1Bc9Rl8KHDW_DZwt3Mlb
+        conditions:
+        - id: IsxNTFyNNhxwRlBZ8ujeX
+          type: eq
+          value: 'true'
+          value_type: string
+      type: split-flow
+      position:
+        x: 40.00543726463533
+        y: 71.85504934813756
+    - id: BrwzD0DxP3UIJxvP91ms9
+      data:
+        code: |-
+          const transaction_type = Context.getVariable("transaction_type")
+          const transaction_type_list = ["Credit_Card", "Payment", "Withdrawal", "Transfer", "Add_on", "Deposit", "Purchase", "Other", "Loan_Payments"]
+
+          var transaction_type_option = 'false'
+          if (transaction_type && transaction_type_list.includes(transaction_type)){
+              transaction_type_option = 'true'
+
+              Context.setVariable('transaction_type', transaction_type.toUpperCase())
+          }
+
+          Context.setVariable('transaction_type_option', transaction_type_option)
+        name: Identify transaction type
+      type: function
+      position:
+        x: -228.15284641759044
+        y: 45.57113835521689
+    - id: Iq76U7bAXcN5sgGZZnTvC
+      data:
+        code: Context.setVariable("workflow_status", "identify error")
+        name: set function error
+      type: function
+      position:
+        x: 285.17246715406725
+        y: 333.2088464473924
+    - id: 2wDqbId0p__4y0H0Hm-pP
+      data:
+        code: Context.setVariable("workflow_status", "by type error")
+        name: set fail
+      type: function
+      position:
+        x: 805.8316428422811
+        y: -153.69820002626807
+    - id: _TZJYVTTqizRQ_TRnU4G8
+      data:
+        code: Context.setVariable("workflow_status", "by type time out")
+        name: set fail
+      type: function
+      position:
+        x: 804.8261015066852
+        y: 16.83839301682832
+    - id: qIt9-exeYFFlS-uRwHk0Z
+      data:
+        code: |-
+          function getAccountDetails(selectedAccountNumber) {
+              const accountList = Context.getVariable("account_list").accounts;
+
+              const last4 = String(selectedAccountNumber).slice(-4);
+
+              const account = accountList.find(acc => acc.account_number.endsWith(last4));
+              if (!account) return null;
+
+              Context.setVariable("account_id", account.id)
+              Context.setVariable("account_number", account.account_number)
+              Context.setVariable("account_type", account.account_type)
+          }
+
+          const selectedAccountNumber = Context.getVariable("selected_account_number")
+          getAccountDetails(selectedAccountNumber)
+        name: get selected account id
+      type: function
+      position:
+        x: -506.77917167146126
+        y: 65.83114933411696
+    - id: Gfg4H6SDm-T3rAFo8WpC8
+      data:
+        code: Context.setVariable("workflow_status", "get account id error")
+        name: set fail
+      type: function
+      position:
+        x: -81.07876576458666
+        y: 385.4110792113903
+    edges:
+    - id: vwvPxYZAgo9vVWxtmODQq
+      type: worflowEdge
+      source: O3A0bgK_1m0PA0oz8Yfve
+      target: htZJkhgGTgL3DwayIiyMl
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: XlovnoVmwi1RMVGLThfiB
+      type: worflowEdge
+      source: O3A0bgK_1m0PA0oz8Yfve
+      target: bVR-kbl-X4ucZV5hdAKfX
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: Y48Tcbm7juu48QCoilnSE
+      type: worflowEdge
+      source: O3A0bgK_1m0PA0oz8Yfve
+      target: U49eFxnLPKt4xQrElgkJJ
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: tjbtHrN7G0pOjjdn3TBB8
+      type: worflowEdge
+      source: bVR-kbl-X4ucZV5hdAKfX
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: MaPXS2DqVJ2OlD9Fozqjr
+      type: worflowEdge
+      source: bVR-kbl-X4ucZV5hdAKfX
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: O2ZfxpHYD8VMkfcTVSwg-
+      type: worflowEdge
+      source: U49eFxnLPKt4xQrElgkJJ
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: DByqQXrWXttEi7mEaNyde
+      type: worflowEdge
+      source: U49eFxnLPKt4xQrElgkJJ
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: HsjaLHyOfdhXEYrBEsKzL
+      type: worflowEdge
+      source: BrwzD0DxP3UIJxvP91ms9
+      target: HbxmHT-5g7vJpdnjQNHq8
+      source_handle: success
+      target_handle: split-flow-left-handle-1
+    - id: CduRx8l4YPJu8cCaVNbHW
+      type: worflowEdge
+      source: HbxmHT-5g7vJpdnjQNHq8
+      target: aerwrwQK5Od8cfMd8Nu62
+      source_handle: IsxNTFyNNhxwRlBZ8ujeX
+      target_handle: execute-action-node-rigth-handle-1
+    - id: 4_gAeMZ_5IAL6vgt-sr7q
+      type: worflowEdge
+      source: HbxmHT-5g7vJpdnjQNHq8
+      target: O3A0bgK_1m0PA0oz8Yfve
+      source_handle: split-flow-exit-fallback
+      target_handle: execute-action-node-rigth-handle-1
+    - id: OE-1U1mte7LQhJaLqq5JG
+      type: worflowEdge
+      source: aerwrwQK5Od8cfMd8Nu62
+      target: htZJkhgGTgL3DwayIiyMl
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: bM_10J_JVu1_onyZSdXLT
+      type: worflowEdge
+      source: BrwzD0DxP3UIJxvP91ms9
+      target: Iq76U7bAXcN5sgGZZnTvC
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: eIdOkPYCN6PQO9EKkm4qP
+      type: worflowEdge
+      source: Iq76U7bAXcN5sgGZZnTvC
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: JzkaXeHszmoBdcaH2XdcJ
+      type: worflowEdge
+      source: Iq76U7bAXcN5sgGZZnTvC
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: K0MvBS4v-sT6oXhw6V3IQ
+      type: worflowEdge
+      source: aerwrwQK5Od8cfMd8Nu62
+      target: 2wDqbId0p__4y0H0Hm-pP
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: BGWNsf8HEzxuhQJY1ysqv
+      type: worflowEdge
+      source: aerwrwQK5Od8cfMd8Nu62
+      target: _TZJYVTTqizRQ_TRnU4G8
+      source_handle: timeout
+      target_handle: function-left-handle-1
+    - id: 3Nm0Hbn5GY9u-i9p_Gu6y
+      type: worflowEdge
+      source: 2wDqbId0p__4y0H0Hm-pP
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: k6gtm23K6yzUpBchPYeFk
+      type: worflowEdge
+      source: 2wDqbId0p__4y0H0Hm-pP
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: sRQm4GrAlQURbMijEcay6
+      type: worflowEdge
+      source: _TZJYVTTqizRQ_TRnU4G8
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: TkPOFUBO5w-aRJoLMSd2-
+      type: worflowEdge
+      source: _TZJYVTTqizRQ_TRnU4G8
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    - id: w6w4KbaTCsSfHwzRR_v7K
+      type: worflowEdge
+      source: 7js9RUrzta6yeRHyYu_QL
+      target: qIt9-exeYFFlS-uRwHk0Z
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: RSjouqD7yd6HkibKDc8JI
+      type: worflowEdge
+      source: qIt9-exeYFFlS-uRwHk0Z
+      target: BrwzD0DxP3UIJxvP91ms9
+      source_handle: success
+      target_handle: function-left-handle-1
+    - id: Gxl2dsCb-QrAzuIDBCQ3Z
+      type: worflowEdge
+      source: qIt9-exeYFFlS-uRwHk0Z
+      target: Gfg4H6SDm-T3rAFo8WpC8
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: LCo5TbYnchqJM2bSoVueb
+      type: worflowEdge
+      source: Gfg4H6SDm-T3rAFo8WpC8
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: xiFxLN39LqI8CNEC2zR6e
+      type: worflowEdge
+      source: Gfg4H6SDm-T3rAFo8WpC8
+      target: TF01Jap9vrRKI1Wp-Ew5u
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables:
+    - id: W1Bc9Rl8KHDW_DZwt3Mlb
+      type: Workflow
+      variable_name: transaction_type_option
+      tool_reference:
+      - tool_id: kts3Gnbji2vXbPLdvBtpv
+        agent_id: f5c743b6-ca44-4be3-bb30-cd1cd7040bd9
+      - tool_id: _IA4-C5Xz62HUopWJTiSC
+        agent_id: f5c743b6-ca44-4be3-bb30-cd1cd7040bd9
+      - tool_id: daa1hUIxD8QM3Mrz4NjHc
+        agent_id: 270cfe11-8364-4fad-bf18-86b008d46040
+      - tool_id: 1JOYeYy3HZEtDfQL8oAcz
+        agent_id: 2e4da0d6-5853-4878-a704-41f858675649
+      - tool_id: be812db5-4d52-466a-b118-1cff250ecf72
+        agent_id: c73945a7-e742-4746-93fa-d3e7845d8732
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    transaction_type:
+      name: transaction_type
+      description: transaction_type
+      title: transaction_type
+      required: true
+      type: string
+      variable_name: transaction_type
+      value: null
+    selected_account_number:
+      name: selected_account_number
+      description: This variable represents the account number that the customer selects
+        to operate on, which is usually a masked account number that only shows last
+        four digits.
+      title: This variable represents the account number that the customer selects
+        to operate on, which is usually a masked account number that only shows last
+        four digits.
+      required: true
+      type: string
+      variable_name: selected_account_number
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: workflow_status
+      title: workflow_status
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    transaction_total_count:
+      name: transaction_total_count
+      description: The total number of transactions in the collection
+      title: The total number of transactions in the collection
+      required: true
+      type: string
+      variable_name: transaction_total_count
+      value: null
+    account_id:
+      name: account_id
+      description: Identification for an account
+      title: Identification for an account
+      required: true
+      type: string
+      variable_name: account_id
+      value: null
+    transaction_option:
+      name: transaction_option
+      description: transaction_option
+      title: transaction_option
+      required: true
+      type: string
+      variable_name: transaction_option
+      value: null
+    transaction_list:
+      name: transaction_list
+      description: List of account's transactions
+      title: List of account's transactions
+      required: true
+      type: string
+      variable_name: transaction_list
+      value: null
+    transaction_type:
+      name: transaction_type
+      description: transaction_type
+      title: transaction_type
+      required: true
+      type: string
+      variable_name: transaction_type
+      value: null
+  tool_version: 14
+  tool_type: WORKFLOW
+- tool_id: c3ee2595-e323-4266-8210-e8910f719321
+  tool_name: Get Account Balance
+  tool_description: Get selected account balance information
+  execute_params:
+    connection_id: ''
+    action_id: ''
+    nodes:
+    - id: RkF6m2PF8X3BFEtgAN_T7
+      data:
+        name: Get Selected Account
+        variables:
+        - type: string
+          variable: 49690105-5d33-49ba-b1ef-d6dbb60e6fdf
+        more_details: Get selected account information
+      type: start-flow
+      position:
+        x: 0
+        y: 0
+    - id: P86LJqoSTTuWOYb5nNC8X
+      data:
+        code: |-
+          function getAccountDetails(selectedAccountNumber) {
+              const accountList = Context.getVariable("account_list").accounts;
+
+              const last4 = String(selectedAccountNumber).slice(-4);
+
+              const account = accountList.find(acc => acc.account_number.endsWith(last4));
+              if (!account) return null;
+
+              Context.setVariable("account_id", account.id)
+              Context.setVariable("account_number", account.account_number)
+              Context.setVariable("account_type", account.account_type)
+              Context.setVariable("account_balance", account.balance)
+              Context.setVariable("account_available_balance", account.available_balance)
+
+              const account_type_set1 = ['DEBIT', 'SAVINGS', 'CHECKING', 'CERTIFICATE_OF_DEPOSIT', 'STUDENT', 'OTHER', 'UNDEFINED'];
+              const account_type_set2 = ['CREDIT_CARD', 'CREDIT', 'BUSINESS_CREDIT_CARD', 'STUDENT_CREDIT_CARD', 'PERSONAL_CREDIT_CARD'];
+              const account_type_set3 = ['MORTGAGE_LOAN', 'HOME_EQUITY_LOAN', 'AUTO_LOAN', 'PERSONAL_LOAN', 'BUSINESS_LOAN', 'STUDENT_LOAN'];
+
+              const account_type = account.account_type;
+              let account_type_option = -1;
+              let account_balance_information = "";
+              if (account_type_set1.indexOf(account_type) > -1) {
+                  account_type_option = 1
+                  if (account.balance !== account.available_balance) {
+                      account_balance_information = "Your current balance is " + account.balance + " dollars and your available balance is " + account.available_balance + " dollars."
+                  } else {
+                      account_balance_information = "Your current and available balance is " + account.balance + " dollars."
+                  }
+              }
+              else if (account_type_set2.indexOf(account_type) > -1) {
+                  account_type_option = 2
+                  // Context.setVariable("account_credit_limit", account.credit_limit)
+                  if (account.balance !== account.available_balance) {
+                      account_balance_information = "Your current balance is " + account.balance + " dollars and your available balance is " + account.available_balance + " dollars. Your total credit limit is " + account.credit_limit + " dollars."
+                  } else {
+                      account_balance_information = "Your current and available balance is " + account.balance + " dollars. Your total credit limit is " + account.credit_limit + " dollars."
+                  }
+              }
+              else if (account_type_set3.indexOf(account_type) > -1) {
+                  account_type_option = 3
+                  account_balance_information = "Your current principal balance is " + account.balance + " dollars. Would you like to know more information about your loan?"
+              }
+
+              Context.setVariable('account_type_option', account_type_option)
+              Context.setVariable('account_balance_information', account_balance_information)
+
+          }
+
+          const selectedAccountNumber = Context.getVariable("selected_account_number")
+          getAccountDetails(selectedAccountNumber)
+        name: Store account information
+      type: function
+      position:
+        x: 306.5129262593417
+        y: -18.22042781100953
+    - id: RJxodkiuBP-iamYZ97QPr
+      data:
+        name: Success End
+        variables:
+        - id: null
+          variable: 845070d9-a81e-4c8a-a304-c9b5b0011391
+          first_variable:
+            variable: 845070d9-a81e-4c8a-a304-c9b5b0011391
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 27d10fbc-7602-43d2-a9a8-8077d63eaa8d
+          first_variable:
+            variable: 27d10fbc-7602-43d2-a9a8-8077d63eaa8d
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: fa7454ec-9699-4bda-8dce-2a829def5895
+          first_variable:
+            variable: fa7454ec-9699-4bda-8dce-2a829def5895
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 6bfe9107-fb8d-4f56-961a-4a2f3515badf
+          first_variable:
+            variable: 6bfe9107-fb8d-4f56-961a-4a2f3515badf
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: c81e913a-c6a9-44f6-a526-39a858e3fd8a
+          first_variable:
+            variable: c81e913a-c6a9-44f6-a526-39a858e3fd8a
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 25ece392-0a7b-4925-8122-16e8e4511356
+          first_variable:
+            variable: 25ece392-0a7b-4925-8122-16e8e4511356
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: 9f25a6ac-42db-4c58-b6fa-19d91bcb407f
+          first_variable:
+            variable: 9f25a6ac-42db-4c58-b6fa-19d91bcb407f
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 635.6123677126182
+        y: 1.8281261388871886
+    - id: qB3HtBeOsXV1XsZEW7418
+      data:
+        code: Context.setVariable("workflow_status", "get account info fail")
+        name: Set workflow as failure
+      type: function
+      position:
+        x: 642.8702834198399
+        y: 114.81721627881419
+    - id: 0fIG-LTGhyKgGCXS44wD5
+      data:
+        name: Error End
+        variables:
+        - id: null
+          variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          first_variable:
+            variable: 491add00-0628-4d52-8aff-5b3560fcb926
+          second_variable:
+            variable: null
+        - id: null
+          type: string
+          variable: dd7f52f4-6dc2-40fa-8aa9-111b39353c7f
+          first_variable:
+            variable: dd7f52f4-6dc2-40fa-8aa9-111b39353c7f
+          second_variable:
+            variable: null
+      type: end-flow
+      position:
+        x: 897.3978062410447
+        y: 156.8977329199454
+    edges:
+    - id: _tBbp6xgKFDTKtPz7rOBP
+      type: worflowEdge
+      source: RkF6m2PF8X3BFEtgAN_T7
+      target: P86LJqoSTTuWOYb5nNC8X
+      source_handle: start-flow-node-rigth-handle-1
+      target_handle: function-left-handle-1
+    - id: 8nqOZiUd0OiBL0err1Myu
+      type: worflowEdge
+      source: P86LJqoSTTuWOYb5nNC8X
+      target: RJxodkiuBP-iamYZ97QPr
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: QeZHLV4jrj640NrrIO9m0
+      type: worflowEdge
+      source: P86LJqoSTTuWOYb5nNC8X
+      target: qB3HtBeOsXV1XsZEW7418
+      source_handle: error
+      target_handle: function-left-handle-1
+    - id: fFJ-JpSEXYTbaD7i0rAbL
+      type: worflowEdge
+      source: qB3HtBeOsXV1XsZEW7418
+      target: 0fIG-LTGhyKgGCXS44wD5
+      source_handle: success
+      target_handle: end-flow-left-handle-1
+    - id: Pa9soVMiSuscQoX8c0bJM
+      type: worflowEdge
+      source: qB3HtBeOsXV1XsZEW7418
+      target: 0fIG-LTGhyKgGCXS44wD5
+      source_handle: error
+      target_handle: end-flow-left-handle-1
+    variables: []
+    mcp_server_id: ''
+    mcp_server_url: ''
+    mcp_tool_name: ''
+  is_internal_tool: false
+  input_params:
+    selected_account_number:
+      name: selected_account_number
+      description: selected_account_number
+      title: selected_account_number
+      required: true
+      type: string
+      variable_name: selected_account_number
+      value: null
+  output_params:
+    workflow_status:
+      name: workflow_status
+      description: workflow_status
+      title: workflow_status
+      required: true
+      type: string
+      variable_name: workflow_status
+      value: null
+    account_number:
+      name: account_number
+      description: account_number
+      title: account_number
+      required: true
+      type: string
+      variable_name: account_number
+      value: null
+    account_available_balance:
+      name: account_available_balance
+      description: account_available_balance
+      title: account_available_balance
+      required: true
+      type: string
+      variable_name: account_available_balance
+      value: null
+    account_type:
+      name: account_type
+      description: account_type
+      title: account_type
+      required: true
+      type: string
+      variable_name: account_type
+      value: null
+    account_id:
+      name: account_id
+      description: Identification for an account
+      title: Identification for an account
+      required: true
+      type: string
+      variable_name: account_id
+      value: null
+    account_balance:
+      name: account_balance
+      description: account_balance
+      title: account_balance
+      required: true
+      type: string
+      variable_name: account_balance
+      value: null
+    account_list:
+      name: account_list
+      description: List of accounts details
+      title: List of accounts details
+      required: true
+      type: string
+      variable_name: account_list
+      value: null
+    account_type_option:
+      name: account_type_option
+      description: account_type_option
+      title: account_type_option
+      required: true
+      type: string
+      variable_name: account_type_option
+      value: null
+    account_balance_information:
+      name: account_balance_information
+      description: account_balance_information
+      title: account_balance_information
+      required: true
+      type: string
+      variable_name: account_balance_information
+      value: null
+  tool_version: 14
+  tool_type: WORKFLOW
