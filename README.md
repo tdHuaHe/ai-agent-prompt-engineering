@@ -152,7 +152,7 @@ The coordinator agent is always included automatically.
 Split a specific banking import file:
 
 ```bash
-./ai-agent-templates decompose "systems/fsi-banking/imports/fsec-AI-Agent-platform-FSI Providers Multi Agent - hehua-2026-03-09T18-17.json" --industry fsi-banking
+./ai-agent-templates decompose "systems/fsi-banking/imports/fsec-AI-Agent-platform-FSI Providers Multi Agent - hehua.json" --industry fsi-banking
 ```
 
 Build with selected action agents (`Member Search`, `Account Balance`, `FAQ`):
